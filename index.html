@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام KG2-A</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1a4f7a;
+  --primary-light: #e8f4fd;
+  --accent: #f0a500;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --bg: #f0f5fa;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #d1e3f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); direction: rtl; }
+
+/* ── HEADER ── */
+header {
+  background: linear-gradient(135deg, #1a4f7a, #0d3057);
+  color: white; padding: 16px 20px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 4px 20px rgba(26,79,122,0.3);
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { width: 46px; height: 46px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+header h1 { font-size: 18px; font-weight: 900; }
+header p { font-size: 12px; opacity: 0.75; }
+.header-badge { margin-right: auto; background: rgba(240,165,0,0.2); border: 1px solid var(--accent); color: var(--accent); padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+
+/* ── TABS ── */
+.tabs { display: flex; background: white; border-bottom: 2px solid var(--border); position: sticky; top: 78px; z-index: 99; }
+.tab { flex: 1; padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tab-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+
+/* ── PAGE ── */
+.page { display: none; padding: 16px; }
+.page.active { display: block; }
+
+/* ── SEARCH BAR ── */
+.search-wrap { position: relative; margin-bottom: 14px; }
+.search-wrap input { width: 100%; padding: 12px 44px 12px 16px; border: 2px solid var(--border); border-radius: 12px; font-family: 'Cairo', sans-serif; font-size: 14px; outline: none; background: white; direction: rtl; }
+.search-wrap input:focus { border-color: var(--primary); }
+.search-wrap .si { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--muted); pointer-events: none; }
+
+/* ── ACTION ROW ── */
+.action-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+.count-badge { background: var(--primary-light); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: var(--primary); }
+
+/* ── BUTTONS ── */
+.btn { padding: 9px 18px; border-radius: 10px; border: none; font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: #0d3057; }
+.btn-accent { background: var(--accent); color: white; }
+.btn-accent:active { background: #d4940a; }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-outline { background: white; color: var(--primary); border: 2px solid var(--border); }
+.btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+.btn-icon { padding: 8px; border-radius: 8px; font-size: 16px; }
+
+/* ── CONTACT CARD ── */
+.contact-card {
+  background: white; border-radius: 14px; padding: 14px 16px;
+  margin-bottom: 10px; border: 2px solid transparent;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: border 0.2s;
+}
+.contact-card.selected { border-color: var(--accent); background: #fffbf0; }
+.card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; flex-shrink: 0; }
+.av0{background:#dbeafe;color:#1d4ed8} .av1{background:#dcfce7;color:#15803d}
+.av2{background:#fef9c3;color:#92400e} .av3{background:#fce7f3;color:#9d174d}
+.av4{background:#ede9fe;color:#6d28d9} .av5{background:#ffedd5;color:#c2410c}
+.card-name { font-size: 13px; font-weight: 700; line-height: 1.3; flex: 1; }
+.card-id { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.card-emails { margin-bottom: 10px; }
+.email-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; border-bottom: 1px solid #f0f5fa; }
+.email-row:last-child { border-bottom: none; }
+.elabel { background: var(--primary-light); border-radius: 5px; padding: 2px 7px; font-size: 10px; font-weight: 700; color: var(--primary); flex-shrink: 0; }
+.evalue { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: left; font-size: 11px; flex: 1; }
+.no-email { color: #cbd5e1; font-style: italic; font-size: 11px; }
+.card-actions { display: flex; gap: 6px; }
+
+/* ── SELECT ALL BAR ── */
+.select-bar { background: white; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.select-bar .slabel { font-weight: 700; font-size: 13px; flex: 1; }
+
+/* ── MODAL ── */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; align-items: flex-end; justify-content: center; }
+.overlay.open { display: flex; }
+.modal { background: white; border-radius: 20px 20px 0 0; width: 100%; max-height: 92vh; overflow-y: auto; animation: slideUp 0.25s ease; }
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-head { background: linear-gradient(135deg, #1a4f7a, #0d3057); color: white; padding: 18px 20px; border-radius: 20px 20px 0 0; display: flex; align-items: center; justify-content: space-between; }
+.modal-head h2 { font-size: 16px; font-weight: 700; }
+.modal-head p { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+.close-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal-body { padding: 20px; }
+.modal-foot { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; background: #f8fbff; border-radius: 0 0 0 0; }
+
+/* ── FORM ── */
+.fg { margin-bottom: 16px; }
+.fg label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+.fg input, .fg textarea, .fg select {
+  width: 100%; padding: 11px 14px; border: 2px solid var(--border);
+  border-radius: 10px; font-family: 'Cairo', sans-serif; font-size: 13px;
+  outline: none; transition: border 0.2s; direction: rtl; background: #f8fbff;
+}
+.fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--primary); background: white; }
+.fg textarea { min-height: 120px; resize: vertical; }
+
+/* ── ATTACHMENTS ── */
+.attach-area { border: 2px dashed var(--border); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: border 0.2s; background: #f8fbff; }
+.attach-area:hover, .attach-area.dragover { border-color: var(--primary); background: var(--primary-light); }
+.attach-area p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.attach-list { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.attach-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.attach-item .aname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: left; }
+.attach-item .asize { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.attach-item .adel { color: var(--danger); cursor: pointer; font-size: 15px; flex-shrink: 0; }
+.drive-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; background: white; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); width: 100%; justify-content: center; transition: border 0.2s; }
+.drive-btn:hover { border-color: #4285f4; color: #4285f4; }
+.drive-icon { width: 20px; height: 20px; }
+
+/* ── RECIPIENTS BOX ── */
+.rcpt-box { background: #f8fbff; border: 2px solid var(--border); border-radius: 10px; padding: 10px 14px; min-height: 50px; display: flex; flex-wrap: wrap; gap: 5px; }
+.rtag { background: var(--primary-light); border: 1px solid var(--border); border-radius: 15px; padding: 3px 10px; font-size: 11px; font-weight: 600; color: var(--primary); direction: ltr; }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1e293b; color: white; padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 700; z-index: 999; transition: transform 0.3s; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.ok { background: #15803d; }
+.toast.err { background: #dc2626; }
+
+/* ── CONFIRM MODAL ── */
+.confirm-box { background: white; border-radius: 16px; padding: 24px 20px; width: 90%; max-width: 340px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: slideUp 0.2s ease; }
+.confirm-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.confirm-box p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.confirm-actions { display: flex; gap: 10px; }
+.confirm-actions .btn { flex: 1; justify-content: center; }
+
+/* ── EMPTY ── */
+.empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+.empty .ei { font-size: 36px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🎒</div>
+  <div>
+    <h1>نظام KG2-A</h1>
+    <p>City School — إدارة أولياء الأمور</p>
+  </div>
+  <div class="header-badge" id="totalBadge">25 طالب</div>
+  <div style="background:rgba(34,197,94,0.2);border:1px solid #22c55e;color:#15803d;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px">
+    <span style="width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite"></span>Firebase
+  </div>
+  <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}</style>
+  <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);padding:6px 12px;font-size:11px" onclick="showDataMenu()">⚙️</button>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('contacts')">
+    <span class="tab-icon">👥</span>جهات الاتصال
+  </div>
+  <div class="tab" onclick="switchTab('email')">
+    <span class="tab-icon">✉️</span>إرسال إيميل
+  </div>
+  <div class="tab" onclick="switchTab('templates')">
+    <span class="tab-icon">📝</span>القوالب
+  </div>
+</div>
+
+<div class="page active" id="page-contacts">
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" id="contactSearch" placeholder="ابحث بالاسم أو رقم الطالب..." oninput="renderContacts()">
+  </div>
+  <div class="action-row">
+    <span class="count-badge" id="contactCount">25 طالب</span>
+    <button class="btn btn-primary btn-sm" onclick="openAddModal()">➕ إضافة طالب</button>
+  </div>
+  <div id="contactsList"></div>
+</div>
+
+<div class="page" id="page-email">
+  <div class="select-bar">
+    <span class="slabel" id="selLabel">اختر الطلاب للإرسال</span>
+    <button class="btn btn-outline btn-sm" onclick="selectAll()">✅ الكل</button>
+    <button class="btn btn-outline btn-sm" onclick="deselectAll()">❌ إلغاء</button>
+  </div>
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" id="emailSearch" placeholder="ابحث للتصفية..." oninput="renderEmailList()">
+  </div>
+  <div id="emailList"></div>
+
+  <div style="background:white;border-radius:16px;padding:18px;margin-top:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+    <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:14px">✉️ إنشاء الرسالة</div>
+
+    <div class="fg">
+      <label>📧 المرسل إليهم</label>
+      <div class="rcpt-box" id="rcptBox"><span style="font-size:12px;color:var(--muted)">اختر طلاب من الأعلى...</span></div>
+    </div>
+
+    <div class="fg">
+      <label>⚙️ إرسال إلى</label>
+      <select id="emailTarget" onchange="updateRecipients()">
+        <option value="both">الأب والأم معاً</option>
+        <option value="father">الأب فقط</option>
+        <option value="mother">الأم فقط</option>
+      </select>
+    </div>
+
+    <div class="fg">
+      <label>📝 الموضوع</label>
+      <input type="text" id="composeSubject" placeholder="موضوع الرسالة...">
+    </div>
+
+    <div class="fg">
+      <label>💬 نص الرسالة</label>
+      <textarea id="composeBody" placeholder="اكتبي الرسالة هنا..."></textarea>
+    </div>
+
+    <div class="fg">
+      <label>📎 المرفقات</label>
+      <div class="attach-area" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <div style="font-size:28px">📁</div>
+        <p>اضغط لإرفاق ملف من الجهاز</p>
+        <p style="font-size:11px;margin-top:4px">أو اسحب وأفلت الملف هنا</p>
+      </div>
+      <input type="file" id="fileInput" multiple style="display:none" onchange="handleFileSelect(event)">
+
+      <button class="drive-btn" style="margin-top:8px" onclick="openGoogleDrivePicker()">
+        <svg class="drive-icon" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+          <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+          <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/>
+          <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/>
+          <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+          <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+          <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+        </svg>
+        إرفاق من Google Drive
+      </button>
+
+      <div class="attach-list" id="attachList"></div>
+    </div>
+
+    <div class="fg">
+      <label>📮 طريقة الإرسال</label>
+      <select id="emailSendType">
+        <option value="to">To - عادي (كل المرسل إليهم يشوفوا بعض)</option>
+        <option value="bcc">BCC - مخفي (كل واحد ما يشوفش التانيين)</option>
+      </select>
+    </div>
+
+    <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="sendEmail()">
+      🚀 إرسال عبر Gmail
+    </button>
+    <button id="personalizedSendBtn" class="btn btn-accent" style="width:100%;justify-content:center;padding:14px;font-size:15px;display:none;margin-top:10px" onclick="sendPersonalizedEmails()">
+      ✨ إرسال إيميلات مخصصة (قالب)
+    </button>
+  </div>
+</div>
+
+
+<div class="page" id="page-templates">
+  <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:700;color:var(--primary)">📝 قوالب الإيميلات المحفوظة</div>
+      <button class="btn btn-primary btn-sm" onclick="openTemplateModal()">➕ إضافة قالب</button>
+    </div>
+    <div id="templatesList"></div>
+  </div>
+</div>
+
+<div class="overlay" id="editOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2 id="editTitle">➕ إضافة طالب</h2>
+        <p id="editSubtitle">أدخل بيانات الطالب</p>
+      </div>
+      <button class="close-btn" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="fg">
+        <label>🪪 رقم الطالب</label>
+        <input type="number" id="editStudentId" placeholder="مثال: 11353">
+      </div>
+      <div class="fg">
+        <label>👤 اسم الطالب كاملاً</label>
+        <input type="text" id="editName" placeholder="الاسم بالإنجليزي">
+      </div>
+      <div class="fg">
+        <label>👨 إيميل الأب</label>
+        <input type="email" id="editFather" placeholder="father@email.com" style="direction:ltr;text-align:left">
+      </div>
+      <div class="fg">
+        <label>👩 إيميل الأم</label>
+        <input type="email" id="editMother" placeholder="mother@email.com" style="direction:ltr;text-align:left">
+      </div>
+      <div class="fg">
+        <label>🎓 إيميل الطالب</label>
+        <input type="email" id="editEmail" placeholder="student@cityschool.ae" style="direction:ltr;text-align:left">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeEditModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveStudent()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="confirmOverlay" style="align-items:center">
+  <div class="confirm-box">
+    <div style="font-size:36px;margin-bottom:8px">🗑️</div>
+    <h3>حذف الطالب؟</h3>
+    <p id="confirmName">هل أنت متأكد من حذف هذا الطالب؟</p>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeConfirm()">إلغاء</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">حذف</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="overlay" id="dataMenuOverlay" style="align-items:center">
+  <div style="background:white;border-radius:20px;width:90%;max-width:340px;padding:0;animation:slideUp 0.25s ease">
+    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:16px 20px;border-radius:20px 20px 0 0;font-size:15px;font-weight:700">⚙️ إدارة البيانات</div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="exportData()">📤 تصدير البيانات</button>
+      <button class="btn btn-accent" style="width:100%;justify-content:center" onclick="document.getElementById('importFile').click()">📥 استيراد البيانات</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="handleLogout()">🚪 تسجيل الخروج</button>
+      <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeDataMenu()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="templateOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2 id="templateTitle">📝 قالب جديد</h2>
+        <p style="font-size:11px;line-height:1.6">
+  <strong>الاسم:</strong> STUDENT_FIRST_NAME (الأول فقط) | STUDENT_FIRST_TWO_NAMES (أول اسمين) | STUDENT_FULL_NAME (كامل)<br>
+  <strong>الرقم:</strong> STUDENT_ID | <em>كل الأسماء: حرف أول كبير Capital</em>
+</p>
+      </div>
+      <button class="close-btn" onclick="closeTemplateModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="templateId">
+      <div class="fg">
+        <label>📌 اسم القالب</label>
+        <input type="text" id="templateName" placeholder="مثال: تذكير بالواجب المنزلي">
+      </div>
+      <div class="fg">
+        <label>📝 الموضوع</label>
+        <input type="text" id="templateSubject" placeholder="يمكنك استخدام [اسم الطالب]">
+      </div>
+      <div class="fg">
+        <label>💬 نص الرسالة</label>
+        <textarea id="templateBody" placeholder="مثال: عزيزي ولي أمر [اسم الطالب]..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeTemplateModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveTemplate()">💾 حفظ القالب</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="personalizedOverlay">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-head">
+      <div>
+        <h2>✨ إيميلات مخصصة</h2>
+        <p id="personalizedCount"></p>
+      </div>
+      <button class="close-btn" onclick="closePersonalizedModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#0369a1;line-height:1.6">
+        📌 <strong>كيف تعمل:</strong> كل طالب له إيميل منفصل باسمه. اضغطي "📧 إرسال" لكل طالب ← هيفتح Gmail ← اضغطي Send ← ارجعي للقائمة وكملي باقي الطلاب
+      </div>
+      <div id="personalizedList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="sendOverlay" style="align-items:center">
+  <div style="background:white;border-radius:20px;width:92%;max-width:400px;max-height:85vh;overflow-y:auto;animation:slideUp 0.25s ease">
+    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:18px 20px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:16px;font-weight:700">📧 تأكيد الإرسال</div><div style="font-size:11px;opacity:0.75;margin-top:2px">راجعي البيانات قبل الإرسال</div></div>
+      <button class="close-btn" onclick="document.getElementById('sendOverlay').classList.remove('open')">✕</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+
+      <div style="background:#f8fbff;border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📧 المرسل إليهم (<span id="sendTypeLabel">To</span>)</div>
+        <div id="sendEmails" style="font-size:12px;color:var(--text);direction:ltr;text-align:left;word-break:break-all"></div>
+      </div>
+
+      <div style="background:#f8fbff;border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📝 الموضوع</div>
+        <div id="sendSubject" style="font-size:13px;font-weight:600"></div>
+      </div>
+
+      <div style="background:#f8fbff;border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">💬 الرسالة</div>
+        <div id="sendBody" style="font-size:12px;color:var(--text);white-space:pre-wrap;max-height:100px;overflow-y:auto"></div>
+      </div>
+
+      <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px">
+        <div id="attachStatus" style="font-size:11px;font-weight:700;color:#c2410c;margin-bottom:6px">المرفقات</div>
+        <div id="sendAttachList"></div>
+        <div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:8px;font-size:11px;color:#92400e;line-height:1.6">
+          ⚠️ <strong>ملاحظة:</strong> بعد فتح Gmail، أضيفي المرفقات يدوياً من زر الـ Attach في Gmail لأن Android لا يسمح بإرفاق الملفات تلقائياً عبر الروابط
+        </div>
+      </div>
+
+      <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="confirmSend()">
+        🚀 فتح Gmail والإرسال
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+// ── DATA ──
+let templates = [];
+let currentTemplate = null;
+let personalizedList = [];
+let students = [
+  {id:11353,name:"ROVAN SALAH HUSSEIN MOHAMED",father:"misodahab21@gmail.com",mother:"misodahab21@gmail.com",email:"11353@student.cityschool.ae"},
+  {id:11239,name:"SHEHAB ELHELFAWY",father:"ihab.elehelfawy@flydubai.com",mother:"ihab.elehelfawy@flydubai.com",email:"11239@student.cityschool.ae"},
+  {id:11013,name:"LTEN MUAMMAR ABDULLAH AL AMRI",father:"mralomari@hotmail.com",mother:"mralomari@hotmail.com",email:"11013@student.cityschool.ae"},
+  {id:11009,name:"EYAD KHALAF ABDELFATAH TAHA MOHAMED",father:"kh8522@yahoo.com",mother:"kh8522@yahoo.com",email:"11009@student.cityschool.ae"},
+  {id:11100,name:"ALI MOHAMED ABDULALEEM ABDULKAREEM MOHAMED",father:"rub.aleem11@gmail.com",mother:null,email:"11100@student.cityschool.ae"},
+  {id:11019,name:"MARYAM MAHMOUD SULEIMAN ABED ALJAWAD",father:"abujawad1985@yahoo.com",mother:null,email:"11019@student.cityschool.ae"},
+  {id:11018,name:"NEZAR FARES HASSAN MOHAMMAD AZZAN",father:"faresbinazzan@yahoo.com",mother:null,email:"11018@student.cityschool.ae"},
+  {id:11432,name:"TAIM I S MANSOUR",father:"kholud.m1988@hotmail.com",mother:null,email:"11432@student.cityschool.ae"},
+  {id:11031,name:"MOSAAB AHMED ELHAJ ABAS",father:"yasminabdmoti1987@gmail.com",mother:"lawmusab@yahoo.com",email:"11031@student.cityschool.ae"},
+  {id:12816,name:"TALEEN MOHAMMAD AL MELHEM",father:"almelhem.55@gmail.com",mother:"totahariri96@gmail.com",email:"12816@student.cityschool.ae"},
+  {id:11023,name:"ZAIN NEHAD SALAHALDEEN ABU DAGAR",father:"Nehad.n11@icloud.com",mother:"Nehad.n11@icloud.com",email:"11023@student.cityschool.ae"},
+  {id:11042,name:"GHAITH EZALDEEN MUSTAFA IBRAHIM",father:"ez.mustafa@hotmail.com",mother:"wiam09102@gmail.com",email:"11042@student.cityschool.ae"},
+  {id:11064,name:"JULIA ADNAN OBAID",father:"adnan12obaid@gmail.com",mother:"adnan12obaid@gmail.com",email:"11064@student.cityschool.ae"},
+  {id:11065,name:"MOHAMAD OSAMA HAYKAL",father:"naroma_1986@hotmail.com",mother:"omh_2000@hotmail.com",email:"11065@student.cityschool.ae"},
+  {id:11183,name:"SELEEM MOHAMED SAMY AWAD MOHAMED RAMADA",father:"samo.ramada777@gmail.com",mother:"fatmagmagdy333@gmail.com",email:"11183@student.cityschool.ae"},
+  {id:11264,name:"ASEEL AHMED MOHAMED RAMADAN IBRAHIM",father:"ahmedalbrens2001@yahoo.com",mother:"ahmedalbrens2001@yahoo.com",email:"11264@student.cityschool.ae"},
+  {id:11608,name:"RASHED AHMAD ZEYAD NAWAFLEH",father:"ahmednawafleh1992@yahoo.com",mother:null,email:"11608@student.cityschool.ae"},
+  {id:11660,name:"FARAH ABDALLA",father:"abdallazain65@gmail.com",mother:"abdallazain65@gmail.com",email:"11660@student.cityschool.ae"},
+  {id:11809,name:"ALIA HUTHEIFA SAMI ALTALAFHA",father:"rsh-ramadan@hotmail.com",mother:null,email:"11809@student.cityschool.ae"},
+  {id:12002,name:"LUJAIN MAHIR ABAKER ISHAG",father:"mahir.abaker.90@gmail.com",mother:"mahir.abaker.90@gmail.com",email:"12002@student.cityschool.ae"},
+  {id:12174,name:"JINAN OSMAN HASSAN SIDDIG",father:"mohjaadil94@gmail.com",mother:null,email:"12174@student.cityschool.ae"},
+  {id:12175,name:"JOWAN OSMAN HASSAN SIDDIG",father:"mohjaadil94@gmail.com",mother:null,email:"12175@student.cityschool.ae"},
+  {id:12937,name:"MIRACLE PIERRE MOUNIR NAZIR AYOUB",father:"pierre.mounir@outlook.com",mother:"eva.pierre13@gmail.com",email:"12937@student.cityschool.ae"},
+  {id:12524,name:"RAKAN MOHAMMED KHADHER MOHAMMED SALEH",father:"Borakan10001@gmail.com",mother:null,email:"12524@student.cityschool.ae"},
+  {id:12811,name:"NAYA ADNAN ALKAYAT",father:"adn86kh@gmail.com",mother:"moon.sy2013@gmail.com",email:"12811@student.cityschool.ae"}
+];
+
+const avColors = ['av0','av1','av2','av3','av4','av5'];
+let selectedIds = new Set();
+let attachments = []; 
+let deleteTargetId = null;
+
+function initials(name) {
+  const p = name.trim().split(' ');
+  return (p[0][0]+(p[1]?p[1][0]:'')).toUpperCase();
+}
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes+'B';
+  if (bytes < 1048576) return (bytes/1024).toFixed(1)+'KB';
+  return (bytes/1048576).toFixed(1)+'MB';
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['contacts','email','templates'][i]===tab));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id==='page-'+tab));
+  if (tab==='email') renderEmailList();
+  if (tab==='templates') renderTemplates();
+}
+
+// ── CONTACTS TAB ──
+function renderContacts() {
+  const q = document.getElementById('contactSearch').value.trim().toLowerCase();
+  const filtered = students.filter(s =>
+    s.name.toLowerCase().includes(q) || String(s.id).includes(q) ||
+    (s.father||'').toLowerCase().includes(q) || (s.mother||'').toLowerCase().includes(q)
+  );
+  document.getElementById('contactCount').textContent = filtered.length + ' طالب';
+  document.getElementById('totalBadge').textContent = students.length + ' طالب';
+  const list = document.getElementById('contactsList');
+  if (!filtered.length) { list.innerHTML = '<div class="empty"><div class="ei">🔍</div>لا توجد نتائج</div>'; return; }
+  list.innerHTML = filtered.map((s,i) => {
+    const av = avColors[students.indexOf(s) % avColors.length];
+    const fRow = s.father
+      ? `<div class="email-row"><span class="elabel">أب</span><span class="evalue">${s.father}</span></div>`
+      : `<div class="email-row"><span class="elabel">أب</span><span class="no-email">لا يوجد</span></div>`;
+    const mRow = s.mother && s.mother !== s.father
+      ? `<div class="email-row"><span class="elabel">أم</span><span class="evalue">${s.mother}</span></div>`
+      : s.mother === s.father
+      ? `<div class="email-row"><span class="elabel">أم</span><span class="no-email">نفس الأب</span></div>`
+      : `<div class="email-row"><span class="elabel">أم</span><span class="no-email">لا يوجد</span></div>`;
+    return `
+    <div class="contact-card">
+      <div class="card-top">
+        <div class="avatar ${av}">${initials(s.name)}</div>
+        <div style="flex:1">
+          <div class="card-name">${s.name}</div>
+          <div class="card-id">🪪 ${s.id}</div>
+        </div>
+      </div>
+      <div class="card-emails">${fRow}${mRow}</div>
+      <div class="card-actions">
+        <button class="btn btn-primary btn-sm" onclick="openEditModal(${s.id})">✏️ تعديل</button>
+        <button class="btn btn-danger btn-sm" onclick="askDelete(${s.id})">🗑️ حذف</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── EMAIL TAB ──
+function renderEmailList() {
+  const q = document.getElementById('emailSearch').value.trim().toLowerCase();
+  const filtered = students.filter(s =>
+    s.name.toLowerCase().includes(q) || String(s.id).includes(q)
+  );
+  const list = document.getElementById('emailList');
+  list.innerHTML = filtered.map((s,i) => {
+    const av = avColors[students.indexOf(s) % avColors.length];
+    const sel = selectedIds.has(s.id);
+    return `
+    <div class="contact-card ${sel?'selected':''}" onclick="toggleSel(${s.id})" style="margin-bottom:8px">
+      <div class="card-top" style="margin-bottom:0">
+        <div style="width:24px;height:24px;border-radius:50%;border:2px solid ${sel?'var(--accent)':'var(--border)'};background:${sel?'var(--accent)':'white'};display:flex;align-items:center;justify-content:center;font-size:12px;color:white;flex-shrink:0">${sel?'✓':''}</div>
+        <div class="avatar ${av}" style="width:36px;height:36px;font-size:13px">${initials(s.name)}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700">${s.name}</div>
+          <div style="font-size:11px;color:var(--muted)">${s.father||s.mother||'لا يوجد إيميل'}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  updateSelUI();
+}
+
+function toggleSel(id) {
+  if (selectedIds.has(id)) selectedIds.delete(id);
+  else selectedIds.add(id);
+  renderEmailList();
+  updateRecipients();
+}
+
+function selectAll() {
+  students.forEach(s => selectedIds.add(s.id));
+  renderEmailList(); updateRecipients();
+}
+function deselectAll() {
+  selectedIds.clear();
+  renderEmailList(); updateRecipients();
+}
+
+function updateSelUI() {
+  const n = selectedIds.size;
+  document.getElementById('selLabel').textContent = n > 0 ? `تم اختيار ${n} طالب` : 'اختر الطلاب للإرسال';
+}
+
+function updateRecipients() {
+  const target = document.getElementById('emailTarget').value;
+  const box = document.getElementById('rcptBox');
+  const sel = students.filter(s => selectedIds.has(s.id));
+  if (!sel.length) { box.innerHTML = '<span style="font-size:12px;color:var(--muted)">اختر طلاب من الأعلى...</span>'; box._emails=[]; return; }
+  let emails = [];
+  sel.forEach(s => {
+    if ((target==='father'||target==='both') && s.father && !emails.includes(s.father)) emails.push(s.father);
+    if ((target==='mother'||target==='both') && s.mother && s.mother!==s.father && !emails.includes(s.mother)) emails.push(s.mother);
+  });
+  box.innerHTML = emails.length
+    ? emails.map(e=>`<span class="rtag">${e}</span>`).join('')
+    : '<span style="font-size:12px;color:var(--muted)">لا توجد إيميلات للمحددين</span>';
+  box._emails = emails;
+}
+
+// ── SEND ──
+function sendEmail() {
+  const emails = document.getElementById('rcptBox')._emails || [];
+  if (!emails.length) { toast('اختاري طلاب أولاً', 'err'); return; }
+  const subject = document.getElementById('composeSubject').value;
+  const body = document.getElementById('composeBody').value;
+  if (!subject) { toast('اكتبي الموضوع أولاً', 'err'); return; }
+
+  if (attachments.length > 0) {
+    openSendModal(emails, subject, body);
+  } else {
+    const mailto = 'mailto:' + emails.join(',')
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+    window.location.href = mailto;
+  }
+}
+
+function openSendModal(emails, subject, body) {
+  document.getElementById('sendEmails').textContent = emails.join('، ');
+  document.getElementById('sendSubject').textContent = subject || '—';
+  document.getElementById('sendBody').textContent = body || '—';
+  document.getElementById('attachStatus').textContent = `المرفقات (${attachments.length} ملف)`;
+  const al = document.getElementById('sendAttachList');
+  al.innerHTML = attachments.map(a =>
+    `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f5fa;font-size:12px">
+      <span>📄</span><span style="flex:1;direction:ltr;text-align:left">${a.name}</span><span style="color:var(--muted);font-size:11px">${a.size}</span>
+    </div>`).join('');
+  document.getElementById('sendOverlay').classList.add('open');
+  document.getElementById('sendOverlay')._mailto = 'mailto:' + emails.join(',')
+    + '?subject=' + encodeURIComponent(subject)
+    + '&body=' + encodeURIComponent(body);
+}
+
+function confirmSend() {
+  const overlay = document.getElementById('sendOverlay');
+  const sendType = document.getElementById('emailSendType').value;
+  const emails = document.getElementById('rcptBox')._emails || [];
+  const subject = document.getElementById('composeSubject').value;
+  const body = document.getElementById('composeBody').value;
+  
+  openGmailCompose(emails, subject, body, sendType);
+  overlay.classList.remove('open');
+}
+
+// ── ATTACHMENTS ──
+function handleFileSelect(e) {
+  [...e.target.files].forEach(addFile);
+  e.target.value = '';
+}
+function handleDragOver(e) { e.preventDefault(); document.getElementById('dropZone').classList.add('dragover'); }
+function handleDragLeave(e) { document.getElementById('dropZone').classList.remove('dragover'); }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('dragover');
+  [...e.dataTransfer.files].forEach(addFile);
+}
+function addFile(file) {
+  attachments.push({name: file.name, size: formatSize(file.size), file, type:'local'});
+  renderAttachments();
+}
+function removeAttachment(i) {
+  attachments.splice(i, 1);
+  renderAttachments();
+}
+function renderAttachments() {
+  const list = document.getElementById('attachList');
+  if (!attachments.length) { list.innerHTML = ''; return; }
+  list.innerHTML = attachments.map((a,i) => `
+    <div class="attach-item">
+      <span style="font-size:18px">${a.type==='drive'?'📂':'📄'}</span>
+      <span class="aname">${a.name}</span>
+      <span class="asize">${a.size||''}</span>
+      <span class="adel" onclick="removeAttachment(${i})">✕</span>
+    </div>`).join('');
+}
+
+function openGoogleDrivePicker() {
+  toast('افتحي Drive واختاري الملف ثم شاركيه في الإيميل مباشرة', '');
+  setTimeout(() => {
+    window.open('https://drive.google.com', '_blank');
+  }, 800);
+}
+
+// ── ADD / EDIT MODAL ──
+function openAddModal() {
+  document.getElementById('editTitle').textContent = '➕ إضافة طالب';
+  document.getElementById('editSubtitle').textContent = 'أدخل بيانات الطالب الجديد';
+  document.getElementById('editId').value = '';
+  document.getElementById('editStudentId').value = '';
+  document.getElementById('editName').value = '';
+  document.getElementById('editFather').value = '';
+  document.getElementById('editMother').value = '';
+  document.getElementById('editEmail').value = '';
+  document.getElementById('editOverlay').classList.add('open');
+}
+
+function openEditModal(id) {
+  const s = students.find(x => x.id === id);
+  if (!s) return;
+  document.getElementById('editTitle').textContent = '✏️ تعديل بيانات الطالب';
+  document.getElementById('editSubtitle').textContent = s.name;
+  document.getElementById('editId').value = id;
+  document.getElementById('editStudentId').value = s.id;
+  document.getElementById('editName').value = s.name;
+  document.getElementById('editFather').value = s.father || '';
+  document.getElementById('editMother').value = s.mother || '';
+  document.getElementById('editEmail').value = s.email || '';
+  document.getElementById('editOverlay').classList.add('open');
+}
+
+function closeEditModal() {
+  document.getElementById('editOverlay').classList.remove('open');
+}
+
+function saveStudent() {
+  const origId = document.getElementById('editId').value;
+  const sid = parseInt(document.getElementById('editStudentId').value);
+  const name = document.getElementById('editName').value.trim().toUpperCase();
+  const father = document.getElementById('editFather').value.trim() || null;
+  const mother = document.getElementById('editMother').value.trim() || null;
+  const email = document.getElementById('editEmail').value.trim() || null;
+
+  if (!sid || !name) { toast('الرقم والاسم مطلوبان', 'err'); return; }
+
+  if (origId) {
+    const idx = students.findIndex(s => s.id === parseInt(origId));
+    if (idx > -1) students[idx] = {id: sid, name, father, mother, email};
+    toast('✅ تم التعديل بنجاح', 'ok');
+  } else {
+    if (students.find(s => s.id === sid)) { toast('رقم الطالب موجود مسبقاً', 'err'); return; }
+    students.push({id: sid, name, father, mother, email});
+    toast('✅ تمت الإضافة بنجاح', 'ok');
+  }
+  saveData();
+  closeEditModal();
+  renderContacts();
+}
+
+// ── DELETE ──
+function askDelete(id) {
+  const s = students.find(x => x.id === id);
+  if (!s) return;
+  deleteTargetId = id;
+  document.getElementById('confirmName').textContent = s.name;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); deleteTargetId = null; }
+function confirmDelete() {
+  if (!deleteTargetId) return;
+  students = students.filter(s => s.id !== deleteTargetId);
+  selectedIds.delete(deleteTargetId);
+  saveData();
+  closeConfirm();
+  renderContacts();
+  toast('🗑️ تم الحذف', 'ok');
+}
+
+// ── TOAST ──
+let toastTimer;
+function toast(msg, type='') {
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast show ${type}`;
+  toastTimer = setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ── FIREBASE CONFIG ──
+const firebaseConfig = {
+  apiKey: "AIzaSyCtyhfOAh3aQF9_SSzmI8hJ8YJg5jG5Q_Q",
+  authDomain: "cs-kg2a-system.firebaseapp.com",
+  databaseURL: "https://cs-kg2a-system-default-rtdb.firebaseio.com",
+  projectId: "cs-kg2a-system",
+  storageBucket: "cs-kg2a-system.firebasestorage.app",
+  messagingSenderId: "937866969676",
+  appId: "1:937866969676:web:f23e53eda3e5a55b57eae9"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
+
+let isSyncing = false;
+let currentUser = null;
+
+async function saveData() {
+  if (isSyncing || !currentUser) return;
+  try {
+    await db.ref('students').set(students);
+    await db.ref('templates').set(templates);
+    localStorage.setItem('kg2a_students', JSON.stringify(students));
+    localStorage.setItem('kg2a_templates', JSON.stringify(templates));
+  } catch(err) {
+    console.error('Firebase save error:', err);
+  }
+}
+
+async function loadData() {
+  if (!currentUser) return;
+  isSyncing = true;
+  try {
+    const [studentsSnap, templatesSnap] = await Promise.all([
+      db.ref('students').once('value'),
+      db.ref('templates').once('value')
+    ]);
+    const studentsData = studentsSnap.val();
+    const templatesData = templatesSnap.val();
+    if (studentsData && Array.isArray(studentsData)) students = studentsData;
+    if (templatesData && Array.isArray(templatesData)) templates = templatesData;
+  } catch(err) {
+    console.error('Firebase load error:', err);
+    try {
+      const saved = localStorage.getItem('kg2a_students');
+      if (saved) students = JSON.parse(saved);
+      const savedT = localStorage.getItem('kg2a_templates');
+      if (savedT) templates = JSON.parse(savedT);
+    } catch(e){}
+  }
+  isSyncing = false;
+}
+
+// Auto-sync
+setInterval(async () => {
+  if (!isSyncing && currentUser) {
+    await loadData();
+    renderContacts();
+    renderTemplates();
+  }
+}, 60000);
+
+// ── LOGOUT ──
+async function handleLogout() {
+  if (confirm('تسجيل الخروج؟')) {
+    await auth.signOut();
+    closeDataMenu();
+    showLogin();
+  }
+}
+
+function showDataMenu() { document.getElementById('dataMenuOverlay').classList.add('open'); }
+function closeDataMenu() { document.getElementById('dataMenuOverlay').classList.remove('open'); }
+
+function exportData() {
+  const data = {students, templates, exported: new Date().toISOString()};
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'kg2a_data.json'; a.click();
+  URL.revokeObjectURL(url);
+  closeDataMenu();
+  toast('✅ تم التصدير', 'ok');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.students) students = data.students;
+      if (data.templates) templates = data.templates;
+      saveData();
+      renderContacts();
+      renderTemplates();
+      closeDataMenu();
+      toast('✅ تم الاستيراد', 'ok');
+    } catch(err) { toast('❌ ملف غير صالح', 'err'); }
+  };
+  reader.readAsText(file);
+}
+
+// ── TEMPLATES ──
+function renderTemplates() {
+  const list = document.getElementById('templatesList');
+  if (!templates.length) {
+    list.innerHTML = '<div class="empty"><div class="ei">📝</div>لا توجد قوالب محفوظة</div>';
+    return;
+  }
+  list.innerHTML = templates.map((t,i) => {
+    return `<div style="background:#f8fbff;border:2px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-size:14px;font-weight:700;color:var(--primary)">${t.name}</div>
+      <div style="display:flex;gap:6px">
+      <button class="btn btn-primary btn-sm" onclick="useTemplate(${i})">✉️ استخدام</button>
+      <button class="btn btn-outline btn-sm" onclick="editTemplate(${i})">✏️</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteTemplate(${i})">🗑️</button>
+      </div></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px"><strong>الموضوع:</strong> ${t.subject}</div>
+      </div>`;
+  }).join('');
+}
+
+function openTemplateModal() {
+  document.getElementById('templateId').value = '';
+  document.getElementById('templateName').value = '';
+  document.getElementById('templateSubject').value = '';
+  document.getElementById('templateBody').value = '';
+  document.getElementById('templateOverlay').classList.add('open');
+}
+
+function editTemplate(i) {
+  const t = templates[i];
+  document.getElementById('templateId').value = i;
+  document.getElementById('templateName').value = t.name;
+  document.getElementById('templateSubject').value = t.subject;
+  document.getElementById('templateBody').value = t.body;
+  document.getElementById('templateOverlay').classList.add('open');
+}
+
+function closeTemplateModal() { document.getElementById('templateOverlay').classList.remove('open'); }
+
+function saveTemplate() {
+  const idx = document.getElementById('templateId').value;
+  const name = document.getElementById('templateName').value.trim();
+  const subject = document.getElementById('templateSubject').value.trim();
+  const body = document.getElementById('templateBody').value.trim();
+  if (!name || !subject || !body) { toast('املأي جميع الحقول', 'err'); return; }
+  if (idx !== '') templates[parseInt(idx)] = {name, subject, body};
+  else templates.push({name, subject, body});
+  saveData(); closeTemplateModal(); renderTemplates();
+}
+
+function deleteTemplate(i) {
+  if (!confirm('حذف هذا القالب؟')) return;
+  templates.splice(i, 1);
+  saveData(); renderTemplates(); toast('🗑️ تم الحذف', 'ok');
+}
+
+function useTemplate(i) {
+  currentTemplate = templates[i];
+  switchTab('email');
+  selectAll();
+  document.getElementById('personalizedSendBtn').style.display = 'flex';
+  toast('✅ اختاري الطلاب ثم اضغطي "إرسال إيميلات مخصصة"', 'ok');
+}
+
+function sendPersonalizedEmails() {
+  const sel = students.filter(s => selectedIds.has(s.id));
+  if (!sel.length || !currentTemplate) return;
+  const target = document.getElementById('emailTarget').value;
+  personalizedList = sel.map(s => {
+    const emails = [];
+    if ((target==='father'||target==='both') && s.father) emails.push(s.father);
+    if ((target==='mother'||target==='both') && s.mother && s.mother!==s.father) emails.push(s.mother);
+    return {
+      student: s,
+      emails: emails,
+      subject: replacePlaceholders(currentTemplate.subject, s),
+      body: replacePlaceholders(currentTemplate.body, s)
+    };
+  }).filter(x => x.emails.length > 0);
+  renderPersonalizedList();
+  document.getElementById('personalizedOverlay').classList.add('open');
+}
+
+function renderPersonalizedList() {
+  document.getElementById("personalizedCount").textContent = personalizedList.length + " طالب";
+  const list = document.getElementById('personalizedList');
+  list.innerHTML = personalizedList.map((item, idx) => `
+    <div style="background:white;border:2px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+      <div style="flex:1">
+      <div style="font-size:13px;font-weight:700">${item.student.name}</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="sendSinglePersonalized(${idx})">📧 إرسال</button>
+      </div>
+    </div>`).join('');
+}
+
+function sendSinglePersonalized(idx) {
+  const item = personalizedList[idx];
+  openGmailCompose(item.emails, item.subject, item.body, 'to');
+}
+
+function closePersonalizedModal() {
+  document.getElementById('personalizedOverlay').classList.remove('open');
+  document.getElementById('personalizedSendBtn').style.display = 'none';
+}
+
+function replacePlaceholders(text, student) {
+  return text.replace(/\[اسم الطالب\]/g, student.name).replace(/\[رقم الطالب\]/g, student.id).replace(/STUDENT_NAME/g, student.name).replace(/STUDENT_ID/g, student.id);
+}
+
+// ── AUTH ──
+function showLogin() { document.getElementById('loginScreen').style.display = 'flex'; }
+function hideLogin() { document.getElementById('loginScreen').style.display = 'none'; }
+
+async function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if (!email || !password) return;
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+    hideLogin();
+  } catch(err) {
+    document.getElementById('loginError').textContent = "خطأ في تسجيل الدخول";
+    document.getElementById('loginError').style.display = "block";
+  }
+}
+
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    currentUser = user;
+    hideLogin();
+    await init();
+  } else {
+    showLogin();
+  }
+});
+
+async function init() {
+  document.body.style.opacity = '0.5';
+  await loadData();
+  renderContacts();
+  renderTemplates();
+  document.body.style.opacity = '1';
+}
+
+</script>
+
+<div id="loginScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1a4f7a,#0d3057);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px">
+  <div style="background:white;border-radius:20px;padding:32px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="width:64px;height:64px;background:var(--accent);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px">🎒</div>
+      <h1 style="font-size:20px;font-weight:900;color:var(--primary)">نظام KG2-A</h1>
+    </div>
+    <div class="fg">
+      <label>📧 البريد الإلكتروني</label>
+      <input type="email" id="loginEmail" placeholder="teacher@cityschool.ae" style="direction:ltr;text-align:left">
+    </div>
+    <div class="fg">
+      <label>🔒 كلمة المرور</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" style="direction:ltr;text-align:left">
+    </div>
+    <div id="loginError" style="display:none;color:red;font-size:12px;margin-bottom:10px"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleLogin()">🚀 تسجيل الدخول</button>
+  </div>
+</div>
+
+</body>
+</html>
