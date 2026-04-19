@@ -452,31 +452,31 @@ let templates = [];
 let currentTemplate = null;
 let personalizedList = [];
 let students = [
-  {id:11353,name:"ROVAN SALAH HUSSEIN MOHAMED",father:"misodahab21@gmail.com",mother:"misodahab21@gmail.com",email:"11353@student.cityschool.ae"},
-  {id:11239,name:"SHEHAB ELHELFAWY",father:"ihab.elehelfawy@flydubai.com",mother:"ihab.elehelfawy@flydubai.com",email:"11239@student.cityschool.ae"},
-  {id:11013,name:"LTEN MUAMMAR ABDULLAH AL AMRI",father:"mralomari@hotmail.com",mother:"mralomari@hotmail.com",email:"11013@student.cityschool.ae"},
   {id:11009,name:"EYAD KHALAF ABDELFATAH TAHA MOHAMED",father:"kh8522@yahoo.com",mother:"kh8522@yahoo.com",email:"11009@student.cityschool.ae"},
-  {id:11100,name:"ALI MOHAMED ABDULALEEM ABDULKAREEM MOHAMED",father:"rub.aleem11@gmail.com",mother:null,email:"11100@student.cityschool.ae"},
-  {id:11019,name:"MARYAM MAHMOUD SULEIMAN ABED ALJAWAD",father:"abujawad1985@yahoo.com",mother:null,email:"11019@student.cityschool.ae"},
+  {id:11013,name:"LTEN MUAMMAR ABDULLAH AL AMRI",father:"mralomari@hotmail.com",mother:"mralomari@hotmail.com",email:"11013@student.cityschool.ae"},
   {id:11018,name:"NEZAR FARES HASSAN MOHAMMAD AZZAN",father:"faresbinazzan@yahoo.com",mother:null,email:"11018@student.cityschool.ae"},
-  {id:11432,name:"TAIM I S MANSOUR",father:"kholud.m1988@hotmail.com",mother:null,email:"11432@student.cityschool.ae"},
-  {id:11031,name:"MOSAAB AHMED ELHAJ ABAS",father:"yasminabdmoti1987@gmail.com",mother:"lawmusab@yahoo.com",email:"11031@student.cityschool.ae"},
-  {id:12816,name:"TALEEN MOHAMMAD AL MELHEM",father:"almelhem.55@gmail.com",mother:"totahariri96@gmail.com",email:"12816@student.cityschool.ae"},
+  {id:11019,name:"MARYAM MAHMOUD SULEIMAN ABED ALJAWAD",father:"abujawad1985@yahoo.com",mother:null,email:"11019@student.cityschool.ae"},
   {id:11023,name:"ZAIN NEHAD SALAHALDEEN ABU DAGAR",father:"Nehad.n11@icloud.com",mother:"Nehad.n11@icloud.com",email:"11023@student.cityschool.ae"},
+  {id:11031,name:"MOSAAB AHMED ELHAJ ABAS",father:"yasminabdmoti1987@gmail.com",mother:"lawmusab@yahoo.com",email:"11031@student.cityschool.ae"},
   {id:11042,name:"GHAITH EZALDEEN MUSTAFA IBRAHIM",father:"ez.mustafa@hotmail.com",mother:"wiam09102@gmail.com",email:"11042@student.cityschool.ae"},
   {id:11064,name:"JULIA ADNAN OBAID",father:"adnan12obaid@gmail.com",mother:"adnan12obaid@gmail.com",email:"11064@student.cityschool.ae"},
   {id:11065,name:"MOHAMAD OSAMA HAYKAL",father:"naroma_1986@hotmail.com",mother:"omh_2000@hotmail.com",email:"11065@student.cityschool.ae"},
+  {id:11100,name:"ALI MOHAMED ABDULALEEM ABDULKAREEM MOHAMED",father:"rub.aleem11@gmail.com",mother:null,email:"11100@student.cityschool.ae"},
   {id:11183,name:"SELEEM MOHAMED SAMY AWAD MOHAMED RAMADA",father:"samo.ramada777@gmail.com",mother:"fatmagmagdy333@gmail.com",email:"11183@student.cityschool.ae"},
+  {id:11239,name:"SHEHAB ELHELFAWY",father:"ihab.elehelfawy@flydubai.com",mother:"ihab.elehelfawy@flydubai.com",email:"11239@student.cityschool.ae"},
   {id:11264,name:"ASEEL AHMED MOHAMED RAMADAN IBRAHIM",father:"ahmedalbrens2001@yahoo.com",mother:"ahmedalbrens2001@yahoo.com",email:"11264@student.cityschool.ae"},
+  {id:11353,name:"ROVAN SALAH HUSSEIN MOHAMED",father:"misodahab21@gmail.com",mother:"misodahab21@gmail.com",email:"11353@student.cityschool.ae"},
+  {id:11432,name:"TAIM I S MANSOUR",father:"kholud.m1988@hotmail.com",mother:null,email:"11432@student.cityschool.ae"},
   {id:11608,name:"RASHED AHMAD ZEYAD NAWAFLEH",father:"ahmednawafleh1992@yahoo.com",mother:null,email:"11608@student.cityschool.ae"},
-  {id:11660,name:"FARAH ABDALLA",father:"abdallazain65@gmail.com",mother:"abdallazain65@gmail.com",email:"11660@student.cityschool.ae"},
+  {id:11660,name:"FARAH ABDALLA MOHAMED ESSAMELDIN ABDELMOATY ZAIN",father:"abdallazain65@gmail.com",mother:"abdallazain65@gmail.com",email:"11660@student.cityschool.ae"},
   {id:11809,name:"ALIA HUTHEIFA SAMI ALTALAFHA",father:"rsh-ramadan@hotmail.com",mother:null,email:"11809@student.cityschool.ae"},
   {id:12002,name:"LUJAIN MAHIR ABAKER ISHAG",father:"mahir.abaker.90@gmail.com",mother:"mahir.abaker.90@gmail.com",email:"12002@student.cityschool.ae"},
   {id:12174,name:"JINAN OSMAN HASSAN SIDDIG",father:"mohjaadil94@gmail.com",mother:null,email:"12174@student.cityschool.ae"},
   {id:12175,name:"JOWAN OSMAN HASSAN SIDDIG",father:"mohjaadil94@gmail.com",mother:null,email:"12175@student.cityschool.ae"},
-  {id:12937,name:"MIRACLE PIERRE MOUNIR NAZIR AYOUB",father:"pierre.mounir@outlook.com",mother:"eva.pierre13@gmail.com",email:"12937@student.cityschool.ae"},
   {id:12524,name:"RAKAN MOHAMMED KHADHER MOHAMMED SALEH",father:"Borakan10001@gmail.com",mother:null,email:"12524@student.cityschool.ae"},
-  {id:12811,name:"NAYA ADNAN ALKAYAT",father:"adn86kh@gmail.com",mother:"moon.sy2013@gmail.com",email:"12811@student.cityschool.ae"}
+  {id:12811,name:"NAYA ADNAN ALKAYAT",father:"adn86kh@gmail.com",mother:"moon.sy2013@gmail.com",email:"12811@student.cityschool.ae"},
+  {id:12816,name:"TALEEN MOHAMMAD AL MELHEM",father:"almelhem.55@gmail.com",mother:"totahariri96@gmail.com",email:"12816@student.cityschool.ae"},
+  {id:12937,name:"MIRACLE PIERRE MOUNIR NAZIR AYOUB",father:"pierre.mounir@outlook.com",mother:"eva.pierre13@gmail.com",email:"12937@student.cityschool.ae"}
 ];
 
 const avColors = ['av0','av1','av2','av3','av4','av5'];
