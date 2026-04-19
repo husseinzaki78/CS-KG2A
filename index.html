@@ -1006,18 +1006,34 @@ function useTemplate(i) {
 function sendPersonalizedEmails() {
   const sel = students.filter(s => selectedIds.has(s.id));
   if (!sel.length || !currentTemplate) return;
+  
+  console.log('🎯 Building personalized emails for', sel.length, 'students');
+  console.log('Template subject:', currentTemplate.subject);
+  console.log('Template body:', currentTemplate.body.substring(0, 100) + '...');
+  
   const target = document.getElementById('emailTarget').value;
   personalizedList = sel.map(s => {
     const emails = [];
     if ((target==='father'||target==='both') && s.father) emails.push(s.father);
     if ((target==='mother'||target==='both') && s.mother && s.mother!==s.father) emails.push(s.mother);
+    
+    const replacedSubject = replacePlaceholders(currentTemplate.subject, s);
+    const replacedBody = replacePlaceholders(currentTemplate.body, s);
+    
+    console.log('Student:', s.name);
+    console.log('  Subject:', replacedSubject);
+    console.log('  Body preview:', replacedBody.substring(0, 50) + '...');
+    
     return {
       student: s,
       emails: emails,
-      subject: replacePlaceholders(currentTemplate.subject, s),
-      body: replacePlaceholders(currentTemplate.body, s)
+      subject: replacedSubject,
+      body: replacedBody
     };
   }).filter(x => x.emails.length > 0);
+  
+  console.log('✅ Created', personalizedList.length, 'personalized emails');
+  
   renderPersonalizedList();
   document.getElementById('personalizedOverlay').classList.add('open');
 }
@@ -1027,18 +1043,35 @@ function renderPersonalizedList() {
   const list = document.getElementById('personalizedList');
   list.innerHTML = personalizedList.map((item, idx) => `
     <div style="background:white;border:2px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:10px">
-      <div style="flex:1">
-      <div style="font-size:13px;font-weight:700">${item.student.name}</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700">${item.student.name}</div>
+          <div style="font-size:11px;color:var(--muted);direction:ltr;text-align:left">${item.emails.join(', ')}</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="previewPersonalized(${idx})">👁️ معاينة</button>
+        <button class="btn btn-primary btn-sm" onclick="sendSinglePersonalized(${idx})">📧 إرسال</button>
       </div>
-      <button class="btn btn-primary btn-sm" onclick="sendSinglePersonalized(${idx})">📧 إرسال</button>
+      <div id="preview${idx}" style="display:none;background:#f8fbff;border-radius:8px;padding:10px;margin-top:8px;font-size:11px">
+        <div style="margin-bottom:6px"><strong>الموضوع:</strong> ${item.subject}</div>
+        <div><strong>الرسالة:</strong></div>
+        <div style="white-space:pre-wrap;margin-top:4px;color:var(--muted)">${item.body}</div>
       </div>
     </div>`).join('');
+}
+
+function previewPersonalized(idx) {
+  const preview = document.getElementById('preview' + idx);
+  const isVisible = preview.style.display !== 'none';
+  preview.style.display = isVisible ? 'none' : 'block';
 }
 
 function sendSinglePersonalized(idx) {
   console.log('📤 Sending personalized email #' + idx);
   const item = personalizedList[idx];
+  
+  console.log('Student:', item.student.name);
+  console.log('Subject AFTER replacement:', item.subject);
+  console.log('Body AFTER replacement:', item.body);
   
   // Get CC emails if any
   const ccInput = document.getElementById('ccEmails');
@@ -1047,6 +1080,7 @@ function sendSinglePersonalized(idx) {
   console.log('📧 Email details:', {
     student: item.emails,
     subject: item.subject,
+    body: item.body.substring(0, 100) + '...',
     hasCC: !!ccEmails
   });
   
