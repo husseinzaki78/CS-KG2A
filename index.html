@@ -623,37 +623,67 @@ function sendEmail() {
 }
 
 function openGmailCompose(emails, subject, body, sendType = 'to', ccEmails = '') {
-  // Build Gmail URL - works on desktop and mobile
-  let gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1';
-  
-  if (sendType === 'bcc') {
-    // BCC mode - put all parent emails in BCC field
-    gmailUrl += '&bcc=' + encodeURIComponent(emails.join(','));
-  } else {
-    // Normal TO mode
-    gmailUrl += '&to=' + encodeURIComponent(emails.join(','));
-  }
-  
-  // Add CC if provided
-  if (ccEmails) {
-    gmailUrl += '&cc=' + encodeURIComponent(ccEmails);
-  }
-  
-  gmailUrl += '&su=' + encodeURIComponent(subject);
-  gmailUrl += '&body=' + encodeURIComponent(body);
-  
   console.log('📧 Opening Gmail:', {sendType, emailCount: emails.length, hasCC: !!ccEmails});
   
-  // Try to open in new window - works better on laptop
-  const newWin = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+  // Detect if mobile
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   
-  // Fallback if popup blocked
-  if (!newWin || newWin.closed || typeof newWin.closed == 'undefined') {
-    console.log('⚠️ Popup blocked, using direct navigation');
-    window.location.href = gmailUrl;
+  if (isMobile) {
+    // On mobile: use mailto - opens Gmail app directly
+    let mailtoUrl = 'mailto:';
+    
+    if (sendType === 'bcc') {
+      // BCC mode
+      mailtoUrl += '?bcc=' + encodeURIComponent(emails.join(','));
+    } else {
+      // Normal TO mode
+      mailtoUrl += emails.join(',');
+    }
+    
+    // Add CC if provided
+    if (ccEmails) {
+      mailtoUrl += (sendType === 'bcc' ? '&' : '?') + 'cc=' + encodeURIComponent(ccEmails);
+    }
+    
+    // Add subject and body
+    const hasParams = mailtoUrl.includes('?');
+    mailtoUrl += (hasParams ? '&' : '?') + 'subject=' + encodeURIComponent(subject);
+    mailtoUrl += '&body=' + encodeURIComponent(body);
+    
+    console.log('📱 Mobile detected - using mailto:', mailtoUrl);
+    window.location.href = mailtoUrl;
+    toast('✅ جاري فتح Gmail...', 'ok');
+    
+  } else {
+    // On desktop/laptop: use Gmail URL
+    let gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1';
+    
+    if (sendType === 'bcc') {
+      gmailUrl += '&bcc=' + encodeURIComponent(emails.join(','));
+    } else {
+      gmailUrl += '&to=' + encodeURIComponent(emails.join(','));
+    }
+    
+    if (ccEmails) {
+      gmailUrl += '&cc=' + encodeURIComponent(ccEmails);
+    }
+    
+    gmailUrl += '&su=' + encodeURIComponent(subject);
+    gmailUrl += '&body=' + encodeURIComponent(body);
+    
+    console.log('💻 Desktop detected - using Gmail URL:', gmailUrl);
+    
+    // Try to open in new window
+    const newWin = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+    
+    // Fallback if popup blocked
+    if (!newWin || newWin.closed || typeof newWin.closed == 'undefined') {
+      console.log('⚠️ Popup blocked, using direct navigation');
+      window.location.href = gmailUrl;
+    }
+    
+    toast('✅ جاري فتح Gmail...', 'ok');
   }
-  
-  toast('✅ جاري فتح Gmail...', 'ok');
 }
 
 function openSendModal(emails, subject, body, sendType = 'to', ccEmails = '') {
