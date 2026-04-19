@@ -263,6 +263,12 @@ header p { font-size: 12px; opacity: 0.75; }
       </select>
     </div>
 
+    <div class="fg">
+      <label>📧 CC - نسخة إضافية للمدير/المشرف (اختياري)</label>
+      <input type="text" id="ccEmails" placeholder="supervisor@cityschool.ae, manager@cityschool.ae" style="direction:ltr;text-align:left">
+      <small style="font-size:11px;color:var(--muted);display:block;margin-top:4px">افصلي بين الإيميلات بفاصلة (,)</small>
+    </div>
+
     <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="sendEmail()">
       🚀 إرسال عبر Gmail
     </button>
@@ -354,10 +360,7 @@ header p { font-size: 12px; opacity: 0.75; }
     <div class="modal-head">
       <div>
         <h2 id="templateTitle">📝 قالب جديد</h2>
-        <p style="font-size:11px;line-height:1.6">
-  <strong>الاسم:</strong> STUDENT_FIRST_NAME (الأول فقط) | STUDENT_FIRST_TWO_NAMES (أول اسمين) | STUDENT_FULL_NAME (كامل)<br>
-  <strong>الرقم:</strong> STUDENT_ID | <em>كل الأسماء: حرف أول كبير Capital</em>
-</p>
+        <p>استخدمي: [اسم الطالب] أو STUDENT_NAME للاسم، [رقم الطالب] أو STUDENT_ID للرقم</p>
       </div>
       <button class="close-btn" onclick="closeTemplateModal()">✕</button>
     </div>
@@ -410,7 +413,7 @@ header p { font-size: 12px; opacity: 0.75; }
     <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
 
       <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📧 المرسل إليهم (<span id="sendTypeLabel">To</span>)</div>
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📧 المرسل إليهم</div>
         <div id="sendEmails" style="font-size:12px;color:var(--text);direction:ltr;text-align:left;word-break:break-all"></div>
       </div>
 
@@ -608,17 +611,52 @@ function sendEmail() {
   const body = document.getElementById('composeBody').value;
   if (!subject) { toast('اكتبي الموضوع أولاً', 'err'); return; }
 
+  const sendType = document.getElementById('emailSendType').value;
+  const ccInput = document.getElementById('ccEmails');
+  const ccEmails = ccInput ? ccInput.value.trim() : '';
+
   if (attachments.length > 0) {
-    openSendModal(emails, subject, body);
+    openSendModal(emails, subject, body, sendType, ccEmails);
   } else {
-    const mailto = 'mailto:' + emails.join(',')
-      + '?subject=' + encodeURIComponent(subject)
-      + '&body=' + encodeURIComponent(body);
-    window.location.href = mailto;
+    openGmailCompose(emails, subject, body, sendType, ccEmails);
   }
 }
 
-function openSendModal(emails, subject, body) {
+function openGmailCompose(emails, subject, body, sendType = 'to', ccEmails = '') {
+  // Build Gmail URL - works on desktop and mobile
+  let gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1';
+  
+  if (sendType === 'bcc') {
+    // BCC mode - put all parent emails in BCC field
+    gmailUrl += '&bcc=' + encodeURIComponent(emails.join(','));
+  } else {
+    // Normal TO mode
+    gmailUrl += '&to=' + encodeURIComponent(emails.join(','));
+  }
+  
+  // Add CC if provided
+  if (ccEmails) {
+    gmailUrl += '&cc=' + encodeURIComponent(ccEmails);
+  }
+  
+  gmailUrl += '&su=' + encodeURIComponent(subject);
+  gmailUrl += '&body=' + encodeURIComponent(body);
+  
+  console.log('📧 Opening Gmail:', {sendType, emailCount: emails.length, hasCC: !!ccEmails});
+  
+  // Try to open in new window - works better on laptop
+  const newWin = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+  
+  // Fallback if popup blocked
+  if (!newWin || newWin.closed || typeof newWin.closed == 'undefined') {
+    console.log('⚠️ Popup blocked, using direct navigation');
+    window.location.href = gmailUrl;
+  }
+  
+  toast('✅ جاري فتح Gmail...', 'ok');
+}
+
+function openSendModal(emails, subject, body, sendType = 'to', ccEmails = '') {
   document.getElementById('sendEmails').textContent = emails.join('، ');
   document.getElementById('sendSubject').textContent = subject || '—';
   document.getElementById('sendBody').textContent = body || '—';
@@ -629,19 +667,16 @@ function openSendModal(emails, subject, body) {
       <span>📄</span><span style="flex:1;direction:ltr;text-align:left">${a.name}</span><span style="color:var(--muted);font-size:11px">${a.size}</span>
     </div>`).join('');
   document.getElementById('sendOverlay').classList.add('open');
-  document.getElementById('sendOverlay')._mailto = 'mailto:' + emails.join(',')
-    + '?subject=' + encodeURIComponent(subject)
-    + '&body=' + encodeURIComponent(body);
+  document.getElementById('sendOverlay')._sendType = sendType;
+  document.getElementById('sendOverlay')._ccEmails = ccEmails;
+  document.getElementById('sendOverlay')._emails = emails;
+  document.getElementById('sendOverlay')._subject = subject;
+  document.getElementById('sendOverlay')._body = body;
 }
 
 function confirmSend() {
   const overlay = document.getElementById('sendOverlay');
-  const sendType = document.getElementById('emailSendType').value;
-  const emails = document.getElementById('rcptBox')._emails || [];
-  const subject = document.getElementById('composeSubject').value;
-  const body = document.getElementById('composeBody').value;
-  
-  openGmailCompose(emails, subject, body, sendType);
+  openGmailCompose(overlay._emails, overlay._subject, overlay._body, overlay._sendType, overlay._ccEmails);
   overlay.classList.remove('open');
 }
 
@@ -972,8 +1007,20 @@ function renderPersonalizedList() {
 }
 
 function sendSinglePersonalized(idx) {
+  console.log('📤 Sending personalized email #' + idx);
   const item = personalizedList[idx];
-  openGmailCompose(item.emails, item.subject, item.body, 'to');
+  
+  // Get CC emails if any
+  const ccInput = document.getElementById('ccEmails');
+  const ccEmails = ccInput ? ccInput.value.trim() : '';
+  
+  console.log('📧 Email details:', {
+    student: item.emails,
+    subject: item.subject,
+    hasCC: !!ccEmails
+  });
+  
+  openGmailCompose(item.emails, item.subject, item.body, 'to', ccEmails);
 }
 
 function closePersonalizedModal() {
@@ -981,8 +1028,35 @@ function closePersonalizedModal() {
   document.getElementById('personalizedSendBtn').style.display = 'none';
 }
 
+// ── NAME FORMATTING ──
+function toTitleCase(str) {
+  return str.toLowerCase().split(' ').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+}
+
+function getFirstName(fullName) {
+  return toTitleCase(fullName.split(' ')[0] || fullName);
+}
+
+function getFirstTwoNames(fullName) {
+  const parts = fullName.split(' ');
+  return toTitleCase((parts.slice(0, 2).join(' ') || fullName));
+}
+
+function getFullName(fullName) {
+  return toTitleCase(fullName);
+}
+
 function replacePlaceholders(text, student) {
-  return text.replace(/\[اسم الطالب\]/g, student.name).replace(/\[رقم الطالب\]/g, student.id).replace(/STUDENT_NAME/g, student.name).replace(/STUDENT_ID/g, student.id);
+  return text
+    .replace(/\[اسم الطالب\]/g, getFullName(student.name))
+    .replace(/\[رقم الطالب\]/g, student.id)
+    .replace(/STUDENT_NAME/g, getFullName(student.name))
+    .replace(/STUDENT_FIRST_NAME/g, getFirstName(student.name))
+    .replace(/STUDENT_FIRST_TWO_NAMES/g, getFirstTwoNames(student.name))
+    .replace(/STUDENT_FULL_NAME/g, getFullName(student.name))
+    .replace(/STUDENT_ID/g, student.id);
 }
 
 // ── AUTH ──
