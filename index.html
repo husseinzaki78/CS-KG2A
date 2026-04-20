@@ -452,31 +452,31 @@ let templates = [];
 let currentTemplate = null;
 let personalizedList = [];
 let students = [
-  {id:11009,name:"EYAD KHALAF ABDELFATAH TAHA MOHAMED",father:"kh8522@yahoo.com",mother:"kh8522@yahoo.com",email:"11009@student.cityschool.ae"},
-  {id:11013,name:"LTEN MUAMMAR ABDULLAH AL AMRI",father:"mralomari@hotmail.com",mother:"mralomari@hotmail.com",email:"11013@student.cityschool.ae"},
-  {id:11018,name:"NEZAR FARES HASSAN MOHAMMAD AZZAN",father:"faresbinazzan@yahoo.com",mother:null,email:"11018@student.cityschool.ae"},
-  {id:11019,name:"MARYAM MAHMOUD SULEIMAN ABED ALJAWAD",father:"abujawad1985@yahoo.com",mother:null,email:"11019@student.cityschool.ae"},
-  {id:11023,name:"ZAIN NEHAD SALAHALDEEN ABU DAGAR",father:"Nehad.n11@icloud.com",mother:"Nehad.n11@icloud.com",email:"11023@student.cityschool.ae"},
-  {id:11031,name:"MOSAAB AHMED ELHAJ ABAS",father:"yasminabdmoti1987@gmail.com",mother:"lawmusab@yahoo.com",email:"11031@student.cityschool.ae"},
-  {id:11042,name:"GHAITH EZALDEEN MUSTAFA IBRAHIM",father:"ez.mustafa@hotmail.com",mother:"wiam09102@gmail.com",email:"11042@student.cityschool.ae"},
-  {id:11064,name:"JULIA ADNAN OBAID",father:"adnan12obaid@gmail.com",mother:"adnan12obaid@gmail.com",email:"11064@student.cityschool.ae"},
-  {id:11065,name:"MOHAMAD OSAMA HAYKAL",father:"naroma_1986@hotmail.com",mother:"omh_2000@hotmail.com",email:"11065@student.cityschool.ae"},
-  {id:11100,name:"ALI MOHAMED ABDULALEEM ABDULKAREEM MOHAMED",father:"rub.aleem11@gmail.com",mother:null,email:"11100@student.cityschool.ae"},
-  {id:11183,name:"SELEEM MOHAMED SAMY AWAD MOHAMED RAMADA",father:"samo.ramada777@gmail.com",mother:"fatmagmagdy333@gmail.com",email:"11183@student.cityschool.ae"},
-  {id:11239,name:"SHEHAB ELHELFAWY",father:"ihab.elehelfawy@flydubai.com",mother:"ihab.elehelfawy@flydubai.com",email:"11239@student.cityschool.ae"},
-  {id:11264,name:"ASEEL AHMED MOHAMED RAMADAN IBRAHIM",father:"ahmedalbrens2001@yahoo.com",mother:"ahmedalbrens2001@yahoo.com",email:"11264@student.cityschool.ae"},
-  {id:11353,name:"ROVAN SALAH HUSSEIN MOHAMED",father:"misodahab21@gmail.com",mother:"misodahab21@gmail.com",email:"11353@student.cityschool.ae"},
-  {id:11432,name:"TAIM I S MANSOUR",father:"kholud.m1988@hotmail.com",mother:null,email:"11432@student.cityschool.ae"},
-  {id:11608,name:"RASHED AHMAD ZEYAD NAWAFLEH",father:"ahmednawafleh1992@yahoo.com",mother:null,email:"11608@student.cityschool.ae"},
-  {id:11660,name:"FARAH ABDALLA MOHAMED ESSAMELDIN ABDELMOATY ZAIN",father:"abdallazain65@gmail.com",mother:"abdallazain65@gmail.com",email:"11660@student.cityschool.ae"},
-  {id:11809,name:"ALIA HUTHEIFA SAMI ALTALAFHA",father:"rsh-ramadan@hotmail.com",mother:null,email:"11809@student.cityschool.ae"},
-  {id:12002,name:"LUJAIN MAHIR ABAKER ISHAG",father:"mahir.abaker.90@gmail.com",mother:"mahir.abaker.90@gmail.com",email:"12002@student.cityschool.ae"},
-  {id:12174,name:"JINAN OSMAN HASSAN SIDDIG",father:"mohjaadil94@gmail.com",mother:null,email:"12174@student.cityschool.ae"},
-  {id:12175,name:"JOWAN OSMAN HASSAN SIDDIG",father:"mohjaadil94@gmail.com",mother:null,email:"12175@student.cityschool.ae"},
-  {id:12524,name:"RAKAN MOHAMMED KHADHER MOHAMMED SALEH",father:"Borakan10001@gmail.com",mother:null,email:"12524@student.cityschool.ae"},
-  {id:12811,name:"NAYA ADNAN ALKAYAT",father:"adn86kh@gmail.com",mother:"moon.sy2013@gmail.com",email:"12811@student.cityschool.ae"},
-  {id:12816,name:"TALEEN MOHAMMAD AL MELHEM",father:"almelhem.55@gmail.com",mother:"totahariri96@gmail.com",email:"12816@student.cityschool.ae"},
-  {id:12937,name:"MIRACLE PIERRE MOUNIR NAZIR AYOUB",father:"pierre.mounir@outlook.com",mother:"eva.pierre13@gmail.com",email:"12937@student.cityschool.ae"}
+  {id:11009,name:"EYAD KHALAF ABDELFATAH TAHA MOHAMED",gender:"Male",nationality:"Egyptian",religion:"Muslim",father:"kh8522@yahoo.com",mother:"kh8522@yahoo.com",fatherMobile:"556226112",motherMobile:"558933869",email:"11009@student.cityschool.ae"},
+  {id:11013,name:"LTEN MUAMMAR ABDULLAH AL AMRI",gender:"Female",nationality:"Yemeni",religion:"Muslim",father:"mralomari@hotmail.com",mother:"mralomari@hotmail.com",fatherMobile:"558477719",motherMobile:"566277768",email:"11013@student.cityschool.ae"},
+  {id:11018,name:"NEZAR FARES HASSAN MOHAMMAD AZZAN",gender:"Male",nationality:"Yemeni",religion:"Muslim",father:"faresbinazzan@yahoo.com",mother:null,fatherMobile:"564604490",motherMobile:"504317355",email:"11018@student.cityschool.ae"},
+  {id:11019,name:"MARYAM MAHMOUD SULEIMAN ABED ALJAWAD",gender:"Female",nationality:"Jordanian",religion:"Muslim",father:"abujawad1985@yahoo.com",mother:null,fatherMobile:"554081600",motherMobile:null,email:"11019@student.cityschool.ae"},
+  {id:11023,name:"ZAIN NEHAD SALAHALDEEN ABU DAGAR",gender:"Male",nationality:"Jordanian",religion:"Muslim",father:"Nehad.n11@icloud.com",mother:"Nehad.n11@icloud.com",fatherMobile:"588973880",motherMobile:"553571448",email:"11023@student.cityschool.ae"},
+  {id:11031,name:"MOSAAB AHMED ELHAJ ABAS",gender:"Male",nationality:"Sudanese",religion:"Muslim",father:"yasminabdmoti1987@gmail.com",mother:"lawmusab@yahoo.com",fatherMobile:"529032385",motherMobile:"526839597",email:"11031@student.cityschool.ae"},
+  {id:11042,name:"GHAITH EZALDEEN MUSTAFA IBRAHIM",gender:"Male",nationality:"Sudanese",religion:"Muslim",father:"ez.mustafa@hotmail.com",mother:"wiam09102@gmail.com",fatherMobile:"501536962",motherMobile:"505480575",email:"11042@student.cityschool.ae"},
+  {id:11064,name:"JULIA ADNAN OBAID",gender:"Female",nationality:"Syrian",religion:"Muslim",father:"adnan12obaid@gmail.com",mother:"adnan12obaid@gmail.com",fatherMobile:"503159837",motherMobile:"503159837",email:"11064@student.cityschool.ae"},
+  {id:11065,name:"MOHAMAD OSAMA HAYKAL",gender:"Male",nationality:"Syrian",religion:"Muslim",father:"naroma_1986@hotmail.com",mother:"omh_2000@hotmail.com",fatherMobile:"551063165",motherMobile:"551063162",email:"11065@student.cityschool.ae"},
+  {id:11100,name:"ALI MOHAMED ABDULALEEM ABDULKAREEM MOHAMED",gender:"Male",nationality:"Egyptian",religion:"Muslim",father:"rub.aleem11@gmail.com",mother:null,fatherMobile:"561560318",motherMobile:"507610196",email:"11100@student.cityschool.ae"},
+  {id:11183,name:"SELEEM MOHAMED SAMY AWAD MOHAMED RAMADA",gender:"Male",nationality:"Egyptian",religion:"Muslim",father:"samo.ramada777@gmail.com",mother:"fatmagmagdy333@gmail.com",fatherMobile:"564392123",motherMobile:"554800660",email:"11183@student.cityschool.ae"},
+  {id:11239,name:"SHEHAB ELHELFAWY",gender:"Male",nationality:"Egyptian",religion:"Muslim",father:"ihab.elehelfawy@flydubai.com",mother:"ihab.elehelfawy@flydubai.com",fatherMobile:"552876762",motherMobile:"507875760",email:"11239@student.cityschool.ae"},
+  {id:11264,name:"ASEEL AHMED MOHAMED RAMADAN IBRAHIM",gender:"Female",nationality:"Egyptian",religion:"Muslim",father:"ahmedalbrens2001@yahoo.com",mother:"ahmedalbrens2001@yahoo.com",fatherMobile:"566866893",motherMobile:"569016017",email:"11264@student.cityschool.ae"},
+  {id:11353,name:"ROVAN SALAH HUSSEIN MOHAMED",gender:"Female",nationality:"Sudanese",religion:"Muslim",father:"misodahab21@gmail.com",mother:"misodahab21@gmail.com",fatherMobile:"505392926",motherMobile:"505392926",email:"11353@student.cityschool.ae"},
+  {id:11432,name:"TAIM I S MANSOUR",gender:"Male",nationality:"Palestinian",religion:"Muslim",father:"kholud.m1988@hotmail.com",mother:null,fatherMobile:"529301661",motherMobile:"529301661",email:"11432@student.cityschool.ae"},
+  {id:11608,name:"RASHED AHMAD ZEYAD NAWAFLEH",gender:"Male",nationality:"Jordanian",religion:"Muslim",father:"ahmednawafleh1992@yahoo.com",mother:null,fatherMobile:"549982199",motherMobile:"549982199",email:"11608@student.cityschool.ae"},
+  {id:11660,name:"FARAH ABDALLA MOHAMED ESSAMELDIN ABDELMOATY ZAIN",gender:"Female",nationality:"Egyptian",religion:"Muslim",father:"abdallazain65@gmail.com",mother:"abdallazain65@gmail.com",fatherMobile:"555844851",motherMobile:"547374610",email:"11660@student.cityschool.ae"},
+  {id:11809,name:"ALIA HUTHEIFA SAMI ALTALAFHA",gender:"Female",nationality:"Jordanian",religion:"Muslim",father:"rsh-ramadan@hotmail.com",mother:null,fatherMobile:"509556693",motherMobile:"566618258",email:"11809@student.cityschool.ae"},
+  {id:12002,name:"LUJAIN MAHIR ABAKER ISHAG",gender:"Female",nationality:"Sudanese",religion:"Muslim",father:"mahir.abaker.90@gmail.com",mother:"mahir.abaker.90@gmail.com",fatherMobile:"524433791",motherMobile:"566467730",email:"12002@student.cityschool.ae"},
+  {id:12174,name:"JINAN OSMAN HASSAN SIDDIG",gender:"Female",nationality:"Sudanese",religion:"Muslim",father:"mohjaadil94@gmail.com",mother:null,fatherMobile:"509356304",motherMobile:null,email:"12174@student.cityschool.ae"},
+  {id:12175,name:"JOWAN OSMAN HASSAN SIDDIG",gender:"Female",nationality:"Sudanese",religion:"Muslim",father:"mohjaadil94@gmail.com",mother:null,fatherMobile:"509356304",motherMobile:null,email:"12175@student.cityschool.ae"},
+  {id:12524,name:"RAKAN MOHAMMED KHADHER MOHAMMED SALEH",gender:"Male",nationality:"Yemeni",religion:"Muslim",father:"Borakan10001@gmail.com",mother:null,fatherMobile:"501969615",motherMobile:"504329942",email:"12524@student.cityschool.ae"},
+  {id:12811,name:"NAYA ADNAN ALKAYAT",gender:"Female",nationality:"Syrian",religion:"Muslim",father:"adn86kh@gmail.com",mother:"moon.sy2013@gmail.com",fatherMobile:"563577881",motherMobile:"563577881",email:"12811@student.cityschool.ae"},
+  {id:12816,name:"TALEEN MOHAMMAD AL MELHEM",gender:"Female",nationality:"Syrian",religion:"Muslim",father:"almelhem.55@gmail.com",mother:"totahariri96@gmail.com",fatherMobile:"555565490",motherMobile:"566664880",email:"12816@student.cityschool.ae"},
+  {id:12937,name:"MIRACLE PIERRE MOUNIR NAZIR AYOUB",gender:"Female",nationality:"Egyptian",religion:"Christian",father:"pierre.mounir@outlook.com",mother:"eva.pierre13@gmail.com",fatherMobile:"544172205",motherMobile:"544219982",email:"12937@student.cityschool.ae"}
 ];
 
 const avColors = ['av0','av1','av2','av3','av4','av5'];
@@ -507,7 +507,8 @@ function renderContacts() {
   const q = document.getElementById('contactSearch').value.trim().toLowerCase();
   const filtered = students.filter(s =>
     s.name.toLowerCase().includes(q) || String(s.id).includes(q) ||
-    (s.father||'').toLowerCase().includes(q) || (s.mother||'').toLowerCase().includes(q)
+    (s.father||'').toLowerCase().includes(q) || (s.mother||'').toLowerCase().includes(q) ||
+    (s.nationality||'').toLowerCase().includes(q)
   );
   document.getElementById('contactCount').textContent = filtered.length + ' طالب';
   document.getElementById('totalBadge').textContent = students.length + ' طالب';
@@ -515,14 +516,39 @@ function renderContacts() {
   if (!filtered.length) { list.innerHTML = '<div class="empty"><div class="ei">🔍</div>لا توجد نتائج</div>'; return; }
   list.innerHTML = filtered.map((s,i) => {
     const av = avColors[students.indexOf(s) % avColors.length];
-    const fRow = s.father
-      ? `<div class="email-row"><span class="elabel">أب</span><span class="evalue">${s.father}</span></div>`
-      : `<div class="email-row"><span class="elabel">أب</span><span class="no-email">لا يوجد</span></div>`;
-    const mRow = s.mother && s.mother !== s.father
-      ? `<div class="email-row"><span class="elabel">أم</span><span class="evalue">${s.mother}</span></div>`
-      : s.mother === s.father
-      ? `<div class="email-row"><span class="elabel">أم</span><span class="no-email">نفس الأب</span></div>`
-      : `<div class="email-row"><span class="elabel">أم</span><span class="no-email">لا يوجد</span></div>`;
+    const genderIcon = s.gender === 'Male' ? '👨' : '👩';
+    
+    // Info rows with better styling
+    const infoRows = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;font-size:11px">
+        <div style="background:#f8fbff;padding:6px 8px;border-radius:6px">
+          <div style="color:var(--muted);font-size:10px;margin-bottom:2px">النوع</div>
+          <div style="font-weight:700">${genderIcon} ${s.gender === 'Male' ? 'ذكر' : 'أنثى'}</div>
+        </div>
+        <div style="background:#f8fbff;padding:6px 8px;border-radius:6px">
+          <div style="color:var(--muted);font-size:10px;margin-bottom:2px">الجنسية</div>
+          <div style="font-weight:700;font-size:10px">${s.nationality}</div>
+        </div>
+      </div>
+    `;
+    
+    // Parent contact rows with mobile AND email
+    const fatherRow = `
+      <div class="email-row" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0">
+        <div style="font-size:10px;font-weight:700;color:var(--primary)">👨 الأب</div>
+        ${s.fatherMobile ? `<a href="tel:${s.fatherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.fatherMobile}</a>` : '<span class="no-email">لا يوجد هاتف</span>'}
+        ${s.father ? `<div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.father}</div>` : '<span class="no-email">لا يوجد إيميل</span>'}
+      </div>
+    `;
+    
+    const motherRow = s.mother && s.mother !== s.father ? `
+      <div class="email-row" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0;border-top:1px solid #f0f5fa">
+        <div style="font-size:10px;font-weight:700;color:var(--primary)">👩 الأم</div>
+        ${s.motherMobile ? `<a href="tel:${s.motherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.motherMobile}</a>` : '<span class="no-email">لا يوجد هاتف</span>'}
+        <div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.mother}</div>
+      </div>
+    ` : '';
+    
     return `
     <div class="contact-card">
       <div class="card-top">
@@ -532,7 +558,8 @@ function renderContacts() {
           <div class="card-id">🪪 ${s.id}</div>
         </div>
       </div>
-      <div class="card-emails">${fRow}${mRow}</div>
+      ${infoRows}
+      <div class="card-emails">${fatherRow}${motherRow}</div>
       <div class="card-actions">
         <button class="btn btn-primary btn-sm" onclick="openEditModal(${s.id})">✏️ تعديل</button>
         <button class="btn btn-danger btn-sm" onclick="askDelete(${s.id})">🗑️ حذف</button>
