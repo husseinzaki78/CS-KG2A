@@ -178,6 +178,9 @@ header p { font-size: 12px; opacity: 0.75; }
   <div class="tab" onclick="switchTab('templates')">
     <span class="tab-icon">📝</span>القوالب
   </div>
+  <div class="tab" onclick="switchTab('stats')">
+    <span class="tab-icon">📊</span>إحصائيات
+  </div>
 </div>
 
 <div class="page active" id="page-contacts">
@@ -187,7 +190,10 @@ header p { font-size: 12px; opacity: 0.75; }
   </div>
   <div class="action-row">
     <span class="count-badge" id="contactCount">25 طالب</span>
-    <button class="btn btn-primary btn-sm" onclick="openAddModal()">➕ إضافة طالب</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-outline btn-sm" onclick="printContacts()">🖨️ طباعة</button>
+      <button class="btn btn-primary btn-sm" onclick="openAddModal()">➕ إضافة طالب</button>
+    </div>
   </div>
   <div id="contactsList"></div>
 </div>
@@ -286,6 +292,41 @@ header p { font-size: 12px; opacity: 0.75; }
       <button class="btn btn-primary btn-sm" onclick="openTemplateModal()">➕ إضافة قالب</button>
     </div>
     <div id="templatesList"></div>
+  </div>
+</div>
+
+<div class="page" id="page-stats">
+  <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:16px;font-weight:700;color:var(--primary)">📊 إحصائيات الفصل</div>
+      <span class="count-badge" id="totalBadge">25 طالب</span>
+    </div>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:16px;border-radius:12px">
+        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">إجمالي الطلاب</div>
+        <div style="font-size:24px;font-weight:700" id="statTotal">25</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;padding:16px;border-radius:12px">
+        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">أولياء الأمور</div>
+        <div style="font-size:24px;font-weight:700" id="statParents">25</div>
+      </div>
+    </div>
+    
+    <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">👥 النوع</div>
+      <div id="genderStats"></div>
+    </div>
+    
+    <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">🌍 الجنسيات</div>
+      <div id="nationalityStats"></div>
+    </div>
+    
+    <div style="background:#f8fbff;border-radius:12px;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📞 بيانات التواصل</div>
+      <div id="contactStats"></div>
+    </div>
   </div>
 </div>
 
@@ -543,10 +584,12 @@ function formatSize(bytes) {
 
 // ── TABS ──
 function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['contacts','email','templates'][i]===tab));
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['contacts','email','templates','stats'][i]===tab));
   document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id==='page-'+tab));
   if (tab==='email') renderEmailList();
   if (tab==='templates') renderTemplates();
+  if (tab==='stats') renderStats();
+  resetIdleTimer(); // Reset timer on activity
 }
 
 // ── CONTACTS TAB ──
@@ -1224,6 +1267,215 @@ function replacePlaceholders(text, student) {
     .replace(/STUDENT_FULL_NAME/g, getFullName(student.name))
     .replace(/STUDENT_ID/g, student.id);
 }
+
+// ── STATISTICS ──
+function renderStats() {
+  // Total counts
+  document.getElementById('statTotal').textContent = students.length;
+  
+  const uniqueParents = new Set();
+  students.forEach(s => {
+    if (s.father) uniqueParents.add(s.father);
+    if (s.mother && s.mother !== s.father) uniqueParents.add(s.mother);
+  });
+  document.getElementById('statParents').textContent = uniqueParents.size;
+  
+  // Gender stats
+  const genderCounts = {};
+  students.forEach(s => {
+    const g = s.gender || 'Unknown';
+    genderCounts[g] = (genderCounts[g] || 0) + 1;
+  });
+  
+  const genderHtml = Object.entries(genderCounts).map(([gender, count]) => {
+    const icon = gender === 'Male' ? '👨' : gender === 'Female' ? '👩' : '❓';
+    const label = gender === 'Male' ? 'ذكور' : gender === 'Female' ? 'إناث' : 'غير محدد';
+    const percent = ((count / students.length) * 100).toFixed(0);
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:20px">${icon}</span>
+          <span style="font-size:13px">${label}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="flex:1;height:8px;background:#e5e7eb;border-radius:4px;width:120px;overflow:hidden">
+            <div style="height:100%;background:var(--accent);width:${percent}%"></div>
+          </div>
+          <span style="font-size:13px;font-weight:700;min-width:50px;text-align:right">${count} (${percent}%)</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('genderStats').innerHTML = genderHtml;
+  
+  // Nationality stats
+  const natCounts = {};
+  students.forEach(s => {
+    const n = s.nationality || 'Unknown';
+    natCounts[n] = (natCounts[n] || 0) + 1;
+  });
+  
+  const natHtml = Object.entries(natCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([nat, count]) => {
+      const percent = ((count / students.length) * 100).toFixed(0);
+      return `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:12px">${nat}</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;height:6px;background:#e5e7eb;border-radius:3px;width:100px;overflow:hidden">
+              <div style="height:100%;background:var(--primary);width:${percent}%"></div>
+            </div>
+            <span style="font-size:12px;font-weight:700;min-width:50px;text-align:right">${count} (${percent}%)</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  document.getElementById('nationalityStats').innerHTML = natHtml;
+  
+  // Contact stats
+  const withFatherMobile = students.filter(s => s.fatherMobile).length;
+  const withMotherMobile = students.filter(s => s.motherMobile).length;
+  const withFatherEmail = students.filter(s => s.father).length;
+  const withMotherEmail = students.filter(s => s.mother && s.mother !== s.father).length;
+  
+  const contactHtml = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="font-size:11px;padding:8px;background:white;border-radius:6px">
+        <div style="color:var(--muted);margin-bottom:2px">📞 هاتف الأب</div>
+        <div style="font-weight:700;color:var(--primary)">${withFatherMobile}/${students.length}</div>
+      </div>
+      <div style="font-size:11px;padding:8px;background:white;border-radius:6px">
+        <div style="color:var(--muted);margin-bottom:2px">📞 هاتف الأم</div>
+        <div style="font-weight:700;color:var(--primary)">${withMotherMobile}/${students.length}</div>
+      </div>
+      <div style="font-size:11px;padding:8px;background:white;border-radius:6px">
+        <div style="color:var(--muted);margin-bottom:2px">📧 إيميل الأب</div>
+        <div style="font-weight:700;color:var(--primary)">${withFatherEmail}/${students.length}</div>
+      </div>
+      <div style="font-size:11px;padding:8px;background:white;border-radius:6px">
+        <div style="color:var(--muted);margin-bottom:2px">📧 إيميل الأم</div>
+        <div style="font-weight:700;color:var(--primary)">${withMotherEmail}/${students.length}</div>
+      </div>
+    </div>
+  `;
+  document.getElementById('contactStats').innerHTML = contactHtml;
+}
+
+// ── PRINT ──
+function printContacts() {
+  const printWindow = window.open('', '_blank');
+  const printContent = `
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>قائمة جهات الاتصال - KG2-A</title>
+  <style>
+    @page { size: A4; margin: 15mm; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; font-size: 10pt; line-height: 1.4; }
+    .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #1a4f7a; padding-bottom: 10px; }
+    .header h1 { color: #1a4f7a; font-size: 18pt; margin-bottom: 5px; }
+    .header p { color: #666; font-size: 10pt; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    th, td { border: 1px solid #ddd; padding: 6px; text-align: right; }
+    th { background: #1a4f7a; color: white; font-weight: bold; }
+    tr:nth-child(even) { background: #f8f9fa; }
+    .student-name { font-weight: bold; color: #1a4f7a; }
+    .footer { text-align: center; margin-top: 20px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 9pt; color: #666; }
+    @media print {
+      .no-print { display: none; }
+      body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>قائمة جهات الاتصال - KG2-A</h1>
+    <p>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+    <p>إجمالي الطلاب: ${students.length} طالب</p>
+  </div>
+  
+  <table>
+    <thead>
+      <tr>
+        <th style="width:5%">#</th>
+        <th style="width:25%">اسم الطالب</th>
+        <th style="width:8%">النوع</th>
+        <th style="width:12%">الجنسية</th>
+        <th style="width:15%">هاتف الأب</th>
+        <th style="width:15%">هاتف الأم</th>
+        <th style="width:20%">إيميل ولي الأمر</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${students.map((s, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td class="student-name">${s.name}</td>
+          <td>${s.gender === 'Male' ? '👨 ذكر' : '👩 أنثى'}</td>
+          <td>${s.nationality || '-'}</td>
+          <td>${s.fatherMobile ? '0' + s.fatherMobile : '-'}</td>
+          <td>${s.motherMobile ? '0' + s.motherMobile : '-'}</td>
+          <td style="font-size:9pt;direction:ltr;text-align:left">${s.father || '-'}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+  
+  <div class="footer">
+    <p>City School - KG2-A Contact List</p>
+    <p>هذه القائمة سرية ومخصصة للاستخدام الداخلي فقط</p>
+  </div>
+  
+  <button class="no-print" onclick="window.print()" style="position:fixed;top:10px;left:10px;padding:10px 20px;background:#1a4f7a;color:white;border:none;border-radius:5px;cursor:pointer;font-size:14px">🖨️ طباعة</button>
+</body>
+</html>
+  `;
+  
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+  toast('✅ جاهز للطباعة!', 'ok');
+}
+
+// ── AUTO LOGOUT ──
+let idleTimer;
+let idleTime = 0;
+const MAX_IDLE_TIME = 30 * 60 * 1000; // 30 minutes
+
+function resetIdleTimer() {
+  idleTime = 0;
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(checkIdle, 60000); // Check every minute
+}
+
+function checkIdle() {
+  idleTime += 60000;
+  if (idleTime >= MAX_IDLE_TIME) {
+    autoLogout();
+  } else {
+    idleTimer = setTimeout(checkIdle, 60000);
+  }
+}
+
+async function autoLogout() {
+  console.log('Auto logout due to inactivity');
+  await saveData(); // Save before logout
+  toast('تم تسجيل الخروج تلقائياً بسبب عدم النشاط', 'info');
+  setTimeout(() => {
+    handleLogout();
+  }, 2000);
+}
+
+// Track user activity
+document.addEventListener('click', resetIdleTimer);
+document.addEventListener('keypress', resetIdleTimer);
+document.addEventListener('scroll', resetIdleTimer);
+document.addEventListener('mousemove', resetIdleTimer);
+
+// Start idle timer
+resetIdleTimer();
 
 // ── AUTH ──
 function showLogin() { document.getElementById('loginScreen').style.display = 'flex'; }
