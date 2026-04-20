@@ -290,34 +290,81 @@ header p { font-size: 12px; opacity: 0.75; }
 </div>
 
 <div class="overlay" id="editOverlay">
-  <div class="modal">
+  <div class="modal" style="max-height:90vh;overflow-y:auto">
     <div class="modal-head">
       <div>
         <h2 id="editTitle">➕ إضافة طالب</h2>
-        <p id="editSubtitle">أدخل بيانات الطالب</p>
+        <p id="editSubtitle">أدخل بيانات الطالب كاملة</p>
       </div>
       <button class="close-btn" onclick="closeEditModal()">✕</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="editId">
+      
+      <div style="background:#e0f2fe;padding:10px;border-radius:8px;margin-bottom:12px;font-size:11px">
+        💡 <strong>نصيحة:</strong> املأي كل الحقول للحصول على قاعدة بيانات كاملة
+      </div>
+      
       <div class="fg">
         <label>🪪 رقم الطالب</label>
         <input type="number" id="editStudentId" placeholder="مثال: 11353">
       </div>
+      
       <div class="fg">
         <label>👤 اسم الطالب كاملاً</label>
-        <input type="text" id="editName" placeholder="الاسم بالإنجليزي">
+        <input type="text" id="editName" placeholder="الاسم بالإنجليزي (CAPITAL LETTERS)">
       </div>
+      
       <div class="fg">
-        <label>👨 إيميل الأب</label>
+        <label>⚧️ النوع</label>
+        <select id="editGender">
+          <option value="">اختر النوع</option>
+          <option value="Male">👨 ذكر (Male)</option>
+          <option value="Female">👩 أنثى (Female)</option>
+        </select>
+      </div>
+      
+      <div class="fg">
+        <label>🌍 الجنسية</label>
+        <input type="text" id="editNationality" placeholder="Egyptian, Yemeni, Jordanian, etc.">
+      </div>
+      
+      <div class="fg">
+        <label>🕌 الديانة</label>
+        <input type="text" id="editReligion" placeholder="Muslim, Christian, etc.">
+      </div>
+      
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👨 بيانات الأب</div>
+      
+      <div class="fg">
+        <label>📞 رقم هاتف الأب</label>
+        <input type="tel" id="editFatherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left">
+      </div>
+      
+      <div class="fg">
+        <label>📧 إيميل الأب</label>
         <input type="email" id="editFather" placeholder="father@email.com" style="direction:ltr;text-align:left">
       </div>
+      
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👩 بيانات الأم</div>
+      
       <div class="fg">
-        <label>👩 إيميل الأم</label>
+        <label>📞 رقم هاتف الأم</label>
+        <input type="tel" id="editMotherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left">
+      </div>
+      
+      <div class="fg">
+        <label>📧 إيميل الأم</label>
         <input type="email" id="editMother" placeholder="mother@email.com" style="direction:ltr;text-align:left">
       </div>
+      
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">🎓 بيانات الطالب</div>
+      
       <div class="fg">
-        <label>🎓 إيميل الطالب</label>
+        <label>📧 إيميل الطالب</label>
         <input type="email" id="editEmail" placeholder="student@cityschool.ae" style="direction:ltr;text-align:left">
       </div>
     </div>
@@ -779,11 +826,16 @@ function openGoogleDrivePicker() {
 // ── ADD / EDIT MODAL ──
 function openAddModal() {
   document.getElementById('editTitle').textContent = '➕ إضافة طالب';
-  document.getElementById('editSubtitle').textContent = 'أدخل بيانات الطالب الجديد';
+  document.getElementById('editSubtitle').textContent = 'أدخل بيانات الطالب كاملة';
   document.getElementById('editId').value = '';
   document.getElementById('editStudentId').value = '';
   document.getElementById('editName').value = '';
+  document.getElementById('editGender').value = '';
+  document.getElementById('editNationality').value = '';
+  document.getElementById('editReligion').value = '';
+  document.getElementById('editFatherMobile').value = '';
   document.getElementById('editFather').value = '';
+  document.getElementById('editMotherMobile').value = '';
   document.getElementById('editMother').value = '';
   document.getElementById('editEmail').value = '';
   document.getElementById('editOverlay').classList.add('open');
@@ -797,7 +849,12 @@ function openEditModal(id) {
   document.getElementById('editId').value = id;
   document.getElementById('editStudentId').value = s.id;
   document.getElementById('editName').value = s.name;
+  document.getElementById('editGender').value = s.gender || '';
+  document.getElementById('editNationality').value = s.nationality || '';
+  document.getElementById('editReligion').value = s.religion || '';
+  document.getElementById('editFatherMobile').value = s.fatherMobile || '';
   document.getElementById('editFather').value = s.father || '';
+  document.getElementById('editMotherMobile').value = s.motherMobile || '';
   document.getElementById('editMother').value = s.mother || '';
   document.getElementById('editEmail').value = s.email || '';
   document.getElementById('editOverlay').classList.add('open');
@@ -811,19 +868,37 @@ function saveStudent() {
   const origId = document.getElementById('editId').value;
   const sid = parseInt(document.getElementById('editStudentId').value);
   const name = document.getElementById('editName').value.trim().toUpperCase();
+  const gender = document.getElementById('editGender').value.trim() || null;
+  const nationality = document.getElementById('editNationality').value.trim() || null;
+  const religion = document.getElementById('editReligion').value.trim() || null;
+  const fatherMobile = document.getElementById('editFatherMobile').value.trim() || null;
   const father = document.getElementById('editFather').value.trim() || null;
+  const motherMobile = document.getElementById('editMotherMobile').value.trim() || null;
   const mother = document.getElementById('editMother').value.trim() || null;
   const email = document.getElementById('editEmail').value.trim() || null;
 
   if (!sid || !name) { toast('الرقم والاسم مطلوبان', 'err'); return; }
 
+  const studentData = {
+    id: sid,
+    name,
+    gender,
+    nationality,
+    religion,
+    father,
+    mother,
+    fatherMobile,
+    motherMobile,
+    email
+  };
+
   if (origId) {
     const idx = students.findIndex(s => s.id === parseInt(origId));
-    if (idx > -1) students[idx] = {id: sid, name, father, mother, email};
+    if (idx > -1) students[idx] = studentData;
     toast('✅ تم التعديل بنجاح', 'ok');
   } else {
     if (students.find(s => s.id === sid)) { toast('رقم الطالب موجود مسبقاً', 'err'); return; }
-    students.push({id: sid, name, father, mother, email});
+    students.push(studentData);
     toast('✅ تمت الإضافة بنجاح', 'ok');
   }
   saveData();
