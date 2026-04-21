@@ -186,7 +186,7 @@ header p { font-size: 12px; opacity: 0.75; }
 <div class="page active" id="page-contacts">
   <div class="search-wrap">
     <span class="si">🔍</span>
-    <input type="text" id="contactSearch" placeholder="اSearch بName أو Student ID..." oninput="renderContacts()">
+    <input type="text" id="contactSearch" placeholder="Search Name  Student ID..." oninput="renderContacts()">
   </div>
   <div class="action-row">
     <span class="count-badge" id="contactCount">25 Student</span>
@@ -200,49 +200,49 @@ header p { font-size: 12px; opacity: 0.75; }
 
 <div class="page" id="page-email">
   <div class="select-bar">
-    <span class="slabel" id="selLabel">Select Students للSend</span>
-    <button class="btn btn-outline btn-sm" onclick="selectAll()">✅ الAll</button>
+    <span class="slabel" id="selLabel">Select Students Send</span>
+    <button class="btn btn-outline btn-sm" onclick="selectAll()">✅ All</button>
     <button class="btn btn-outline btn-sm" onclick="deselectAll()">❌ Cancel</button>
   </div>
   <div class="search-wrap">
     <span class="si">🔍</span>
-    <input type="text" id="emailSearch" placeholder="اSearch للتصinة..." oninput="renderEmailList()">
+    <input type="text" id="emailSearch" placeholder="Search in..." oninput="renderEmailList()">
   </div>
   <div id="emailList"></div>
 
   <div style="background:white;border-radius:16px;padding:18px;margin-top:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
-    <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:14px">✉️ إنشاء الرسالة</div>
+    <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:14px">✉️  </div>
 
     <div class="fg">
       <label>📧 Recipients</label>
-      <div class="rcpt-box" id="rcptBox"><span style="font-size:12px;color:var(--muted)">Select طلاب from الأon...</span></div>
+      <div class="rcpt-box" id="rcptBox"><span style="font-size:12px;color:var(--muted)">Select  from on...</span></div>
     </div>
 
     <div class="fg">
       <label>⚙️ Send to</label>
       <select id="emailTarget" onchange="updateRecipients()">
-        <option value="both">الFather والMother withاً</option>
-        <option value="father">الFather فقط</option>
-        <option value="mother">الMother فقط</option>
+        <option value="both">Father Mother with</option>
+        <option value="father">Father </option>
+        <option value="mother">Mother </option>
       </select>
     </div>
 
     <div class="fg">
       <label>📝 Subject</label>
-      <input type="text" id="composeSubject" placeholder="موضوع الرسالة...">
+      <input type="text" id="composeSubject" placeholder=" ...">
     </div>
 
     <div class="fg">
       <label>💬 Message</label>
-      <textarea id="composeBody" placeholder="Enter الرسالة هنا..."></textarea>
+      <textarea id="composeBody" placeholder="Enter  ..."></textarea>
     </div>
 
     <div class="fg">
       <label>📎 Attachments</label>
       <div class="attach-area" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
         <div style="font-size:28px">📁</div>
-        <p>اضغط لإرفاق ملف from الجهاز</p>
-        <p style="font-size:11px;margin-top:4px">أو اسحب وأفلت الملف هنا</p>
+        <p>   from </p>
+        <p style="font-size:11px;margin-top:4px">    </p>
       </div>
       <input type="file" id="fileInput" multiple style="display:none" onchange="handleFileSelect(event)">
 
@@ -255,31 +255,31 @@ header p { font-size: 12px; opacity: 0.75; }
           <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
           <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
         </svg>
-        إرفاق from Google Drive
+         from Google Drive
       </button>
 
       <div class="attach-list" id="attachList"></div>
     </div>
 
     <div class="fg">
-      <label>📮 طريقة الSend</label>
+      <label>📮  Send</label>
       <select id="emailSendType">
-        <option value="to">To - عادي (All Recipients يشوفوا بعض)</option>
+        <option value="to">To -  (All Recipients  )</option>
         <option value="bcc">BCC - Hidden (each recipient cannot see others)</option>
       </select>
     </div>
 
     <div class="fg">
-      <label>📧 CC - نسخة إضاinة للمدير/المشرف (Optional)</label>
+      <label>📧 CC -  in / (Optional)</label>
       <input type="text" id="ccEmails" placeholder="supervisor@cityschool.ae, manager@cityschool.ae" style="direction:ltr;text-align:left">
-      <small style="font-size:11px;color:var(--muted);display:block;margin-top:4px">Separate الإيميلات with comma (,)</small>
+      <small style="font-size:11px;color:var(--muted);display:block;margin-top:4px">Separate  with comma (,)</small>
     </div>
 
     <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="sendEmail()">
-      🚀 Send عبر Gmail
+      🚀 Send  Gmail
     </button>
     <button id="personalizedSendBtn" class="btn btn-accent" style="width:100%;justify-content:center;padding:14px;font-size:15px;display:none;margin-top:10px" onclick="sendPersonalizedEmails()">
-      ✨ Send Emailات مخصصة (قالب)
+      ✨ Send Email  ()
     </button>
   </div>
 </div>
@@ -298,7 +298,7 @@ header p { font-size: 12px; opacity: 0.75; }
 <div class="page" id="page-stats">
   <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:16px;font-weight:700;color:var(--primary)">📊 Statistics الفصل</div>
+      <div style="font-size:16px;font-weight:700;color:var(--primary)">📊 Statistics </div>
       <span class="count-badge" id="totalBadge">25 Student</span>
     </div>
     
@@ -308,7 +308,7 @@ header p { font-size: 12px; opacity: 0.75; }
         <div style="font-size:24px;font-weight:700" id="statTotal">25</div>
       </div>
       <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;padding:16px;border-radius:12px">
-        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">أولياء الMotherور</div>
+        <div style="font-size:11px;opacity:0.9;margin-bottom:4px"> Mother</div>
         <div style="font-size:24px;font-weight:700" id="statParents">25</div>
       </div>
     </div>
@@ -335,7 +335,7 @@ header p { font-size: 12px; opacity: 0.75; }
     <div class="modal-head">
       <div>
         <h2 id="editTitle">➕ Add Student</h2>
-        <p id="editSubtitle">أدخل بيانات الStudent كاملة</p>
+        <p id="editSubtitle">  Student </p>
       </div>
       <button class="close-btn" onclick="closeEditModal()">✕</button>
     </div>
@@ -353,7 +353,7 @@ header p { font-size: 12px; opacity: 0.75; }
       
       <div class="fg">
         <label>👤 Full Student Name</label>
-        <input type="text" id="editName" placeholder="Name بالإنجليزي (CAPITAL LETTERS)">
+        <input type="text" id="editName" placeholder="Name  (CAPITAL LETTERS)">
       </div>
       
       <div class="fg">
@@ -376,7 +376,7 @@ header p { font-size: 12px; opacity: 0.75; }
       </div>
       
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👨 بيانات الFather</div>
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👨  Father</div>
       
       <div class="fg">
         <label>📞 Father Phone</label>
@@ -389,7 +389,7 @@ header p { font-size: 12px; opacity: 0.75; }
       </div>
       
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👩 بيانات الMother</div>
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👩  Mother</div>
       
       <div class="fg">
         <label>📞 Mother Phone</label>
@@ -402,7 +402,7 @@ header p { font-size: 12px; opacity: 0.75; }
       </div>
       
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">🎓 بيانات الStudent</div>
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">🎓  Student</div>
       
       <div class="fg">
         <label>📧 Student Email</label>
@@ -419,8 +419,8 @@ header p { font-size: 12px; opacity: 0.75; }
 <div class="overlay" id="confirmOverlay" style="align-items:center">
   <div class="confirm-box">
     <div style="font-size:36px;margin-bottom:8px">🗑️</div>
-    <h3>Delete الStudent؟</h3>
-    <p id="confirmName">هل أنت متأكد from Delete هذا الStudent؟</p>
+    <h3>Delete Student</h3>
+    <p id="confirmName">   from Delete  Student</p>
     <div class="confirm-actions">
       <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
       <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
@@ -448,7 +448,7 @@ header p { font-size: 12px; opacity: 0.75; }
     <div class="modal-head">
       <div>
         <h2 id="templateTitle">📝 New Template</h2>
-        <p>استخدمي: [Student Name] أو STUDENT_NAME للاسم، [Student ID] أو STUDENT_ID للرقم</p>
+        <p>: [Student Name]  STUDENT_NAME  [Student ID]  STUDENT_ID </p>
       </div>
       <button class="close-btn" onclick="closeTemplateModal()">✕</button>
     </div>
@@ -456,20 +456,20 @@ header p { font-size: 12px; opacity: 0.75; }
       <input type="hidden" id="templateId">
       <div class="fg">
         <label>📌 Template Name</label>
-        <input type="text" id="templateName" placeholder="Example: تذكير بالواجب الfromزلي">
+        <input type="text" id="templateName" placeholder="Example:   from">
       </div>
       <div class="fg">
         <label>📝 Subject</label>
-        <input type="text" id="templateSubject" placeholder="يمكنك Use [Student Name]">
+        <input type="text" id="templateSubject" placeholder=" Use [Student Name]">
       </div>
       <div class="fg">
         <label>💬 Message</label>
-        <textarea id="templateBody" placeholder="Example: عزيزي ولي Motherر [Student Name]..."></textarea>
+        <textarea id="templateBody" placeholder="Example:   Mother [Student Name]..."></textarea>
       </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closeTemplateModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveTemplate()">💾 Save القالب</button>
+      <button class="btn btn-primary" onclick="saveTemplate()">💾 Save </button>
     </div>
   </div>
 </div>
@@ -485,7 +485,7 @@ header p { font-size: 12px; opacity: 0.75; }
     </div>
     <div class="modal-body">
       <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#0369a1;line-height:1.6">
-        📌 <strong>How it works:</strong> All Student له إيميل fromفصل باسمه. اضغطي "📧 Send" لAll Student ← will open Gmail ← اضغطي Send ← return to list and continue remaining الطلاب
+        📌 <strong>How it works:</strong> All Student   from .  "📧 Send" All Student ← will open Gmail ←  Send ← return to list and continue remaining 
       </div>
       <div id="personalizedList"></div>
     </div>
@@ -495,7 +495,7 @@ header p { font-size: 12px; opacity: 0.75; }
 <div class="overlay" id="sendOverlay" style="align-items:center">
   <div style="background:white;border-radius:20px;width:92%;max-width:400px;max-height:85vh;overflow-y:auto;animation:slideUp 0.25s ease">
     <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:18px 20px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between">
-      <div><div style="font-size:16px;font-weight:700">📧 تأكيد الSend</div><div style="font-size:11px;opacity:0.75;margin-top:2px">راجعي البيانات قبل الSend</div></div>
+      <div><div style="font-size:16px;font-weight:700">📧  Send</div><div style="font-size:11px;opacity:0.75;margin-top:2px">   Send</div></div>
       <button class="close-btn" onclick="document.getElementById('sendOverlay').classList.remove('open')">✕</button>
     </div>
     <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
@@ -511,7 +511,7 @@ header p { font-size: 12px; opacity: 0.75; }
       </div>
 
       <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">💬 الرسالة</div>
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">💬 </div>
         <div id="sendBody" style="font-size:12px;color:var(--text);white-space:pre-wrap;max-height:100px;overflow-y:auto"></div>
       </div>
 
@@ -519,12 +519,12 @@ header p { font-size: 12px; opacity: 0.75; }
         <div id="attachStatus" style="font-size:11px;font-weight:700;color:#c2410c;margin-bottom:6px">Attachments</div>
         <div id="sendAttachList"></div>
         <div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:8px;font-size:11px;color:#92400e;line-height:1.6">
-          ⚠️ <strong>ملاحظة:</strong> بعد فتح Gmail، أضيin Attachments يدوياً from زر الـ Attach in Gmail لأن Android لا يسمح بإرفاق الملفات تلقائياً عبر الروابط
+          ⚠️ <strong>:</strong>   Gmail in Attachments  from   Attach in Gmail  Android       
         </div>
       </div>
 
       <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="confirmSend()">
-        🚀 فتح Gmail والSend
+        🚀  Gmail Send
       </button>
     </div>
   </div>
@@ -625,16 +625,16 @@ function renderContacts() {
     // Parent contact rows with mobile AND email
     const fatherRow = `
       <div class="email-row" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0">
-        <div style="font-size:10px;font-weight:700;color:var(--primary)">👨 الFather</div>
-        ${s.fatherMobile ? `<a href="tel:${s.fatherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.fatherMobile}</a>` : '<span class="no-email">None هاتف</span>'}
-        ${s.father ? `<div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.father}</div>` : '<span class="no-email">None إيميل</span>'}
+        <div style="font-size:10px;font-weight:700;color:var(--primary)">👨 Father</div>
+        ${s.fatherMobile ? `<a href="tel:${s.fatherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.fatherMobile}</a>` : '<span class="no-email">None </span>'}
+        ${s.father ? `<div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.father}</div>` : '<span class="no-email">None </span>'}
       </div>
     `;
     
     const motherRow = s.mother && s.mother !== s.father ? `
       <div class="email-row" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0;border-top:1px solid #f0f5fa">
-        <div style="font-size:10px;font-weight:700;color:var(--primary)">👩 الMother</div>
-        ${s.motherMobile ? `<a href="tel:${s.motherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.motherMobile}</a>` : '<span class="no-email">None هاتف</span>'}
+        <div style="font-size:10px;font-weight:700;color:var(--primary)">👩 Mother</div>
+        ${s.motherMobile ? `<a href="tel:${s.motherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.motherMobile}</a>` : '<span class="no-email">None </span>'}
         <div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.mother}</div>
       </div>
     ` : '';
@@ -675,7 +675,7 @@ function renderEmailList() {
         <div class="avatar ${av}" style="width:36px;height:36px;font-size:13px">${initials(s.name)}</div>
         <div style="flex:1">
           <div style="font-size:13px;font-weight:700">${s.name}</div>
-          <div style="font-size:11px;color:var(--muted)">${s.father||s.mother||'None إيميل'}</div>
+          <div style="font-size:11px;color:var(--muted)">${s.father||s.mother||'None '}</div>
         </div>
       </div>
     </div>`;
@@ -701,14 +701,14 @@ function deselectAll() {
 
 function updateSelUI() {
   const n = selectedIds.size;
-  document.getElementById('selLabel').textContent = n > 0 ? `Done اختيار ${n} Student` : 'Select Students للSend';
+  document.getElementById('selLabel').textContent = n > 0 ? `Done  ${n} Student` : 'Select Students Send';
 }
 
 function updateRecipients() {
   const target = document.getElementById('emailTarget').value;
   const box = document.getElementById('rcptBox');
   const sel = students.filter(s => selectedIds.has(s.id));
-  if (!sel.length) { box.innerHTML = '<span style="font-size:12px;color:var(--muted)">Select طلاب from الأon...</span>'; box._emails=[]; return; }
+  if (!sel.length) { box.innerHTML = '<span style="font-size:12px;color:var(--muted)">Select  from on...</span>'; box._emails=[]; return; }
   let emails = [];
   sel.forEach(s => {
     if ((target==='father'||target==='both') && s.father && !emails.includes(s.father)) emails.push(s.father);
@@ -716,7 +716,7 @@ function updateRecipients() {
   });
   box.innerHTML = emails.length
     ? emails.map(e=>`<span class="rtag">${e}</span>`).join('')
-    : '<span style="font-size:12px;color:var(--muted)">No إيميلات للمحددين</span>';
+    : '<span style="font-size:12px;color:var(--muted)">No  </span>';
   box._emails = emails;
 }
 
@@ -726,7 +726,7 @@ function sendEmail() {
   if (!emails.length) { toast('Please select students first', 'err'); return; }
   const subject = document.getElementById('composeSubject').value;
   const body = document.getElementById('composeBody').value;
-  if (!subject) { toast('Enter Subject أولاً', 'err'); return; }
+  if (!subject) { toast('Enter Subject ', 'err'); return; }
 
   const sendType = document.getElementById('emailSendType').value;
   const ccInput = document.getElementById('ccEmails');
@@ -804,10 +804,10 @@ function openGmailCompose(emails, subject, body, sendType = 'to', ccEmails = '')
 }
 
 function openSendModal(emails, subject, body, sendType = 'to', ccEmails = '') {
-  document.getElementById('sendEmails').textContent = emails.join('، ');
+  document.getElementById('sendEmails').textContent = emails.join(' ');
   document.getElementById('sendSubject').textContent = subject || '—';
   document.getElementById('sendBody').textContent = body || '—';
-  document.getElementById('attachStatus').textContent = `Attachments (${attachments.length} ملف)`;
+  document.getElementById('attachStatus').textContent = `Attachments (${attachments.length} )`;
   const al = document.getElementById('sendAttachList');
   al.innerHTML = attachments.map(a =>
     `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f5fa;font-size:12px">
@@ -860,7 +860,7 @@ function renderAttachments() {
 }
 
 function openGoogleDrivePicker() {
-  toast('افتحي Drive واختاري الملف ثم شاركيه in الإيميل مباشرة', '');
+  toast(' Drive     in  ', '');
   setTimeout(() => {
     window.open('https://drive.google.com', '_blank');
   }, 800);
@@ -869,7 +869,7 @@ function openGoogleDrivePicker() {
 // ── ADD / EDIT MODAL ──
 function openAddModal() {
   document.getElementById('editTitle').textContent = '➕ Add Student';
-  document.getElementById('editSubtitle').textContent = 'أدخل بيانات الStudent كاملة';
+  document.getElementById('editSubtitle').textContent = '  Student ';
   document.getElementById('editId').value = '';
   document.getElementById('editStudentId').value = '';
   document.getElementById('editName').value = '';
@@ -887,7 +887,7 @@ function openAddModal() {
 function openEditModal(id) {
   const s = students.find(x => x.id === id);
   if (!s) return;
-  document.getElementById('editTitle').textContent = '✏️ Edit بيانات الStudent';
+  document.getElementById('editTitle').textContent = '✏️ Edit  Student';
   document.getElementById('editSubtitle').textContent = s.name;
   document.getElementById('editId').value = id;
   document.getElementById('editStudentId').value = s.id;
@@ -938,9 +938,9 @@ function saveStudent() {
   if (origId) {
     const idx = students.findIndex(s => s.id === parseInt(origId));
     if (idx > -1) students[idx] = studentData;
-    toast('✅ Done الEdit بنجاح', 'ok');
+    toast('✅ Done Edit ', 'ok');
   } else {
-    if (students.find(s => s.id === sid)) { toast('Student ID exists مسبقاً', 'err'); return; }
+    if (students.find(s => s.id === sid)) { toast('Student ID exists ', 'err'); return; }
     students.push(studentData);
     toast('✅ Added successfully', 'ok');
   }
@@ -965,7 +965,7 @@ function confirmDelete() {
   saveData();
   closeConfirm();
   renderContacts();
-  toast('🗑️ Done الDelete', 'ok');
+  toast('🗑️ Done Delete', 'ok');
 }
 
 // ── TOAST ──
@@ -1043,7 +1043,7 @@ setInterval(async () => {
 
 // ── LOGOUT ──
 async function handleLogout() {
-  if (confirm('Logout؟')) {
+  if (confirm('Logout')) {
     await auth.signOut();
     closeDataMenu();
     showLogin();
@@ -1061,7 +1061,7 @@ function exportData() {
   a.href = url; a.download = 'kg2a_data.json'; a.click();
   URL.revokeObjectURL(url);
   closeDataMenu();
-  toast('✅ Done التصدير', 'ok');
+  toast('✅ Done ', 'ok');
 }
 
 function importData(e) {
@@ -1077,8 +1077,8 @@ function importData(e) {
       renderContacts();
       renderTemplates();
       closeDataMenu();
-      toast('✅ Done الاستيراد', 'ok');
-    } catch(err) { toast('❌ ملف غير صالح', 'err'); }
+      toast('✅ Done ', 'ok');
+    } catch(err) { toast('❌   ', 'err'); }
   };
   reader.readAsText(file);
 }
@@ -1087,7 +1087,7 @@ function importData(e) {
 function renderTemplates() {
   const list = document.getElementById('templatesList');
   if (!templates.length) {
-    list.innerHTML = '<div class="empty"><div class="ei">📝</div>No قوالب محفوظة</div>';
+    list.innerHTML = '<div class="empty"><div class="ei">📝</div>No  </div>';
     return;
   }
   list.innerHTML = templates.map((t,i) => {
@@ -1128,16 +1128,16 @@ function saveTemplate() {
   const name = document.getElementById('templateName').value.trim();
   const subject = document.getElementById('templateSubject').value.trim();
   const body = document.getElementById('templateBody').value.trim();
-  if (!name || !subject || !body) { toast('املأي جميع الحقول', 'err'); return; }
+  if (!name || !subject || !body) { toast('  ', 'err'); return; }
   if (idx !== '') templates[parseInt(idx)] = {name, subject, body};
   else templates.push({name, subject, body});
   saveData(); closeTemplateModal(); renderTemplates();
 }
 
 function deleteTemplate(i) {
-  if (!confirm('Delete هذا القالب؟')) return;
+  if (!confirm('Delete  ')) return;
   templates.splice(i, 1);
-  saveData(); renderTemplates(); toast('🗑️ Done الDelete', 'ok');
+  saveData(); renderTemplates(); toast('🗑️ Done Delete', 'ok');
 }
 
 function useTemplate(i) {
@@ -1145,7 +1145,7 @@ function useTemplate(i) {
   switchTab('email');
   selectAll();
   document.getElementById('personalizedSendBtn').style.display = 'flex';
-  toast('✅ اختاري الطلاب ثم اضغطي "Send Emailات مخصصة"', 'ok');
+  toast('✅     "Send Email "', 'ok');
 }
 
 function sendPersonalizedEmails() {
@@ -1198,7 +1198,7 @@ function renderPersonalizedList() {
       </div>
       <div id="preview${idx}" style="display:none;background:#f8fbff;border-radius:8px;padding:10px;margin-top:8px;font-size:11px">
         <div style="margin-bottom:6px"><strong>Subject:</strong> ${item.subject}</div>
-        <div><strong>الرسالة:</strong></div>
+        <div><strong>:</strong></div>
         <div style="white-space:pre-wrap;margin-top:4px;color:var(--muted)">${item.body}</div>
       </div>
     </div>`).join('');
@@ -1464,7 +1464,7 @@ function checkIdle() {
 async function autoLogout() {
   console.log('Auto logout due to inactivity');
   await saveData(); // Save before logout
-  toast('Done Logout تلقائياً بسبب عدم النشاط', 'info');
+  toast('Done Logout    ', 'info');
   setTimeout(() => {
     handleLogout();
   }, 2000);
@@ -1491,7 +1491,7 @@ async function handleLogin() {
     await auth.signInWithEmailAndPassword(email, password);
     hideLogin();
   } catch(err) {
-    document.getElementById('loginError').textContent = "خطأ in Login";
+    document.getElementById('loginError').textContent = " in Login";
     document.getElementById('loginError').style.display = "block";
   }
 }
