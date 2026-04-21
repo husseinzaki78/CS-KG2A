@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام KG2-A</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<title>KG2-A System</title>
+
 <style>
 :root {
   --primary: #1a4f7a;
@@ -20,7 +20,7 @@
   --border: #d1e3f0;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); direction: rtl; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); direction: ltr; }
 
 /* ── HEADER ── */
 header {
@@ -47,7 +47,7 @@ header p { font-size: 12px; opacity: 0.75; }
 
 /* ── SEARCH BAR ── */
 .search-wrap { position: relative; margin-bottom: 14px; }
-.search-wrap input { width: 100%; padding: 12px 44px 12px 16px; border: 2px solid var(--border); border-radius: 12px; font-family: 'Cairo', sans-serif; font-size: 14px; outline: none; background: white; direction: rtl; }
+.search-wrap input { width: 100%; padding: 12px 44px 12px 16px; border: 2px solid var(--border); border-radius: 12px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; outline: none; background: white; direction: ltr; }
 .search-wrap input:focus { border-color: var(--primary); }
 .search-wrap .si { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--muted); pointer-events: none; }
 
@@ -56,7 +56,7 @@ header p { font-size: 12px; opacity: 0.75; }
 .count-badge { background: var(--primary-light); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: var(--primary); }
 
 /* ── BUTTONS ── */
-.btn { padding: 9px 18px; border-radius: 10px; border: none; font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
+.btn { padding: 9px 18px; border-radius: 10px; border: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
 .btn-primary { background: var(--primary); color: white; }
 .btn-primary:hover { background: #0d3057; }
 .btn-accent { background: var(--accent); color: white; }
@@ -111,8 +111,8 @@ header p { font-size: 12px; opacity: 0.75; }
 .fg label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
 .fg input, .fg textarea, .fg select {
   width: 100%; padding: 11px 14px; border: 2px solid var(--border);
-  border-radius: 10px; font-family: 'Cairo', sans-serif; font-size: 13px;
-  outline: none; transition: border 0.2s; direction: rtl; background: #f8fbff;
+  border-radius: 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px;
+  outline: none; transition: border 0.2s; direction: ltr; background: #f8fbff;
 }
 .fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--primary); background: white; }
 .fg textarea { min-height: 120px; resize: vertical; }
@@ -126,7 +126,7 @@ header p { font-size: 12px; opacity: 0.75; }
 .attach-item .aname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: left; }
 .attach-item .asize { color: var(--muted); font-size: 11px; white-space: nowrap; }
 .attach-item .adel { color: var(--danger); cursor: pointer; font-size: 15px; flex-shrink: 0; }
-.drive-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; background: white; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); width: 100%; justify-content: center; transition: border 0.2s; }
+.drive-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; background: white; cursor: pointer; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; font-weight: 700; color: var(--text); width: 100%; justify-content: center; transition: border 0.2s; }
 .drive-btn:hover { border-color: #4285f4; color: #4285f4; }
 .drive-icon { width: 20px; height: 20px; }
 
@@ -157,10 +157,10 @@ header p { font-size: 12px; opacity: 0.75; }
 <header>
   <div class="logo">🎒</div>
   <div>
-    <h1>نظام KG2-A</h1>
-    <p>City School — إدارة أولياء الأمور</p>
+    <h1>KG2-A System</h1>
+    <p>City School — Parent Management</p>
   </div>
-  <div class="header-badge" id="totalBadge">25 طالب</div>
+  <div class="header-badge" id="totalBadge">25 Student</div>
   <div style="background:rgba(34,197,94,0.2);border:1px solid #22c55e;color:#15803d;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px">
     <span style="width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite"></span>Firebase
   </div>
@@ -170,29 +170,29 @@ header p { font-size: 12px; opacity: 0.75; }
 
 <div class="tabs">
   <div class="tab active" onclick="switchTab('contacts')">
-    <span class="tab-icon">👥</span>جهات الاتصال
+    <span class="tab-icon">👥</span>Contacts
   </div>
   <div class="tab" onclick="switchTab('email')">
-    <span class="tab-icon">✉️</span>إرسال إيميل
+    <span class="tab-icon">✉️</span>Send Email
   </div>
   <div class="tab" onclick="switchTab('templates')">
-    <span class="tab-icon">📝</span>القوالب
+    <span class="tab-icon">📝</span>Templates
   </div>
   <div class="tab" onclick="switchTab('stats')">
-    <span class="tab-icon">📊</span>إحصائيات
+    <span class="tab-icon">📊</span>Statistics
   </div>
 </div>
 
 <div class="page active" id="page-contacts">
   <div class="search-wrap">
     <span class="si">🔍</span>
-    <input type="text" id="contactSearch" placeholder="ابحث بالاسم أو رقم الطالب..." oninput="renderContacts()">
+    <input type="text" id="contactSearch" placeholder="اSearch بName أو Student ID..." oninput="renderContacts()">
   </div>
   <div class="action-row">
-    <span class="count-badge" id="contactCount">25 طالب</span>
+    <span class="count-badge" id="contactCount">25 Student</span>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-outline btn-sm" onclick="printContacts()">🖨️ طباعة</button>
-      <button class="btn btn-primary btn-sm" onclick="openAddModal()">➕ إضافة طالب</button>
+      <button class="btn btn-outline btn-sm" onclick="printContacts()">🖨️ Print</button>
+      <button class="btn btn-primary btn-sm" onclick="openAddModal()">➕ Add Student</button>
     </div>
   </div>
   <div id="contactsList"></div>
@@ -200,13 +200,13 @@ header p { font-size: 12px; opacity: 0.75; }
 
 <div class="page" id="page-email">
   <div class="select-bar">
-    <span class="slabel" id="selLabel">اختر الطلاب للإرسال</span>
-    <button class="btn btn-outline btn-sm" onclick="selectAll()">✅ الكل</button>
-    <button class="btn btn-outline btn-sm" onclick="deselectAll()">❌ إلغاء</button>
+    <span class="slabel" id="selLabel">Select Students للSend</span>
+    <button class="btn btn-outline btn-sm" onclick="selectAll()">✅ الAll</button>
+    <button class="btn btn-outline btn-sm" onclick="deselectAll()">❌ Cancel</button>
   </div>
   <div class="search-wrap">
     <span class="si">🔍</span>
-    <input type="text" id="emailSearch" placeholder="ابحث للتصفية..." oninput="renderEmailList()">
+    <input type="text" id="emailSearch" placeholder="اSearch للتصinة..." oninput="renderEmailList()">
   </div>
   <div id="emailList"></div>
 
@@ -214,34 +214,34 @@ header p { font-size: 12px; opacity: 0.75; }
     <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:14px">✉️ إنشاء الرسالة</div>
 
     <div class="fg">
-      <label>📧 المرسل إليهم</label>
-      <div class="rcpt-box" id="rcptBox"><span style="font-size:12px;color:var(--muted)">اختر طلاب من الأعلى...</span></div>
+      <label>📧 Recipients</label>
+      <div class="rcpt-box" id="rcptBox"><span style="font-size:12px;color:var(--muted)">Select طلاب from الأon...</span></div>
     </div>
 
     <div class="fg">
-      <label>⚙️ إرسال إلى</label>
+      <label>⚙️ Send to</label>
       <select id="emailTarget" onchange="updateRecipients()">
-        <option value="both">الأب والأم معاً</option>
-        <option value="father">الأب فقط</option>
-        <option value="mother">الأم فقط</option>
+        <option value="both">الFather والMother withاً</option>
+        <option value="father">الFather فقط</option>
+        <option value="mother">الMother فقط</option>
       </select>
     </div>
 
     <div class="fg">
-      <label>📝 الموضوع</label>
+      <label>📝 Subject</label>
       <input type="text" id="composeSubject" placeholder="موضوع الرسالة...">
     </div>
 
     <div class="fg">
-      <label>💬 نص الرسالة</label>
-      <textarea id="composeBody" placeholder="اكتبي الرسالة هنا..."></textarea>
+      <label>💬 Message</label>
+      <textarea id="composeBody" placeholder="Enter الرسالة هنا..."></textarea>
     </div>
 
     <div class="fg">
-      <label>📎 المرفقات</label>
+      <label>📎 Attachments</label>
       <div class="attach-area" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
         <div style="font-size:28px">📁</div>
-        <p>اضغط لإرفاق ملف من الجهاز</p>
+        <p>اضغط لإرفاق ملف from الجهاز</p>
         <p style="font-size:11px;margin-top:4px">أو اسحب وأفلت الملف هنا</p>
       </div>
       <input type="file" id="fileInput" multiple style="display:none" onchange="handleFileSelect(event)">
@@ -255,31 +255,31 @@ header p { font-size: 12px; opacity: 0.75; }
           <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
           <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
         </svg>
-        إرفاق من Google Drive
+        إرفاق from Google Drive
       </button>
 
       <div class="attach-list" id="attachList"></div>
     </div>
 
     <div class="fg">
-      <label>📮 طريقة الإرسال</label>
+      <label>📮 طريقة الSend</label>
       <select id="emailSendType">
-        <option value="to">To - عادي (كل المرسل إليهم يشوفوا بعض)</option>
-        <option value="bcc">BCC - مخفي (كل واحد ما يشوفش التانيين)</option>
+        <option value="to">To - عادي (All Recipients يشوفوا بعض)</option>
+        <option value="bcc">BCC - Hidden (each recipient cannot see others)</option>
       </select>
     </div>
 
     <div class="fg">
-      <label>📧 CC - نسخة إضافية للمدير/المشرف (اختياري)</label>
+      <label>📧 CC - نسخة إضاinة للمدير/المشرف (Optional)</label>
       <input type="text" id="ccEmails" placeholder="supervisor@cityschool.ae, manager@cityschool.ae" style="direction:ltr;text-align:left">
-      <small style="font-size:11px;color:var(--muted);display:block;margin-top:4px">افصلي بين الإيميلات بفاصلة (,)</small>
+      <small style="font-size:11px;color:var(--muted);display:block;margin-top:4px">Separate الإيميلات with comma (,)</small>
     </div>
 
     <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="sendEmail()">
-      🚀 إرسال عبر Gmail
+      🚀 Send عبر Gmail
     </button>
     <button id="personalizedSendBtn" class="btn btn-accent" style="width:100%;justify-content:center;padding:14px;font-size:15px;display:none;margin-top:10px" onclick="sendPersonalizedEmails()">
-      ✨ إرسال إيميلات مخصصة (قالب)
+      ✨ Send Emailات مخصصة (قالب)
     </button>
   </div>
 </div>
@@ -288,8 +288,8 @@ header p { font-size: 12px; opacity: 0.75; }
 <div class="page" id="page-templates">
   <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-      <div style="font-size:14px;font-weight:700;color:var(--primary)">📝 قوالب الإيميلات المحفوظة</div>
-      <button class="btn btn-primary btn-sm" onclick="openTemplateModal()">➕ إضافة قالب</button>
+      <div style="font-size:14px;font-weight:700;color:var(--primary)">📝 Saved Email Templates</div>
+      <button class="btn btn-primary btn-sm" onclick="openTemplateModal()">➕ Add Template</button>
     </div>
     <div id="templatesList"></div>
   </div>
@@ -298,33 +298,33 @@ header p { font-size: 12px; opacity: 0.75; }
 <div class="page" id="page-stats">
   <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:16px;font-weight:700;color:var(--primary)">📊 إحصائيات الفصل</div>
-      <span class="count-badge" id="totalBadge">25 طالب</span>
+      <div style="font-size:16px;font-weight:700;color:var(--primary)">📊 Statistics الفصل</div>
+      <span class="count-badge" id="totalBadge">25 Student</span>
     </div>
     
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
       <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:16px;border-radius:12px">
-        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">إجمالي الطلاب</div>
+        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Total Students</div>
         <div style="font-size:24px;font-weight:700" id="statTotal">25</div>
       </div>
       <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;padding:16px;border-radius:12px">
-        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">أولياء الأمور</div>
+        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">أولياء الMotherور</div>
         <div style="font-size:24px;font-weight:700" id="statParents">25</div>
       </div>
     </div>
     
     <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">👥 النوع</div>
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">👥 Gender</div>
       <div id="genderStats"></div>
     </div>
     
     <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">🌍 الجنسيات</div>
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">🌍 Nationalities</div>
       <div id="nationalityStats"></div>
     </div>
     
     <div style="background:#f8fbff;border-radius:12px;padding:16px">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📞 بيانات التواصل</div>
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📞 Contact Information</div>
       <div id="contactStats"></div>
     </div>
   </div>
@@ -334,8 +334,8 @@ header p { font-size: 12px; opacity: 0.75; }
   <div class="modal" style="max-height:90vh;overflow-y:auto">
     <div class="modal-head">
       <div>
-        <h2 id="editTitle">➕ إضافة طالب</h2>
-        <p id="editSubtitle">أدخل بيانات الطالب كاملة</p>
+        <h2 id="editTitle">➕ Add Student</h2>
+        <p id="editSubtitle">أدخل بيانات الStudent كاملة</p>
       </div>
       <button class="close-btn" onclick="closeEditModal()">✕</button>
     </div>
@@ -343,75 +343,75 @@ header p { font-size: 12px; opacity: 0.75; }
       <input type="hidden" id="editId">
       
       <div style="background:#e0f2fe;padding:10px;border-radius:8px;margin-bottom:12px;font-size:11px">
-        💡 <strong>نصيحة:</strong> املأي كل الحقول للحصول على قاعدة بيانات كاملة
+        💡 <strong>نصيحة:</strong> Fill all fields for complete database
       </div>
       
       <div class="fg">
-        <label>🪪 رقم الطالب</label>
-        <input type="number" id="editStudentId" placeholder="مثال: 11353">
+        <label>🪪 Student ID</label>
+        <input type="number" id="editStudentId" placeholder="Example: 11353">
       </div>
       
       <div class="fg">
-        <label>👤 اسم الطالب كاملاً</label>
-        <input type="text" id="editName" placeholder="الاسم بالإنجليزي (CAPITAL LETTERS)">
+        <label>👤 Full Student Name</label>
+        <input type="text" id="editName" placeholder="Name بالإنجليزي (CAPITAL LETTERS)">
       </div>
       
       <div class="fg">
-        <label>⚧️ النوع</label>
+        <label>⚧️ Gender</label>
         <select id="editGender">
-          <option value="">اختر النوع</option>
-          <option value="Male">👨 ذكر (Male)</option>
-          <option value="Female">👩 أنثى (Female)</option>
+          <option value="">Select Gender</option>
+          <option value="Male">👨 Male (Male)</option>
+          <option value="Female">👩 Female (Female)</option>
         </select>
       </div>
       
       <div class="fg">
-        <label>🌍 الجنسية</label>
+        <label>🌍 Nationality</label>
         <input type="text" id="editNationality" placeholder="Egyptian, Yemeni, Jordanian, etc.">
       </div>
       
       <div class="fg">
-        <label>🕌 الديانة</label>
+        <label>🕌 Religion</label>
         <input type="text" id="editReligion" placeholder="Muslim, Christian, etc.">
       </div>
       
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👨 بيانات الأب</div>
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👨 بيانات الFather</div>
       
       <div class="fg">
-        <label>📞 رقم هاتف الأب</label>
+        <label>📞 Father Phone</label>
         <input type="tel" id="editFatherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left">
       </div>
       
       <div class="fg">
-        <label>📧 إيميل الأب</label>
+        <label>📧 Father Email</label>
         <input type="email" id="editFather" placeholder="father@email.com" style="direction:ltr;text-align:left">
       </div>
       
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👩 بيانات الأم</div>
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👩 بيانات الMother</div>
       
       <div class="fg">
-        <label>📞 رقم هاتف الأم</label>
+        <label>📞 Mother Phone</label>
         <input type="tel" id="editMotherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left">
       </div>
       
       <div class="fg">
-        <label>📧 إيميل الأم</label>
+        <label>📧 Mother Email</label>
         <input type="email" id="editMother" placeholder="mother@email.com" style="direction:ltr;text-align:left">
       </div>
       
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">🎓 بيانات الطالب</div>
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">🎓 بيانات الStudent</div>
       
       <div class="fg">
-        <label>📧 إيميل الطالب</label>
+        <label>📧 Student Email</label>
         <input type="email" id="editEmail" placeholder="student@cityschool.ae" style="direction:ltr;text-align:left">
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="closeEditModal()">إلغاء</button>
-      <button class="btn btn-primary" onclick="saveStudent()">💾 حفظ</button>
+      <button class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStudent()">💾 Save</button>
     </div>
   </div>
 </div>
@@ -419,11 +419,11 @@ header p { font-size: 12px; opacity: 0.75; }
 <div class="overlay" id="confirmOverlay" style="align-items:center">
   <div class="confirm-box">
     <div style="font-size:36px;margin-bottom:8px">🗑️</div>
-    <h3>حذف الطالب؟</h3>
-    <p id="confirmName">هل أنت متأكد من حذف هذا الطالب؟</p>
+    <h3>Delete الStudent؟</h3>
+    <p id="confirmName">هل أنت متأكد from Delete هذا الStudent؟</p>
     <div class="confirm-actions">
-      <button class="btn btn-outline" onclick="closeConfirm()">إلغاء</button>
-      <button class="btn btn-danger" onclick="confirmDelete()">حذف</button>
+      <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
     </div>
   </div>
 </div>
@@ -432,13 +432,13 @@ header p { font-size: 12px; opacity: 0.75; }
 
 <div class="overlay" id="dataMenuOverlay" style="align-items:center">
   <div style="background:white;border-radius:20px;width:90%;max-width:340px;padding:0;animation:slideUp 0.25s ease">
-    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:16px 20px;border-radius:20px 20px 0 0;font-size:15px;font-weight:700">⚙️ إدارة البيانات</div>
+    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:16px 20px;border-radius:20px 20px 0 0;font-size:15px;font-weight:700">⚙️ Data Management</div>
     <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
-      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="exportData()">📤 تصدير البيانات</button>
-      <button class="btn btn-accent" style="width:100%;justify-content:center" onclick="document.getElementById('importFile').click()">📥 استيراد البيانات</button>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="exportData()">📤 Export Data</button>
+      <button class="btn btn-accent" style="width:100%;justify-content:center" onclick="document.getElementById('importFile').click()">📥 Import Data</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-      <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="handleLogout()">🚪 تسجيل الخروج</button>
-      <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeDataMenu()">إلغاء</button>
+      <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="handleLogout()">🚪 Logout</button>
+      <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeDataMenu()">Cancel</button>
     </div>
   </div>
 </div>
@@ -447,29 +447,29 @@ header p { font-size: 12px; opacity: 0.75; }
   <div class="modal">
     <div class="modal-head">
       <div>
-        <h2 id="templateTitle">📝 قالب جديد</h2>
-        <p>استخدمي: [اسم الطالب] أو STUDENT_NAME للاسم، [رقم الطالب] أو STUDENT_ID للرقم</p>
+        <h2 id="templateTitle">📝 New Template</h2>
+        <p>استخدمي: [Student Name] أو STUDENT_NAME للاسم، [Student ID] أو STUDENT_ID للرقم</p>
       </div>
       <button class="close-btn" onclick="closeTemplateModal()">✕</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="templateId">
       <div class="fg">
-        <label>📌 اسم القالب</label>
-        <input type="text" id="templateName" placeholder="مثال: تذكير بالواجب المنزلي">
+        <label>📌 Template Name</label>
+        <input type="text" id="templateName" placeholder="Example: تذكير بالواجب الfromزلي">
       </div>
       <div class="fg">
-        <label>📝 الموضوع</label>
-        <input type="text" id="templateSubject" placeholder="يمكنك استخدام [اسم الطالب]">
+        <label>📝 Subject</label>
+        <input type="text" id="templateSubject" placeholder="يمكنك Use [Student Name]">
       </div>
       <div class="fg">
-        <label>💬 نص الرسالة</label>
-        <textarea id="templateBody" placeholder="مثال: عزيزي ولي أمر [اسم الطالب]..."></textarea>
+        <label>💬 Message</label>
+        <textarea id="templateBody" placeholder="Example: عزيزي ولي Motherر [Student Name]..."></textarea>
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="closeTemplateModal()">إلغاء</button>
-      <button class="btn btn-primary" onclick="saveTemplate()">💾 حفظ القالب</button>
+      <button class="btn btn-outline" onclick="closeTemplateModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTemplate()">💾 Save القالب</button>
     </div>
   </div>
 </div>
@@ -485,7 +485,7 @@ header p { font-size: 12px; opacity: 0.75; }
     </div>
     <div class="modal-body">
       <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#0369a1;line-height:1.6">
-        📌 <strong>كيف تعمل:</strong> كل طالب له إيميل منفصل باسمه. اضغطي "📧 إرسال" لكل طالب ← هيفتح Gmail ← اضغطي Send ← ارجعي للقائمة وكملي باقي الطلاب
+        📌 <strong>كيف تعمل:</strong> All Student له إيميل fromفصل باسمه. اضغطي "📧 Send" لAll Student ← هيفتح Gmail ← اضغطي Send ← ارجعي للقائمة وكملي باقي الطلاب
       </div>
       <div id="personalizedList"></div>
     </div>
@@ -495,18 +495,18 @@ header p { font-size: 12px; opacity: 0.75; }
 <div class="overlay" id="sendOverlay" style="align-items:center">
   <div style="background:white;border-radius:20px;width:92%;max-width:400px;max-height:85vh;overflow-y:auto;animation:slideUp 0.25s ease">
     <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:18px 20px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between">
-      <div><div style="font-size:16px;font-weight:700">📧 تأكيد الإرسال</div><div style="font-size:11px;opacity:0.75;margin-top:2px">راجعي البيانات قبل الإرسال</div></div>
+      <div><div style="font-size:16px;font-weight:700">📧 تأكيد الSend</div><div style="font-size:11px;opacity:0.75;margin-top:2px">راجعي البيانات قبل الSend</div></div>
       <button class="close-btn" onclick="document.getElementById('sendOverlay').classList.remove('open')">✕</button>
     </div>
     <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
 
       <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📧 المرسل إليهم</div>
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📧 Recipients</div>
         <div id="sendEmails" style="font-size:12px;color:var(--text);direction:ltr;text-align:left;word-break:break-all"></div>
       </div>
 
       <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📝 الموضوع</div>
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📝 Subject</div>
         <div id="sendSubject" style="font-size:13px;font-weight:600"></div>
       </div>
 
@@ -516,15 +516,15 @@ header p { font-size: 12px; opacity: 0.75; }
       </div>
 
       <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px">
-        <div id="attachStatus" style="font-size:11px;font-weight:700;color:#c2410c;margin-bottom:6px">المرفقات</div>
+        <div id="attachStatus" style="font-size:11px;font-weight:700;color:#c2410c;margin-bottom:6px">Attachments</div>
         <div id="sendAttachList"></div>
         <div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:8px;font-size:11px;color:#92400e;line-height:1.6">
-          ⚠️ <strong>ملاحظة:</strong> بعد فتح Gmail، أضيفي المرفقات يدوياً من زر الـ Attach في Gmail لأن Android لا يسمح بإرفاق الملفات تلقائياً عبر الروابط
+          ⚠️ <strong>ملاحظة:</strong> بعد فتح Gmail، أضيin Attachments يدوياً from زر الـ Attach in Gmail لأن Android لا يسمح بإرفاق الملفات تلقائياً عبر الروابط
         </div>
       </div>
 
       <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="confirmSend()">
-        🚀 فتح Gmail والإرسال
+        🚀 فتح Gmail والSend
       </button>
     </div>
   </div>
@@ -600,10 +600,10 @@ function renderContacts() {
     (s.father||'').toLowerCase().includes(q) || (s.mother||'').toLowerCase().includes(q) ||
     (s.nationality||'').toLowerCase().includes(q)
   );
-  document.getElementById('contactCount').textContent = filtered.length + ' طالب';
-  document.getElementById('totalBadge').textContent = students.length + ' طالب';
+  document.getElementById('contactCount').textContent = filtered.length + ' Student';
+  document.getElementById('totalBadge').textContent = students.length + ' Student';
   const list = document.getElementById('contactsList');
-  if (!filtered.length) { list.innerHTML = '<div class="empty"><div class="ei">🔍</div>لا توجد نتائج</div>'; return; }
+  if (!filtered.length) { list.innerHTML = '<div class="empty"><div class="ei">🔍</div>No results found</div>'; return; }
   list.innerHTML = filtered.map((s,i) => {
     const av = avColors[students.indexOf(s) % avColors.length];
     const genderIcon = s.gender === 'Male' ? '👨' : '👩';
@@ -612,11 +612,11 @@ function renderContacts() {
     const infoRows = `
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;font-size:11px">
         <div style="background:#f8fbff;padding:6px 8px;border-radius:6px">
-          <div style="color:var(--muted);font-size:10px;margin-bottom:2px">النوع</div>
-          <div style="font-weight:700">${genderIcon} ${s.gender === 'Male' ? 'ذكر' : 'أنثى'}</div>
+          <div style="color:var(--muted);font-size:10px;margin-bottom:2px">Gender</div>
+          <div style="font-weight:700">${genderIcon} ${s.gender === 'Male' ? 'Male' : 'Female'}</div>
         </div>
         <div style="background:#f8fbff;padding:6px 8px;border-radius:6px">
-          <div style="color:var(--muted);font-size:10px;margin-bottom:2px">الجنسية</div>
+          <div style="color:var(--muted);font-size:10px;margin-bottom:2px">Nationality</div>
           <div style="font-weight:700;font-size:10px">${s.nationality}</div>
         </div>
       </div>
@@ -625,16 +625,16 @@ function renderContacts() {
     // Parent contact rows with mobile AND email
     const fatherRow = `
       <div class="email-row" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0">
-        <div style="font-size:10px;font-weight:700;color:var(--primary)">👨 الأب</div>
-        ${s.fatherMobile ? `<a href="tel:${s.fatherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.fatherMobile}</a>` : '<span class="no-email">لا يوجد هاتف</span>'}
-        ${s.father ? `<div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.father}</div>` : '<span class="no-email">لا يوجد إيميل</span>'}
+        <div style="font-size:10px;font-weight:700;color:var(--primary)">👨 الFather</div>
+        ${s.fatherMobile ? `<a href="tel:${s.fatherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.fatherMobile}</a>` : '<span class="no-email">None هاتف</span>'}
+        ${s.father ? `<div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.father}</div>` : '<span class="no-email">None إيميل</span>'}
       </div>
     `;
     
     const motherRow = s.mother && s.mother !== s.father ? `
       <div class="email-row" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0;border-top:1px solid #f0f5fa">
-        <div style="font-size:10px;font-weight:700;color:var(--primary)">👩 الأم</div>
-        ${s.motherMobile ? `<a href="tel:${s.motherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.motherMobile}</a>` : '<span class="no-email">لا يوجد هاتف</span>'}
+        <div style="font-size:10px;font-weight:700;color:var(--primary)">👩 الMother</div>
+        ${s.motherMobile ? `<a href="tel:${s.motherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.motherMobile}</a>` : '<span class="no-email">None هاتف</span>'}
         <div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.mother}</div>
       </div>
     ` : '';
@@ -651,8 +651,8 @@ function renderContacts() {
       ${infoRows}
       <div class="card-emails">${fatherRow}${motherRow}</div>
       <div class="card-actions">
-        <button class="btn btn-primary btn-sm" onclick="openEditModal(${s.id})">✏️ تعديل</button>
-        <button class="btn btn-danger btn-sm" onclick="askDelete(${s.id})">🗑️ حذف</button>
+        <button class="btn btn-primary btn-sm" onclick="openEditModal(${s.id})">✏️ Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="askDelete(${s.id})">🗑️ Delete</button>
       </div>
     </div>`;
   }).join('');
@@ -675,7 +675,7 @@ function renderEmailList() {
         <div class="avatar ${av}" style="width:36px;height:36px;font-size:13px">${initials(s.name)}</div>
         <div style="flex:1">
           <div style="font-size:13px;font-weight:700">${s.name}</div>
-          <div style="font-size:11px;color:var(--muted)">${s.father||s.mother||'لا يوجد إيميل'}</div>
+          <div style="font-size:11px;color:var(--muted)">${s.father||s.mother||'None إيميل'}</div>
         </div>
       </div>
     </div>`;
@@ -701,14 +701,14 @@ function deselectAll() {
 
 function updateSelUI() {
   const n = selectedIds.size;
-  document.getElementById('selLabel').textContent = n > 0 ? `تم اختيار ${n} طالب` : 'اختر الطلاب للإرسال';
+  document.getElementById('selLabel').textContent = n > 0 ? `تم اختيار ${n} Student` : 'Select Students للSend';
 }
 
 function updateRecipients() {
   const target = document.getElementById('emailTarget').value;
   const box = document.getElementById('rcptBox');
   const sel = students.filter(s => selectedIds.has(s.id));
-  if (!sel.length) { box.innerHTML = '<span style="font-size:12px;color:var(--muted)">اختر طلاب من الأعلى...</span>'; box._emails=[]; return; }
+  if (!sel.length) { box.innerHTML = '<span style="font-size:12px;color:var(--muted)">Select طلاب from الأon...</span>'; box._emails=[]; return; }
   let emails = [];
   sel.forEach(s => {
     if ((target==='father'||target==='both') && s.father && !emails.includes(s.father)) emails.push(s.father);
@@ -716,17 +716,17 @@ function updateRecipients() {
   });
   box.innerHTML = emails.length
     ? emails.map(e=>`<span class="rtag">${e}</span>`).join('')
-    : '<span style="font-size:12px;color:var(--muted)">لا توجد إيميلات للمحددين</span>';
+    : '<span style="font-size:12px;color:var(--muted)">No إيميلات للمحددين</span>';
   box._emails = emails;
 }
 
 // ── SEND ──
 function sendEmail() {
   const emails = document.getElementById('rcptBox')._emails || [];
-  if (!emails.length) { toast('اختاري طلاب أولاً', 'err'); return; }
+  if (!emails.length) { toast('Please select students first', 'err'); return; }
   const subject = document.getElementById('composeSubject').value;
   const body = document.getElementById('composeBody').value;
-  if (!subject) { toast('اكتبي الموضوع أولاً', 'err'); return; }
+  if (!subject) { toast('Enter Subject أولاً', 'err'); return; }
 
   const sendType = document.getElementById('emailSendType').value;
   const ccInput = document.getElementById('ccEmails');
@@ -769,7 +769,7 @@ function openGmailCompose(emails, subject, body, sendType = 'to', ccEmails = '')
     
     console.log('📱 Mobile detected - using mailto:', mailtoUrl);
     window.location.href = mailtoUrl;
-    toast('✅ جاري فتح Gmail...', 'ok');
+    toast('✅ Opening Gmail...', 'ok');
     
   } else {
     // On desktop/laptop: use Gmail URL
@@ -799,7 +799,7 @@ function openGmailCompose(emails, subject, body, sendType = 'to', ccEmails = '')
       window.location.href = gmailUrl;
     }
     
-    toast('✅ جاري فتح Gmail...', 'ok');
+    toast('✅ Opening Gmail...', 'ok');
   }
 }
 
@@ -807,7 +807,7 @@ function openSendModal(emails, subject, body, sendType = 'to', ccEmails = '') {
   document.getElementById('sendEmails').textContent = emails.join('، ');
   document.getElementById('sendSubject').textContent = subject || '—';
   document.getElementById('sendBody').textContent = body || '—';
-  document.getElementById('attachStatus').textContent = `المرفقات (${attachments.length} ملف)`;
+  document.getElementById('attachStatus').textContent = `Attachments (${attachments.length} ملف)`;
   const al = document.getElementById('sendAttachList');
   al.innerHTML = attachments.map(a =>
     `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f5fa;font-size:12px">
@@ -860,7 +860,7 @@ function renderAttachments() {
 }
 
 function openGoogleDrivePicker() {
-  toast('افتحي Drive واختاري الملف ثم شاركيه في الإيميل مباشرة', '');
+  toast('افتحي Drive واختاري الملف ثم شاركيه in الإيميل مباشرة', '');
   setTimeout(() => {
     window.open('https://drive.google.com', '_blank');
   }, 800);
@@ -868,8 +868,8 @@ function openGoogleDrivePicker() {
 
 // ── ADD / EDIT MODAL ──
 function openAddModal() {
-  document.getElementById('editTitle').textContent = '➕ إضافة طالب';
-  document.getElementById('editSubtitle').textContent = 'أدخل بيانات الطالب كاملة';
+  document.getElementById('editTitle').textContent = '➕ Add Student';
+  document.getElementById('editSubtitle').textContent = 'أدخل بيانات الStudent كاملة';
   document.getElementById('editId').value = '';
   document.getElementById('editStudentId').value = '';
   document.getElementById('editName').value = '';
@@ -887,7 +887,7 @@ function openAddModal() {
 function openEditModal(id) {
   const s = students.find(x => x.id === id);
   if (!s) return;
-  document.getElementById('editTitle').textContent = '✏️ تعديل بيانات الطالب';
+  document.getElementById('editTitle').textContent = '✏️ Edit بيانات الStudent';
   document.getElementById('editSubtitle').textContent = s.name;
   document.getElementById('editId').value = id;
   document.getElementById('editStudentId').value = s.id;
@@ -920,7 +920,7 @@ function saveStudent() {
   const mother = document.getElementById('editMother').value.trim() || null;
   const email = document.getElementById('editEmail').value.trim() || null;
 
-  if (!sid || !name) { toast('الرقم والاسم مطلوبان', 'err'); return; }
+  if (!sid || !name) { toast('ID and name are required', 'err'); return; }
 
   const studentData = {
     id: sid,
@@ -938,11 +938,11 @@ function saveStudent() {
   if (origId) {
     const idx = students.findIndex(s => s.id === parseInt(origId));
     if (idx > -1) students[idx] = studentData;
-    toast('✅ تم التعديل بنجاح', 'ok');
+    toast('✅ تم الEdit بنجاح', 'ok');
   } else {
-    if (students.find(s => s.id === sid)) { toast('رقم الطالب موجود مسبقاً', 'err'); return; }
+    if (students.find(s => s.id === sid)) { toast('Student ID exists مسبقاً', 'err'); return; }
     students.push(studentData);
-    toast('✅ تمت الإضافة بنجاح', 'ok');
+    toast('✅ Added successfully', 'ok');
   }
   saveData();
   closeEditModal();
@@ -965,7 +965,7 @@ function confirmDelete() {
   saveData();
   closeConfirm();
   renderContacts();
-  toast('🗑️ تم الحذف', 'ok');
+  toast('🗑️ تم الDelete', 'ok');
 }
 
 // ── TOAST ──
@@ -1043,7 +1043,7 @@ setInterval(async () => {
 
 // ── LOGOUT ──
 async function handleLogout() {
-  if (confirm('تسجيل الخروج؟')) {
+  if (confirm('Logout؟')) {
     await auth.signOut();
     closeDataMenu();
     showLogin();
@@ -1087,7 +1087,7 @@ function importData(e) {
 function renderTemplates() {
   const list = document.getElementById('templatesList');
   if (!templates.length) {
-    list.innerHTML = '<div class="empty"><div class="ei">📝</div>لا توجد قوالب محفوظة</div>';
+    list.innerHTML = '<div class="empty"><div class="ei">📝</div>No قوالب محفوظة</div>';
     return;
   }
   list.innerHTML = templates.map((t,i) => {
@@ -1095,11 +1095,11 @@ function renderTemplates() {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
       <div style="font-size:14px;font-weight:700;color:var(--primary)">${t.name}</div>
       <div style="display:flex;gap:6px">
-      <button class="btn btn-primary btn-sm" onclick="useTemplate(${i})">✉️ استخدام</button>
+      <button class="btn btn-primary btn-sm" onclick="useTemplate(${i})">✉️ Use</button>
       <button class="btn btn-outline btn-sm" onclick="editTemplate(${i})">✏️</button>
       <button class="btn btn-danger btn-sm" onclick="deleteTemplate(${i})">🗑️</button>
       </div></div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px"><strong>الموضوع:</strong> ${t.subject}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px"><strong>Subject:</strong> ${t.subject}</div>
       </div>`;
   }).join('');
 }
@@ -1135,9 +1135,9 @@ function saveTemplate() {
 }
 
 function deleteTemplate(i) {
-  if (!confirm('حذف هذا القالب؟')) return;
+  if (!confirm('Delete هذا القالب؟')) return;
   templates.splice(i, 1);
-  saveData(); renderTemplates(); toast('🗑️ تم الحذف', 'ok');
+  saveData(); renderTemplates(); toast('🗑️ تم الDelete', 'ok');
 }
 
 function useTemplate(i) {
@@ -1145,7 +1145,7 @@ function useTemplate(i) {
   switchTab('email');
   selectAll();
   document.getElementById('personalizedSendBtn').style.display = 'flex';
-  toast('✅ اختاري الطلاب ثم اضغطي "إرسال إيميلات مخصصة"', 'ok');
+  toast('✅ اختاري الطلاب ثم اضغطي "Send Emailات مخصصة"', 'ok');
 }
 
 function sendPersonalizedEmails() {
@@ -1184,7 +1184,7 @@ function sendPersonalizedEmails() {
 }
 
 function renderPersonalizedList() {
-  document.getElementById("personalizedCount").textContent = personalizedList.length + " طالب";
+  document.getElementById("personalizedCount").textContent = personalizedList.length + " Student";
   const list = document.getElementById('personalizedList');
   list.innerHTML = personalizedList.map((item, idx) => `
     <div style="background:white;border:2px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
@@ -1193,11 +1193,11 @@ function renderPersonalizedList() {
           <div style="font-size:13px;font-weight:700">${item.student.name}</div>
           <div style="font-size:11px;color:var(--muted);direction:ltr;text-align:left">${item.emails.join(', ')}</div>
         </div>
-        <button class="btn btn-outline btn-sm" onclick="previewPersonalized(${idx})">👁️ معاينة</button>
-        <button class="btn btn-primary btn-sm" onclick="sendSinglePersonalized(${idx})">📧 إرسال</button>
+        <button class="btn btn-outline btn-sm" onclick="previewPersonalized(${idx})">👁️ Preview</button>
+        <button class="btn btn-primary btn-sm" onclick="sendSinglePersonalized(${idx})">📧 Send</button>
       </div>
       <div id="preview${idx}" style="display:none;background:#f8fbff;border-radius:8px;padding:10px;margin-top:8px;font-size:11px">
-        <div style="margin-bottom:6px"><strong>الموضوع:</strong> ${item.subject}</div>
+        <div style="margin-bottom:6px"><strong>Subject:</strong> ${item.subject}</div>
         <div><strong>الرسالة:</strong></div>
         <div style="white-space:pre-wrap;margin-top:4px;color:var(--muted)">${item.body}</div>
       </div>
@@ -1259,8 +1259,8 @@ function getFullName(fullName) {
 
 function replacePlaceholders(text, student) {
   return text
-    .replace(/\[اسم الطالب\]/g, getFullName(student.name))
-    .replace(/\[رقم الطالب\]/g, student.id)
+    .replace(/\[Student Name\]/g, getFullName(student.name))
+    .replace(/\[Student ID\]/g, student.id)
     .replace(/STUDENT_NAME/g, getFullName(student.name))
     .replace(/STUDENT_FIRST_NAME/g, getFirstName(student.name))
     .replace(/STUDENT_FIRST_TWO_NAMES/g, getFirstTwoNames(student.name))
@@ -1301,7 +1301,7 @@ function renderStats() {
           <div style="flex:1;height:8px;background:#e5e7eb;border-radius:4px;width:120px;overflow:hidden">
             <div style="height:100%;background:var(--accent);width:${percent}%"></div>
           </div>
-          <span style="font-size:13px;font-weight:700;min-width:50px;text-align:right">${count} (${percent}%)</span>
+          <span style="font-size:13px;font-weight:700;min-width:50px;text-align:left">${count} (${percent}%)</span>
         </div>
       </div>
     `;
@@ -1326,7 +1326,7 @@ function renderStats() {
             <div style="flex:1;height:6px;background:#e5e7eb;border-radius:3px;width:100px;overflow:hidden">
               <div style="height:100%;background:var(--primary);width:${percent}%"></div>
             </div>
-            <span style="font-size:12px;font-weight:700;min-width:50px;text-align:right">${count} (${percent}%)</span>
+            <span style="font-size:12px;font-weight:700;min-width:50px;text-align:left">${count} (${percent}%)</span>
           </div>
         </div>
       `;
@@ -1342,19 +1342,19 @@ function renderStats() {
   const contactHtml = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div style="font-size:11px;padding:8px;background:white;border-radius:6px">
-        <div style="color:var(--muted);margin-bottom:2px">📞 هاتف الأب</div>
+        <div style="color:var(--muted);margin-bottom:2px">📞 Father Phone</div>
         <div style="font-weight:700;color:var(--primary)">${withFatherMobile}/${students.length}</div>
       </div>
       <div style="font-size:11px;padding:8px;background:white;border-radius:6px">
-        <div style="color:var(--muted);margin-bottom:2px">📞 هاتف الأم</div>
+        <div style="color:var(--muted);margin-bottom:2px">📞 Mother Phone</div>
         <div style="font-weight:700;color:var(--primary)">${withMotherMobile}/${students.length}</div>
       </div>
       <div style="font-size:11px;padding:8px;background:white;border-radius:6px">
-        <div style="color:var(--muted);margin-bottom:2px">📧 إيميل الأب</div>
+        <div style="color:var(--muted);margin-bottom:2px">📧 Father Email</div>
         <div style="font-weight:700;color:var(--primary)">${withFatherEmail}/${students.length}</div>
       </div>
       <div style="font-size:11px;padding:8px;background:white;border-radius:6px">
-        <div style="color:var(--muted);margin-bottom:2px">📧 إيميل الأم</div>
+        <div style="color:var(--muted);margin-bottom:2px">📧 Mother Email</div>
         <div style="font-weight:700;color:var(--primary)">${withMotherEmail}/${students.length}</div>
       </div>
     </div>
@@ -1367,10 +1367,10 @@ function printContacts() {
   const printWindow = window.open('', '_blank');
   const printContent = `
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html dir="ltr" lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>قائمة جهات الاتصال - KG2-A</title>
+  <title>قائمة Contacts - KG2-A</title>
   <style>
     @page { size: A4; margin: 15mm; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1379,7 +1379,7 @@ function printContacts() {
     .header h1 { color: #1a4f7a; font-size: 18pt; margin-bottom: 5px; }
     .header p { color: #666; font-size: 10pt; }
     table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-    th, td { border: 1px solid #ddd; padding: 6px; text-align: right; }
+    th, td { border: 1px solid #ddd; padding: 6px; text-align: left; }
     th { background: #1a4f7a; color: white; font-weight: bold; }
     tr:nth-child(even) { background: #f8f9fa; }
     .student-name { font-weight: bold; color: #1a4f7a; }
@@ -1392,21 +1392,21 @@ function printContacts() {
 </head>
 <body>
   <div class="header">
-    <h1>قائمة جهات الاتصال - KG2-A</h1>
-    <p>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-    <p>إجمالي الطلاب: ${students.length} طالب</p>
+    <h1>قائمة Contacts - KG2-A</h1>
+    <p>تاريخ الPrint: ${new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+    <p>Total Students: ${students.length} Student</p>
   </div>
   
   <table>
     <thead>
       <tr>
         <th style="width:5%">#</th>
-        <th style="width:25%">اسم الطالب</th>
-        <th style="width:8%">النوع</th>
-        <th style="width:12%">الجنسية</th>
-        <th style="width:15%">هاتف الأب</th>
-        <th style="width:15%">هاتف الأم</th>
-        <th style="width:20%">إيميل ولي الأمر</th>
+        <th style="width:25%">Student Name</th>
+        <th style="width:8%">Gender</th>
+        <th style="width:12%">Nationality</th>
+        <th style="width:15%">Father Phone</th>
+        <th style="width:15%">Mother Phone</th>
+        <th style="width:20%">إيميل ولي الMotherر</th>
       </tr>
     </thead>
     <tbody>
@@ -1414,7 +1414,7 @@ function printContacts() {
         <tr>
           <td>${i + 1}</td>
           <td class="student-name">${s.name}</td>
-          <td>${s.gender === 'Male' ? '👨 ذكر' : '👩 أنثى'}</td>
+          <td>${s.gender === 'Male' ? '👨 Male' : '👩 Female'}</td>
           <td>${s.nationality || '-'}</td>
           <td>${s.fatherMobile ? '0' + s.fatherMobile : '-'}</td>
           <td>${s.motherMobile ? '0' + s.motherMobile : '-'}</td>
@@ -1426,17 +1426,17 @@ function printContacts() {
   
   <div class="footer">
     <p>City School - KG2-A Contact List</p>
-    <p>هذه القائمة سرية ومخصصة للاستخدام الداخلي فقط</p>
+    <p>هذه القائمة سرية ومخصصة للUse الداخلي فقط</p>
   </div>
   
-  <button class="no-print" onclick="window.print()" style="position:fixed;top:10px;left:10px;padding:10px 20px;background:#1a4f7a;color:white;border:none;border-radius:5px;cursor:pointer;font-size:14px">🖨️ طباعة</button>
+  <button class="no-print" onclick="window.print()" style="position:fixed;top:10px;left:10px;padding:10px 20px;background:#1a4f7a;color:white;border:none;border-radius:5px;cursor:pointer;font-size:14px">🖨️ Print</button>
 </body>
 </html>
   `;
   
   printWindow.document.write(printContent);
   printWindow.document.close();
-  toast('✅ جاهز للطباعة!', 'ok');
+  toast('✅ جاهز للPrint!', 'ok');
 }
 
 // ── AUTO LOGOUT ──
@@ -1462,7 +1462,7 @@ function checkIdle() {
 async function autoLogout() {
   console.log('Auto logout due to inactivity');
   await saveData(); // Save before logout
-  toast('تم تسجيل الخروج تلقائياً بسبب عدم النشاط', 'info');
+  toast('تم Logout تلقائياً بسبب عدم النشاط', 'info');
   setTimeout(() => {
     handleLogout();
   }, 2000);
@@ -1489,7 +1489,7 @@ async function handleLogin() {
     await auth.signInWithEmailAndPassword(email, password);
     hideLogin();
   } catch(err) {
-    document.getElementById('loginError').textContent = "خطأ في تسجيل الدخول";
+    document.getElementById('loginError').textContent = "خطأ in Login";
     document.getElementById('loginError').style.display = "block";
   }
 }
@@ -1518,18 +1518,18 @@ async function init() {
   <div style="background:white;border-radius:20px;padding:32px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
     <div style="text-align:center;margin-bottom:24px">
       <div style="width:64px;height:64px;background:var(--accent);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px">🎒</div>
-      <h1 style="font-size:20px;font-weight:900;color:var(--primary)">نظام KG2-A</h1>
+      <h1 style="font-size:20px;font-weight:900;color:var(--primary)">KG2-A System</h1>
     </div>
     <div class="fg">
-      <label>📧 البريد الإلكتروني</label>
+      <label>📧 Email</label>
       <input type="email" id="loginEmail" placeholder="teacher@cityschool.ae" style="direction:ltr;text-align:left">
     </div>
     <div class="fg">
-      <label>🔒 كلمة المرور</label>
+      <label>🔒 Password</label>
       <input type="password" id="loginPassword" placeholder="••••••••" style="direction:ltr;text-align:left">
     </div>
     <div id="loginError" style="display:none;color:red;font-size:12px;margin-bottom:10px"></div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleLogin()">🚀 تسجيل الدخول</button>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleLogin()">🚀 Login</button>
   </div>
 </div>
 
