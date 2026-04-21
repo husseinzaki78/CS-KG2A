@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KG2-A System</title>
 
+<html dir="ltr" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KG2-A System</title>
 <style>
 :root {
   --primary: #1a4f7a;
@@ -151,389 +151,339 @@ header p { font-size: 12px; opacity: 0.75; }
 .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
 .empty .ei { font-size: 36px; margin-bottom: 8px; }
 </style>
-</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script></head>
 <body>
-
 <header style="display:flex;align-items:center;gap:12px">
-  <img src="data:image/jpeg;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//Z" alt="City School Logo" style="height:55px;width:auto;border-radius:4px">
-  <div style="flex:1">
-    <h1 style="margin:0;font-size:18px;font-weight:700">KG2-A System</h1>
-    <p style="margin:0;font-size:12px;opacity:0.9">City Private School — Parent Management</p>
+<img alt="City School Logo" src="data:image/jpeg;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//Z" style="height:55px;width:auto;border-radius:4px"/>
+<div style="flex:1">
+<h1 style="margin:0;font-size:18px;font-weight:700">KG2-A System</h1>
+<p style="margin:0;font-size:12px;opacity:0.9">City Private School — Parent Management</p>
+</div>
+<div class="header-badge" id="totalBadge">25 Students</div>
+<div style="background:rgba(34,197,94,0.2);border:1px solid #22c55e;color:#15803d;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px">
+<span style="width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite"></span>Firebase
   </div>
-  <div class="header-badge" id="totalBadge">25 Students</div>
-  <div style="background:rgba(34,197,94,0.2);border:1px solid #22c55e;color:#15803d;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px">
-    <span style="width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite"></span>Firebase
-  </div>
-  <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}</style>
-  <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);padding:6px 12px;font-size:11px" onclick="showDataMenu()">⚙️</button>
+<style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}</style>
+<button class="btn btn-sm" onclick="showDataMenu()" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);padding:6px 12px;font-size:11px">⚙️</button>
 </header>
-
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('contacts')">
-    <span class="tab-icon">👥</span>Contacts
+<div class="tab active" onclick="switchTab('contacts')">
+<span class="tab-icon">👥</span>Contacts
   </div>
-  <div class="tab" onclick="switchTab('email')">
-    <span class="tab-icon">✉️</span>Send Email
+<div class="tab" onclick="switchTab('email')">
+<span class="tab-icon">✉️</span>Send Email
   </div>
-  <div class="tab" onclick="switchTab('templates')">
-    <span class="tab-icon">📝</span>Templates
+<div class="tab" onclick="switchTab('templates')">
+<span class="tab-icon">📝</span>Templates
   </div>
-  <div class="tab" onclick="switchTab('stats')">
-    <span class="tab-icon">📊</span>Statistics
+<div class="tab" onclick="switchTab('stats')">
+<span class="tab-icon">📊</span>Statistics
   </div>
 </div>
-
 <div class="page active" id="page-contacts">
-  <div class="search-wrap">
-    <span class="si">🔍</span>
-    <input type="text" id="contactSearch" placeholder="Search Name  Student ID..." oninput="renderContacts()">
-  </div>
-  <div class="action-row">
-    <span class="count-badge" id="contactCount">25 Student</span>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-outline btn-sm" onclick="printContacts()">🖨️ Print</button>
-      <button class="btn btn-primary btn-sm" onclick="openAddModal()">➕ Add Student</button>
-    </div>
-  </div>
-  <div id="contactsList"></div>
+<div class="search-wrap">
+<span class="si">🔍</span>
+<input id="contactSearch" oninput="renderContacts()" placeholder="Search Name  Student ID..." type="text"/>
 </div>
-
+<div class="action-row">
+<span class="count-badge" id="contactCount">25 Student</span>
+<div style="display:flex;gap:8px">
+<button class="btn btn-outline btn-sm" onclick="printContacts()">🖨️ Print</button>
+<button class="btn btn-primary btn-sm" onclick="openAddModal()">➕ Add Student</button>
+</div>
+</div>
+<div id="contactsList"></div>
+</div>
 <div class="page" id="page-email">
-  <div class="select-bar">
-    <span class="slabel" id="selLabel">Select Students Send</span>
-    <button class="btn btn-outline btn-sm" onclick="selectAll()">✅ All</button>
-    <button class="btn btn-outline btn-sm" onclick="deselectAll()">❌ Cancel</button>
-  </div>
-  <div class="search-wrap">
-    <span class="si">🔍</span>
-    <input type="text" id="emailSearch" placeholder="Search in..." oninput="renderEmailList()">
-  </div>
-  <div id="emailList"></div>
-
-  <div style="background:white;border-radius:16px;padding:18px;margin-top:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
-    <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:14px">✉️  </div>
-
-    <div class="fg">
-      <label>📧 Recipients</label>
-      <div class="rcpt-box" id="rcptBox"><span style="font-size:12px;color:var(--muted)">Select  from on...</span></div>
-    </div>
-
-    <div class="fg">
-      <label>⚙️ Send to</label>
-      <select id="emailTarget" onchange="updateRecipients()">
-        <option value="both">Father Mother with</option>
-        <option value="father">Father </option>
-        <option value="mother">Mother </option>
-      </select>
-    </div>
-
-    <div class="fg">
-      <label>📝 Subject</label>
-      <input type="text" id="composeSubject" placeholder=" ...">
-    </div>
-
-    <div class="fg">
-      <label>💬 Message</label>
-      <textarea id="composeBody" placeholder="Enter  ..."></textarea>
-    </div>
-
-    <div class="fg">
-      <label>📎 Attachments</label>
-      <div class="attach-area" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-        <div style="font-size:28px">📁</div>
-        <p>   from </p>
-        <p style="font-size:11px;margin-top:4px">    </p>
-      </div>
-      <input type="file" id="fileInput" multiple style="display:none" onchange="handleFileSelect(event)">
-
-      <button class="drive-btn" style="margin-top:8px" onclick="openGoogleDrivePicker()">
-        <svg class="drive-icon" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
-          <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
-          <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/>
-          <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/>
-          <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
-          <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
-          <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
-        </svg>
+<div class="select-bar">
+<span class="slabel" id="selLabel">Select Students Send</span>
+<button class="btn btn-outline btn-sm" onclick="selectAll()">✅ All</button>
+<button class="btn btn-outline btn-sm" onclick="deselectAll()">❌ Cancel</button>
+</div>
+<div class="search-wrap">
+<span class="si">🔍</span>
+<input id="emailSearch" oninput="renderEmailList()" placeholder="Search in..." type="text"/>
+</div>
+<div id="emailList"></div>
+<div style="background:white;border-radius:16px;padding:18px;margin-top:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+<div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:14px">✉️  </div>
+<div class="fg">
+<label>📧 Recipients</label>
+<div class="rcpt-box" id="rcptBox"><span style="font-size:12px;color:var(--muted)">Select  from on...</span></div>
+</div>
+<div class="fg">
+<label>⚙️ Send to</label>
+<select id="emailTarget" onchange="updateRecipients()">
+<option value="both">Father Mother with</option>
+<option value="father">Father </option>
+<option value="mother">Mother </option>
+</select>
+</div>
+<div class="fg">
+<label>📝 Subject</label>
+<input id="composeSubject" placeholder=" ..." type="text"/>
+</div>
+<div class="fg">
+<label>💬 Message</label>
+<textarea id="composeBody" placeholder="Enter  ..."></textarea>
+</div>
+<div class="fg">
+<label>📎 Attachments</label>
+<div class="attach-area" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragleave="handleDragLeave(event)" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+<div style="font-size:28px">📁</div>
+<p>   from </p>
+<p style="font-size:11px;margin-top:4px"> </p>
+</div>
+<input id="fileInput" multiple="" onchange="handleFileSelect(event)" style="display:none" type="file"/>
+<button class="drive-btn" onclick="openGoogleDrivePicker()" style="margin-top:8px">
+<svg class="drive-icon" viewbox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+<path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"></path>
+<path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"></path>
+<path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"></path>
+<path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"></path>
+<path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"></path>
+<path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"></path>
+</svg>
          from Google Drive
       </button>
-
-      <div class="attach-list" id="attachList"></div>
-    </div>
-
-    <div class="fg">
-      <label>📮  Send</label>
-      <select id="emailSendType">
-        <option value="to">To -  (All Recipients  )</option>
-        <option value="bcc">BCC - Hidden (each recipient cannot see others)</option>
-      </select>
-    </div>
-
-    <div class="fg">
-      <label>📧 CC -  in / (Optional)</label>
-      <input type="text" id="ccEmails" placeholder="supervisor@cityschool.ae, manager@cityschool.ae" style="direction:ltr;text-align:left">
-      <small style="font-size:11px;color:var(--muted);display:block;margin-top:4px">Separate  with comma (,)</small>
-    </div>
-
-    <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="sendEmail()">
+<div class="attach-list" id="attachList"></div>
+</div>
+<div class="fg">
+<label>📮  Send</label>
+<select id="emailSendType">
+<option value="to">To -  (All Recipients  )</option>
+<option value="bcc">BCC - Hidden (each recipient cannot see others)</option>
+</select>
+</div>
+<div class="fg">
+<label>📧 CC -  in / (Optional)</label>
+<input id="ccEmails" placeholder="supervisor@cityschool.ae, manager@cityschool.ae" style="direction:ltr;text-align:left" type="text"/>
+<small style="font-size:11px;color:var(--muted);display:block;margin-top:4px">Separate  with comma (,)</small>
+</div>
+<button class="btn btn-success" onclick="sendEmail()" style="width:100%;justify-content:center;padding:14px;font-size:15px">
       🚀 Send  Gmail
     </button>
-    <button id="personalizedSendBtn" class="btn btn-accent" style="width:100%;justify-content:center;padding:14px;font-size:15px;display:none;margin-top:10px" onclick="sendPersonalizedEmails()">
+<button class="btn btn-accent" id="personalizedSendBtn" onclick="sendPersonalizedEmails()" style="width:100%;justify-content:center;padding:14px;font-size:15px;display:none;margin-top:10px">
       ✨ Send Email  ()
     </button>
-  </div>
 </div>
-
-
+</div>
 <div class="page" id="page-templates">
-  <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-      <div style="font-size:14px;font-weight:700;color:var(--primary)">📝 Saved Email Templates</div>
-      <button class="btn btn-primary btn-sm" onclick="openTemplateModal()">➕ Add Template</button>
-    </div>
-    <div id="templatesList"></div>
-  </div>
+<div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+<div style="font-size:14px;font-weight:700;color:var(--primary)">📝 Saved Email Templates</div>
+<button class="btn btn-primary btn-sm" onclick="openTemplateModal()">➕ Add Template</button>
 </div>
-
+<div id="templatesList"></div>
+</div>
+</div>
 <div class="page" id="page-stats">
-  <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:16px;font-weight:700;color:var(--primary)">📊 Statistics </div>
-      <span class="count-badge" id="totalBadge">25 Student</span>
-    </div>
-    
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-      <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:16px;border-radius:12px">
-        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Total Students</div>
-        <div style="font-size:24px;font-weight:700" id="statTotal">25</div>
-      </div>
-      <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;padding:16px;border-radius:12px">
-        <div style="font-size:11px;opacity:0.9;margin-bottom:4px"> Mother</div>
-        <div style="font-size:24px;font-weight:700" id="statParents">25</div>
-      </div>
-    </div>
-    
-    <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">👥 Gender</div>
-      <div id="genderStats"></div>
-    </div>
-    
-    <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">🌍 Nationalities</div>
-      <div id="nationalityStats"></div>
-    </div>
-    
-    <div style="background:#f8fbff;border-radius:12px;padding:16px">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📞 Contact Information</div>
-      <div id="contactStats"></div>
-    </div>
-  </div>
+<div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+<div style="font-size:16px;font-weight:700;color:var(--primary)">📊 Statistics </div>
+<span class="count-badge" id="totalBadge">25 Student</span>
 </div>
-
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+<div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:16px;border-radius:12px">
+<div style="font-size:11px;opacity:0.9;margin-bottom:4px">Total Students</div>
+<div id="statTotal" style="font-size:24px;font-weight:700">25</div>
+</div>
+<div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;padding:16px;border-radius:12px">
+<div style="font-size:11px;opacity:0.9;margin-bottom:4px"> Mother</div>
+<div id="statParents" style="font-size:24px;font-weight:700">25</div>
+</div>
+</div>
+<div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
+<div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">👥 Gender</div>
+<div id="genderStats"></div>
+</div>
+<div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
+<div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">🌍 Nationalities</div>
+<div id="nationalityStats"></div>
+</div>
+<div style="background:#f8fbff;border-radius:12px;padding:16px">
+<div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📞 Contact Information</div>
+<div id="contactStats"></div>
+</div>
+</div>
+</div>
 <div class="overlay" id="editOverlay">
-  <div class="modal" style="max-height:90vh;overflow-y:auto">
-    <div class="modal-head">
-      <div>
-        <h2 id="editTitle">➕ Add Student</h2>
-        <p id="editSubtitle">  Student </p>
-      </div>
-      <button class="close-btn" onclick="closeEditModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="editId">
-      
-      <div style="background:#e0f2fe;padding:10px;border-radius:8px;margin-bottom:12px;font-size:11px">
+<div class="modal" style="max-height:90vh;overflow-y:auto">
+<div class="modal-head">
+<div>
+<h2 id="editTitle">➕ Add Student</h2>
+<p id="editSubtitle">  Student </p>
+</div>
+<button class="close-btn" onclick="closeEditModal()">✕</button>
+</div>
+<div class="modal-body">
+<input id="editId" type="hidden"/>
+<div style="background:#e0f2fe;padding:10px;border-radius:8px;margin-bottom:12px;font-size:11px">
         💡 <strong>Tip:</strong> Fill all fields for complete database
       </div>
-      
-      <div class="fg">
-        <label>🪪 Student ID</label>
-        <input type="number" id="editStudentId" placeholder="Example: 11353">
-      </div>
-      
-      <div class="fg">
-        <label>👤 Full Student Name</label>
-        <input type="text" id="editName" placeholder="Name  (CAPITAL LETTERS)">
-      </div>
-      
-      <div class="fg">
-        <label>⚧️ Gender</label>
-        <select id="editGender">
-          <option value="">Select Gender</option>
-          <option value="Male">👨 Male (Male)</option>
-          <option value="Female">👩 Female (Female)</option>
-        </select>
-      </div>
-      
-      <div class="fg">
-        <label>🌍 Nationality</label>
-        <input type="text" id="editNationality" placeholder="Egyptian, Yemeni, Jordanian, etc.">
-      </div>
-      
-      <div class="fg">
-        <label>🕌 Religion</label>
-        <input type="text" id="editReligion" placeholder="Muslim, Christian, etc.">
-      </div>
-      
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👨  Father</div>
-      
-      <div class="fg">
-        <label>📞 Father Phone</label>
-        <input type="tel" id="editFatherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left">
-      </div>
-      
-      <div class="fg">
-        <label>📧 Father Email</label>
-        <input type="email" id="editFather" placeholder="father@email.com" style="direction:ltr;text-align:left">
-      </div>
-      
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👩  Mother</div>
-      
-      <div class="fg">
-        <label>📞 Mother Phone</label>
-        <input type="tel" id="editMotherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left">
-      </div>
-      
-      <div class="fg">
-        <label>📧 Mother Email</label>
-        <input type="email" id="editMother" placeholder="mother@email.com" style="direction:ltr;text-align:left">
-      </div>
-      
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">🎓  Student</div>
-      
-      <div class="fg">
-        <label>📧 Student Email</label>
-        <input type="email" id="editEmail" placeholder="student@cityschool.ae" style="direction:ltr;text-align:left">
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveStudent()">💾 Save</button>
-    </div>
-  </div>
+<div class="fg">
+<label>🪪 Student ID</label>
+<input id="editStudentId" placeholder="Example: 11353" type="number"/>
 </div>
-
+<div class="fg">
+<label>👤 Full Student Name</label>
+<input id="editName" placeholder="Name  (CAPITAL LETTERS)" type="text"/>
+</div>
+<div class="fg">
+<label>⚧️ Gender</label>
+<select id="editGender">
+<option value="">Select Gender</option>
+<option value="Male">👨 Male (Male)</option>
+<option value="Female">👩 Female (Female)</option>
+</select>
+</div>
+<div class="fg">
+<label>🌍 Nationality</label>
+<input id="editNationality" placeholder="Egyptian, Yemeni, Jordanian, etc." type="text"/>
+</div>
+<div class="fg">
+<label>🕌 Religion</label>
+<input id="editReligion" placeholder="Muslim, Christian, etc." type="text"/>
+</div>
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0"/>
+<div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👨  Father</div>
+<div class="fg">
+<label>📞 Father Phone</label>
+<input id="editFatherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left" type="tel"/>
+</div>
+<div class="fg">
+<label>📧 Father Email</label>
+<input id="editFather" placeholder="father@email.com" style="direction:ltr;text-align:left" type="email"/>
+</div>
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0"/>
+<div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👩  Mother</div>
+<div class="fg">
+<label>📞 Mother Phone</label>
+<input id="editMotherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left" type="tel"/>
+</div>
+<div class="fg">
+<label>📧 Mother Email</label>
+<input id="editMother" placeholder="mother@email.com" style="direction:ltr;text-align:left" type="email"/>
+</div>
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0"/>
+<div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">🎓  Student</div>
+<div class="fg">
+<label>📧 Student Email</label>
+<input id="editEmail" placeholder="student@cityschool.ae" style="direction:ltr;text-align:left" type="email"/>
+</div>
+</div>
+<div class="modal-foot">
+<button class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
+<button class="btn btn-primary" onclick="saveStudent()">💾 Save</button>
+</div>
+</div>
+</div>
 <div class="overlay" id="confirmOverlay" style="align-items:center">
-  <div class="confirm-box">
-    <div style="font-size:36px;margin-bottom:8px">🗑️</div>
-    <h3>Delete Student</h3>
-    <p id="confirmName">   from Delete  Student</p>
-    <div class="confirm-actions">
-      <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
-      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
-    </div>
-  </div>
+<div class="confirm-box">
+<div style="font-size:36px;margin-bottom:8px">🗑️</div>
+<h3>Delete Student</h3>
+<p id="confirmName">   from Delete  Student</p>
+<div class="confirm-actions">
+<button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
+<button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
 </div>
-
+</div>
+</div>
 <div class="toast" id="toast"></div>
-
 <div class="overlay" id="dataMenuOverlay" style="align-items:center">
-  <div style="background:white;border-radius:20px;width:90%;max-width:340px;padding:0;animation:slideUp 0.25s ease">
-    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:16px 20px;border-radius:20px 20px 0 0;font-size:15px;font-weight:700">⚙️ Data Management</div>
-    <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
-      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="exportData()">📤 Export Data</button>
-      <button class="btn btn-accent" style="width:100%;justify-content:center" onclick="document.getElementById('importFile').click()">📥 Import Data</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-      <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="handleLogout()">🚪 Logout</button>
-      <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeDataMenu()">Cancel</button>
-    </div>
-  </div>
+<div style="background:white;border-radius:20px;width:90%;max-width:340px;padding:0;animation:slideUp 0.25s ease">
+<div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:16px 20px;border-radius:20px 20px 0 0;font-size:15px;font-weight:700">⚙️ Data Management</div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+<button class="btn btn-primary" onclick="exportExcel()" style="width:100%;justify-content:center">📤 Export Data</button>
+<button class="btn btn-accent" onclick="document.getElementById('excelImport').click()" style="width:100%;justify-content:center">📥 Import Data</button>
+<input accept=".json" id="importFile" onchange="importData(event)" style="display:none" type="file"/>
+<button class="btn btn-danger" onclick="handleLogout()" style="width:100%;justify-content:center">🚪 Logout</button>
+<button class="btn btn-outline" onclick="closeDataMenu()" style="width:100%;justify-content:center">Cancel</button>
 </div>
-
+</div>
+</div>
 <div class="overlay" id="templateOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <div>
-        <h2 id="templateTitle">📝 New Template</h2>
-        <p>: [Student Name]  STUDENT_NAME  [Student ID]  STUDENT_ID </p>
-      </div>
-      <button class="close-btn" onclick="closeTemplateModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="templateId">
-      <div class="fg">
-        <label>📌 Template Name</label>
-        <input type="text" id="templateName" placeholder="Example:   from">
-      </div>
-      <div class="fg">
-        <label>📝 Subject</label>
-        <input type="text" id="templateSubject" placeholder=" Use [Student Name]">
-      </div>
-      <div class="fg">
-        <label>💬 Message</label>
-        <textarea id="templateBody" placeholder="Example:   Mother [Student Name]..."></textarea>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline" onclick="closeTemplateModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveTemplate()">💾 Save </button>
-    </div>
-  </div>
+<div class="modal">
+<div class="modal-head">
+<div>
+<h2 id="templateTitle">📝 New Template</h2>
+<p>: [Student Name]  STUDENT_NAME  [Student ID]  STUDENT_ID </p>
 </div>
-
+<button class="close-btn" onclick="closeTemplateModal()">✕</button>
+</div>
+<div class="modal-body">
+<input id="templateId" type="hidden"/>
+<div class="fg">
+<label>📌 Template Name</label>
+<input id="templateName" placeholder="Example:   from" type="text"/>
+</div>
+<div class="fg">
+<label>📝 Subject</label>
+<input id="templateSubject" placeholder=" Use [Student Name]" type="text"/>
+</div>
+<div class="fg">
+<label>💬 Message</label>
+<textarea id="templateBody" placeholder="Example:   Mother [Student Name]..."></textarea>
+</div>
+</div>
+<div class="modal-foot">
+<button class="btn btn-outline" onclick="closeTemplateModal()">Cancel</button>
+<button class="btn btn-primary" onclick="saveTemplate()">💾 Save </button>
+</div>
+</div>
+</div>
 <div class="overlay" id="personalizedOverlay">
-  <div class="modal" style="max-width:500px">
-    <div class="modal-head">
-      <div>
-        <h2>✨ Personalized Emails</h2>
-        <p id="personalizedCount"></p>
-      </div>
-      <button class="close-btn" onclick="closePersonalizedModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#0369a1;line-height:1.6">
+<div class="modal" style="max-width:500px">
+<div class="modal-head">
+<div>
+<h2>✨ Personalized Emails</h2>
+<p id="personalizedCount"></p>
+</div>
+<button class="close-btn" onclick="closePersonalizedModal()">✕</button>
+</div>
+<div class="modal-body">
+<div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#0369a1;line-height:1.6">
         📌 <strong>How it works:</strong> All Student   from .  "📧 Send" All Student ← will open Gmail ←  Send ← return to list and continue remaining 
       </div>
-      <div id="personalizedList"></div>
-    </div>
-  </div>
+<div id="personalizedList"></div>
 </div>
-
+</div>
+</div>
 <div class="overlay" id="sendOverlay" style="align-items:center">
-  <div style="background:white;border-radius:20px;width:92%;max-width:400px;max-height:85vh;overflow-y:auto;animation:slideUp 0.25s ease">
-    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:18px 20px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between">
-      <div><div style="font-size:16px;font-weight:700">📧  Send</div><div style="font-size:11px;opacity:0.75;margin-top:2px">   Send</div></div>
-      <button class="close-btn" onclick="document.getElementById('sendOverlay').classList.remove('open')">✕</button>
-    </div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
-
-      <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📧 Recipients</div>
-        <div id="sendEmails" style="font-size:12px;color:var(--text);direction:ltr;text-align:left;word-break:break-all"></div>
-      </div>
-
-      <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📝 Subject</div>
-        <div id="sendSubject" style="font-size:13px;font-weight:600"></div>
-      </div>
-
-      <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">💬 </div>
-        <div id="sendBody" style="font-size:12px;color:var(--text);white-space:pre-wrap;max-height:100px;overflow-y:auto"></div>
-      </div>
-
-      <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px">
-        <div id="attachStatus" style="font-size:11px;font-weight:700;color:#c2410c;margin-bottom:6px">Attachments</div>
-        <div id="sendAttachList"></div>
-        <div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:8px;font-size:11px;color:#92400e;line-height:1.6">
+<div style="background:white;border-radius:20px;width:92%;max-width:400px;max-height:85vh;overflow-y:auto;animation:slideUp 0.25s ease">
+<div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:18px 20px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between">
+<div><div style="font-size:16px;font-weight:700">📧  Send</div><div style="font-size:11px;opacity:0.75;margin-top:2px">   Send</div></div>
+<button class="close-btn" onclick="document.getElementById('sendOverlay').classList.remove('open')">✕</button>
+</div>
+<div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+<div style="background:#f8fbff;border-radius:10px;padding:12px">
+<div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📧 Recipients</div>
+<div id="sendEmails" style="font-size:12px;color:var(--text);direction:ltr;text-align:left;word-break:break-all"></div>
+</div>
+<div style="background:#f8fbff;border-radius:10px;padding:12px">
+<div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📝 Subject</div>
+<div id="sendSubject" style="font-size:13px;font-weight:600"></div>
+</div>
+<div style="background:#f8fbff;border-radius:10px;padding:12px">
+<div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">💬 </div>
+<div id="sendBody" style="font-size:12px;color:var(--text);white-space:pre-wrap;max-height:100px;overflow-y:auto"></div>
+</div>
+<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px">
+<div id="attachStatus" style="font-size:11px;font-weight:700;color:#c2410c;margin-bottom:6px">Attachments</div>
+<div id="sendAttachList"></div>
+<div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:8px;font-size:11px;color:#92400e;line-height:1.6">
           ⚠️ <strong>:</strong>   Gmail in Attachments  from   Attach in Gmail  Android       
         </div>
-      </div>
-
-      <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="confirmSend()">
+</div>
+<button class="btn btn-success" onclick="confirmSend()" style="width:100%;justify-content:center;padding:14px;font-size:15px">
         🚀  Gmail Send
       </button>
-    </div>
-  </div>
 </div>
-
+</div>
+</div>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
 <script>
 // ── DATA ──
 let templates = [];
@@ -1515,25 +1465,68 @@ async function init() {
 }
 
 </script>
-
 <div id="loginScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1a4f7a,#0d3057);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px">
-  <div style="background:white;border-radius:20px;padding:32px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
-    <div style="text-align:center;margin-bottom:24px">
-      <div style="width:64px;height:64px;background:var(--accent);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px">🎒</div>
-      <h1 style="font-size:20px;font-weight:900;color:var(--primary)">KG2-A System</h1>
-    </div>
-    <div class="fg">
-      <label>📧 Email</label>
-      <input type="email" id="loginEmail" placeholder="teacher@cityschool.ae" style="direction:ltr;text-align:left">
-    </div>
-    <div class="fg">
-      <label>🔒 Password</label>
-      <input type="password" id="loginPassword" placeholder="••••••••" style="direction:ltr;text-align:left">
-    </div>
-    <div id="loginError" style="display:none;color:red;font-size:12px;margin-bottom:10px"></div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleLogin()">🚀 Login</button>
-  </div>
+<div style="background:white;border-radius:20px;padding:32px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+<div style="text-align:center;margin-bottom:24px">
+<div style="width:64px;height:64px;background:var(--accent);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px">🎒</div>
+<h1 style="font-size:20px;font-weight:900;color:var(--primary)">KG2-A System</h1>
 </div>
+<div class="fg">
+<label>📧 Email</label>
+<input id="loginEmail" placeholder="teacher@cityschool.ae" style="direction:ltr;text-align:left" type="email"/>
+</div>
+<div class="fg">
+<label>🔒 Password</label>
+<input id="loginPassword" placeholder="••••••••" style="direction:ltr;text-align:left" type="password"/>
+</div>
+<div id="loginError" style="display:none;color:red;font-size:12px;margin-bottom:10px"></div>
+<button class="btn btn-primary" onclick="handleLogin()" style="width:100%;justify-content:center">🚀 Login</button>
+</div>
+</div>
+<script>
+// ===== Excel Export =====
+function exportExcel(){
+  const data = contacts || [];
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Students");
+  XLSX.writeFile(wb, "students.xlsx");
+}
 
-</body>
+// ===== Excel Import =====
+function importExcel(event){
+  const file = event.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, {type:'array'});
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet);
+
+    json.forEach(row=>{
+      // map fields safely (no breaking existing structure)
+      const student = {
+        id: Date.now() + Math.random(),
+        studentId: row["Student ID"] || "",
+        name: row["Name"] || "",
+        gender: row["Gender"] || "",
+        nationality: row["Nationality"] || "",
+        religion: row["Religion"] || "",
+        fatherMobile: row["Father Phone"] || "",
+        father: row["Father Email"] || "",
+        motherMobile: row["Mother Phone"] || "",
+        mother: row["Mother Email"] || "",
+        email: row["Student Email"] || ""
+      };
+
+      addStudentToSystem(student); // existing function
+    });
+
+    showToast("Excel Imported Successfully", "ok");
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+</script><input accept=".xlsx,.xls" id="excelImport" onchange="importExcel(event)" style="display:none" type="file"/></body>
 </html>
