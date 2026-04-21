@@ -151,6 +151,7 @@ header p { font-size: 12px; opacity: 0.75; }
 .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
 .empty .ei { font-size: 36px; margin-bottom: 8px; }
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -1390,6 +1391,7 @@ function printContacts() {
       body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <body>
   <div class="header">
@@ -1432,6 +1434,80 @@ function printContacts() {
   </div>
   
   <button class="no-print" onclick="window.print()" style="position:fixed;top:10px;right:10px;padding:10px 20px;background:#1a4f7a;color:white;border:none;border-radius:5px;cursor:pointer;font-size:14px;box-shadow:0 2px 10px rgba(0,0,0,0.2)">🖨️ Print</button>
+
+<!-- Import Excel Button -->
+<div style="position:fixed;bottom:20px;right:20px;z-index:999">
+  <button class="btn btn-accent" onclick="document.getElementById('excelFile').click()">📥 Import Excel</button>
+  <input type="file" id="excelFile" accept=".xlsx,.xls" style="display:none" onchange="importExcel(event)">
+</div>
+
+<script>
+async function importExcel(event){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = async function(e){
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, {type:'array'});
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet);
+
+    let success = 0;
+    let failed = 0;
+
+    for(const row of json){
+      try{
+        const student = mapRowToStudent(row);
+        const newRef = firebase.database().ref("students").push();
+        await newRef.set(student);
+        success++;
+      }catch(err){
+        console.error("Row Error:", row, err);
+        failed++;
+      }
+    }
+
+    if(typeof showToast === 'function'){
+      showToast(`✅ تم استيراد ${success} طالب | ❌ فشل ${failed}`, "ok");
+    }else{
+      alert(`Imported ${success} students, Failed ${failed}`);
+    }
+
+    if(typeof loadStudents === 'function') loadStudents();
+    if(typeof renderContacts === 'function') renderContacts();
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+function mapRowToStudent(row){
+  return {
+    studentId: row["Student ID"] || "",
+    name: row["Name As In Passport (EN)"] || "",
+    gender: row["Gender Name (EN)"] || "",
+    nationality: row["Nationality (EN)"] || "",
+    religion: row["Religion (EN)"] || "",
+
+    fatherMobile: cleanPhone(row["Father Mobile"]),
+    fatherEmail: "",
+
+    motherMobile: cleanPhone(row["Mother Mobile"]),
+    motherEmail: "",
+
+    studentEmail: row["Student Email"] || "",
+
+    createdAt: Date.now()
+  };
+}
+
+function cleanPhone(phone){
+  if(!phone) return "";
+  return String(phone).trim();
+}
+</script>
+
 </body>
 </html>
   `;
@@ -1534,6 +1610,80 @@ async function init() {
     <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleLogin()">🚀 Login</button>
   </div>
 </div>
+
+
+<!-- Import Excel Button -->
+<div style="position:fixed;bottom:20px;right:20px;z-index:999">
+  <button class="btn btn-accent" onclick="document.getElementById('excelFile').click()">📥 Import Excel</button>
+  <input type="file" id="excelFile" accept=".xlsx,.xls" style="display:none" onchange="importExcel(event)">
+</div>
+
+<script>
+async function importExcel(event){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = async function(e){
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, {type:'array'});
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet);
+
+    let success = 0;
+    let failed = 0;
+
+    for(const row of json){
+      try{
+        const student = mapRowToStudent(row);
+        const newRef = firebase.database().ref("students").push();
+        await newRef.set(student);
+        success++;
+      }catch(err){
+        console.error("Row Error:", row, err);
+        failed++;
+      }
+    }
+
+    if(typeof showToast === 'function'){
+      showToast(`✅ تم استيراد ${success} طالب | ❌ فشل ${failed}`, "ok");
+    }else{
+      alert(`Imported ${success} students, Failed ${failed}`);
+    }
+
+    if(typeof loadStudents === 'function') loadStudents();
+    if(typeof renderContacts === 'function') renderContacts();
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+function mapRowToStudent(row){
+  return {
+    studentId: row["Student ID"] || "",
+    name: row["Name As In Passport (EN)"] || "",
+    gender: row["Gender Name (EN)"] || "",
+    nationality: row["Nationality (EN)"] || "",
+    religion: row["Religion (EN)"] || "",
+
+    fatherMobile: cleanPhone(row["Father Mobile"]),
+    fatherEmail: "",
+
+    motherMobile: cleanPhone(row["Mother Mobile"]),
+    motherEmail: "",
+
+    studentEmail: row["Student Email"] || "",
+
+    createdAt: Date.now()
+  };
+}
+
+function cleanPhone(phone){
+  if(!phone) return "";
+  return String(phone).trim();
+}
+</script>
 
 </body>
 </html>
