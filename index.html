@@ -30,7 +30,7 @@ header {
   box-shadow: 0 4px 20px rgba(26,79,122,0.3);
   position: sticky; top: 0; z-index: 100;
 }
-.logo { width: 120px; height: 120px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.logo { width: 46px; height: 46px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
 header h1 { font-size: 18px; font-weight: 900; }
 header p { font-size: 12px; opacity: 0.75; }
 .header-badge { margin-right: auto; background: rgba(240,165,0,0.2); border: 1px solid var(--accent); color: var(--accent); padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
@@ -234,8 +234,13 @@ header p { font-size: 12px; opacity: 0.75; }
     </div>
 
     <div class="fg">
-      <label>💬 Message</label>
-      <textarea id="composeBody" placeholder="Enter  ..."></textarea>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+        <label style="margin-bottom:0;">💬 Message</label>
+        <button id="aiBtn" type="button" class="btn btn-sm" style="background:linear-gradient(135deg, #6d28d9, #4c1d95); color:white; border:none; padding:6px 12px; cursor:pointer;" onclick="improveTextWithAI()">
+          ✨ تحسين بالذكاء الاصطناعي
+        </button>
+      </div>
+      <textarea id="composeBody" placeholder="اكتب مسودتك هنا ثم اضغط على زر التحسين..."></textarea>
     </div>
 
     <div class="fg">
@@ -1063,7 +1068,7 @@ async function handleLogout() {
 function showDataMenu() { document.getElementById('dataMenuOverlay').classList.add('open'); }
 function closeDataMenu() { document.getElementById('dataMenuOverlay').classList.remove('open'); }
 
-// ── EXPORT / IMPORT JSON ──
+// ── EXPORT / IMPORT JSON & EXCEL ──
 function exportData() {
   const data = {students, templates, exported: new Date().toISOString()};
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
@@ -1092,10 +1097,8 @@ function importData(e) {
     } catch(err) { toast('❌   ', 'err'); }
   };
   reader.readAsText(file);
-  e.target.value = '';
 }
 
-// ── EXPORT / IMPORT EXCEL (SMART SYNC) ──
 function exportExcel() {
   const ws = XLSX.utils.json_to_sheet(students);
   const wb = XLSX.utils.book_new();
@@ -1122,23 +1125,18 @@ function importExcel(e) {
       let addedCount = 0;
 
       importedStudents.forEach(imported => {
-        if (!imported.id) return; // تخطي إذا لم يوجد ID
-
-        // البحث عن الطالب في السجلات الحالية (مزامنة ذكية)
+        if (!imported.id) return;
         const existingIndex = students.findIndex(s => Number(s.id) === Number(imported.id));
 
         if (existingIndex > -1) {
-          // تحديث البيانات للطالب الموجود مسبقاً
           students[existingIndex] = { ...students[existingIndex], ...imported };
           updatedCount++;
         } else {
-          // إضافة الطالب الجديد
           students.push(imported);
           addedCount++;
         }
       });
 
-      // حفظ التغييرات وعمل ريندر
       saveData();
       renderContacts();
       renderStats();
@@ -1151,10 +1149,8 @@ function importExcel(e) {
     }
   };
   reader.readAsArrayBuffer(file);
-  // تصفير الحقل لاختيار نفس الملف لاحقاً إذا لزم
   e.target.value = '';
 }
-
 
 // ── TEMPLATES ──
 function renderTemplates() {
@@ -1226,8 +1222,6 @@ function sendPersonalizedEmails() {
   if (!sel.length || !currentTemplate) return;
   
   console.log('🎯 Building personalized emails for', sel.length, 'students');
-  console.log('Template subject:', currentTemplate.subject);
-  console.log('Template body:', currentTemplate.body.substring(0, 100) + '...');
   
   const target = document.getElementById('emailTarget').value;
   personalizedList = sel.map(s => {
@@ -1238,10 +1232,6 @@ function sendPersonalizedEmails() {
     const replacedSubject = replacePlaceholders(currentTemplate.subject, s);
     const replacedBody = replacePlaceholders(currentTemplate.body, s);
     
-    console.log('Student:', s.name);
-    console.log('  Subject:', replacedSubject);
-    console.log('  Body preview:', replacedBody.substring(0, 50) + '...');
-    
     return {
       student: s,
       emails: emails,
@@ -1249,8 +1239,6 @@ function sendPersonalizedEmails() {
       body: replacedBody
     };
   }).filter(x => x.emails.length > 0);
-  
-  console.log('✅ Created', personalizedList.length, 'personalized emails');
   
   renderPersonalizedList();
   document.getElementById('personalizedOverlay').classList.add('open');
@@ -1284,30 +1272,69 @@ function previewPersonalized(idx) {
 }
 
 function sendSinglePersonalized(idx) {
-  console.log('📤 Sending personalized email #' + idx);
   const item = personalizedList[idx];
-  
-  console.log('Student:', item.student.name);
-  console.log('Subject AFTER replacement:', item.subject);
-  console.log('Body AFTER replacement:', item.body);
-  
-  // Get CC emails if any
   const ccInput = document.getElementById('ccEmails');
   const ccEmails = ccInput ? ccInput.value.trim() : '';
-  
-  console.log('📧 Email details:', {
-    student: item.emails,
-    subject: item.subject,
-    body: item.body.substring(0, 100) + '...',
-    hasCC: !!ccEmails
-  });
-  
   openGmailCompose(item.emails, item.subject, item.body, 'to', ccEmails);
 }
 
 function closePersonalizedModal() {
   document.getElementById('personalizedOverlay').classList.remove('open');
   document.getElementById('personalizedSendBtn').style.display = 'none';
+}
+
+// ── AI EMAIL ENHANCEMENT ──
+async function improveTextWithAI() {
+  const bodyEl = document.getElementById('composeBody');
+  const text = bodyEl.value.trim();
+  
+  if (!text) { 
+    toast('يرجى كتابة مسودة رسالة أولاً ليقوم الذكاء الاصطناعي بتحسينها!', 'err'); 
+    return; 
+  }
+
+  const btn = document.getElementById('aiBtn');
+  const originalBtnText = btn.innerHTML;
+  btn.innerHTML = '⏳ جاري التحسين...';
+  btn.disabled = true;
+
+  const API_KEY = 'AIzaSyAPt2NSGyTv1QLwiwrVJw4yDVnfp5tFw-w'; 
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
+  const prompt = `
+  أنت مساعد ذكي لمعلمة روضة (KG2-A) تدعى مس دعاء (Ms. Doaa) في مدرسة (City Private School) في إمارة عجمان.
+  المطلوب: أعد صياغة النص التالي ليكون إيميلاً احترافياً، ودوداً، وواضحاً موجهاً لأولياء أمور الطلاب.
+  حافظ على نفس المعنى ولكن حسن الأسلوب اللغوي ليتناسب مع تواصل إدارة المدرسة ومعلمة الفصل مع أولياء الأمور. لا تضف معلومات غير موجودة.
+  النص الأصلي:
+  ${text}
+  `;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.candidates && data.candidates.length > 0) {
+      const improvedText = data.candidates[0].content.parts[0].text;
+      bodyEl.value = improvedText.trim();
+      toast('✨ تم تحسين النص بنجاح', 'ok');
+    } else {
+      console.error(data);
+      toast('❌ فشل التحسين، حاول مرة أخرى', 'err');
+    }
+  } catch(err) {
+    console.error('AI Error:', err);
+    toast('❌ حدث خطأ في الاتصال بالذكاء الاصطناعي', 'err');
+  } finally {
+    btn.innerHTML = originalBtnText;
+    btn.disabled = false;
+  }
 }
 
 // ── NAME FORMATTING ──
@@ -1343,7 +1370,6 @@ function replacePlaceholders(text, student) {
 
 // ── STATISTICS ──
 function renderStats() {
-  // Total counts
   document.getElementById('statTotal').textContent = students.length;
   
   const uniqueParents = new Set();
@@ -1353,7 +1379,6 @@ function renderStats() {
   });
   document.getElementById('statParents').textContent = uniqueParents.size;
   
-  // Gender stats
   const genderCounts = {};
   students.forEach(s => {
     const g = s.gender || 'Unknown';
@@ -1381,7 +1406,6 @@ function renderStats() {
   }).join('');
   document.getElementById('genderStats').innerHTML = genderHtml;
   
-  // Nationality stats
   const natCounts = {};
   students.forEach(s => {
     const n = s.nationality || 'Unknown';
@@ -1406,7 +1430,6 @@ function renderStats() {
     }).join('');
   document.getElementById('nationalityStats').innerHTML = natHtml;
   
-  // Contact stats
   const withFatherMobile = students.filter(s => s.fatherMobile).length;
   const withMotherMobile = students.filter(s => s.motherMobile).length;
   const withFatherEmail = students.filter(s => s.father).length;
@@ -1517,12 +1540,12 @@ function printContacts() {
 // ── AUTO LOGOUT ──
 let idleTimer;
 let idleTime = 0;
-const MAX_IDLE_TIME = 30 * 60 * 1000; // 30 minutes
+const MAX_IDLE_TIME = 30 * 60 * 1000;
 
 function resetIdleTimer() {
   idleTime = 0;
   clearTimeout(idleTimer);
-  idleTimer = setTimeout(checkIdle, 60000); // Check every minute
+  idleTimer = setTimeout(checkIdle, 60000);
 }
 
 function checkIdle() {
@@ -1536,20 +1559,18 @@ function checkIdle() {
 
 async function autoLogout() {
   console.log('Auto logout due to inactivity');
-  await saveData(); // Save before logout
+  await saveData();
   toast('Done Logout    ', 'info');
   setTimeout(() => {
     handleLogout();
   }, 2000);
 }
 
-// Track user activity
 document.addEventListener('click', resetIdleTimer);
 document.addEventListener('keypress', resetIdleTimer);
 document.addEventListener('scroll', resetIdleTimer);
 document.addEventListener('mousemove', resetIdleTimer);
 
-// Start idle timer
 resetIdleTimer();
 
 // ── AUTH ──
