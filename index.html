@@ -1298,8 +1298,6 @@ async function improveTextWithAI() {
   btn.disabled = true;
 
   const API_KEY = 'AIzaSyAPt2NSGyTv1QLwiwrVJw4yDVnfp5tFw-w'; 
-  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-
   const prompt = `
   You are an AI assistant for a Kindergarten teacher (KG2-A) named Ms. Doaa at City Private School in Ajman.
   Task: Rewrite the following text to be a professional, friendly, and clear email addressed to parents.
@@ -1308,33 +1306,48 @@ async function improveTextWithAI() {
   ${text}
   `;
 
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
-      })
-    });
+  // ميكانيزم البحث التلقائي: سنجرب هذه الموديلات بالترتيب لتخطي مشكلة نقص الصلاحيات
+  const models = ['gemini-1.5-flash', 'gemini-1.0-pro', 'gemini-pro'];
+  let success = false;
+  let errorMsg = '';
+
+  for (const model of models) {
+    console.log("Trying AI Model:", model);
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
     
-    const data = await response.json();
-    
-    if (response.ok && data.candidates && data.candidates.length > 0) {
-      const improvedText = data.candidates[0].content.parts[0].text;
-      bodyEl.value = improvedText.trim();
-      toast('✨ Text enhanced successfully!', 'ok');
-    } else {
-      console.error("API Error Details:", data);
-      const errorMsg = data.error ? data.error.message : 'Unknown server error';
-      toast('❌ Failed: ' + errorMsg, 'err');
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.candidates && data.candidates.length > 0) {
+        bodyEl.value = data.candidates[0].content.parts[0].text.trim();
+        toast('✨ Text enhanced successfully!', 'ok');
+        success = true;
+        break; // نجحنا! توقف عن تجربة باقي الموديلات
+      } else {
+        errorMsg = data.error ? data.error.message : 'Unknown server error';
+        console.warn(`Model ${model} failed:`, errorMsg);
+      }
+    } catch(err) {
+      console.error(`Fetch error with ${model}:`, err);
+      errorMsg = 'Network or connection error';
     }
-  } catch(err) {
-    console.error('Network/Fetch Error:', err);
-    toast('❌ Network or connection error', 'err');
-  } finally {
-    btn.innerHTML = originalBtnText;
-    btn.disabled = false;
   }
+
+  if (!success) {
+    toast('❌ Failed: ' + errorMsg.substring(0, 50) + '...', 'err');
+    alert("تنبيه من النظام:\nيبدو أن مفتاح الـ API الخاص بك لا يمتلك صلاحيات الوصول لأي من موديلات الذكاء الاصطناعي (Generative Language API is not enabled).\n\nيرجى الدخول إلى موقع: aistudio.google.com وإنشاء مفتاح جديد مجاناً لتفعيل الخدمة.");
+  }
+
+  btn.innerHTML = originalBtnText;
+  btn.disabled = false;
 }
 
 // ── NAME FORMATTING ──
