@@ -1289,7 +1289,7 @@ async function improveTextWithAI() {
   const text = bodyEl.value.trim();
   
   if (!text) { 
-    toast('يرجى كتابة مسودة رسالة أولاً ليقوم الذكاء الاصطناعي بتحسينها!', 'err'); 
+    toast('يرجى كتابة مسودة رسالة أولاً!', 'err'); 
     return; 
   }
 
@@ -1301,10 +1301,11 @@ async function improveTextWithAI() {
   const API_KEY = 'AIzaSyAPt2NSGyTv1QLwiwrVJw4yDVnfp5tFw-w'; 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
+  // تم تعديل التوجيه ليدعم الإنجليزية والعربية معاً
   const prompt = `
-  أنت مساعد ذكي لمعلمة روضة (KG2-A) تدعى مس دعاء (Ms. Doaa) في مدرسة (City Private School) في إمارة عجمان.
-  المطلوب: أعد صياغة النص التالي ليكون إيميلاً احترافياً، ودوداً، وواضحاً موجهاً لأولياء أمور الطلاب.
-  حافظ على نفس المعنى ولكن حسن الأسلوب اللغوي ليتناسب مع تواصل إدارة المدرسة ومعلمة الفصل مع أولياء الأمور. لا تضف معلومات غير موجودة.
+  أنت مساعد ذكي لمعلمة روضة (KG2-A) في مدرسة (City Private School).
+  المطلوب: أعد صياغة النص التالي ليكون إيميلاً احترافياً وودوداً موجهاً لأولياء الأمور.
+  ملاحظة هامة جداً: إذا كان النص الأصلي باللغة الإنجليزية، يجب أن تكون الصياغة والإيميل باللغة الإنجليزية. وإذا كان بالعربية فبالعربية.
   النص الأصلي:
   ${text}
   `;
@@ -1320,17 +1321,19 @@ async function improveTextWithAI() {
     
     const data = await response.json();
     
-    if (data.candidates && data.candidates.length > 0) {
+    if (response.ok && data.candidates && data.candidates.length > 0) {
       const improvedText = data.candidates[0].content.parts[0].text;
       bodyEl.value = improvedText.trim();
       toast('✨ تم تحسين النص بنجاح', 'ok');
     } else {
-      console.error(data);
-      toast('❌ فشل التحسين، حاول مرة أخرى', 'err');
+      console.error("API Error Details:", data);
+      // هذا السطر سيطبع لك سبب رفض جوجل للطلب في المربع الأحمر
+      const errorMsg = data.error ? data.error.message : 'خطأ غير معروف من السيرفر';
+      toast('❌ فشل: ' + errorMsg, 'err');
     }
   } catch(err) {
-    console.error('AI Error:', err);
-    toast('❌ حدث خطأ في الاتصال بالذكاء الاصطناعي', 'err');
+    console.error('Network/Fetch Error:', err);
+    toast('❌ حدث خطأ في الاتصال بالإنترنت', 'err');
   } finally {
     btn.innerHTML = originalBtnText;
     btn.disabled = false;
