@@ -156,7 +156,7 @@ header p { font-size: 12px; opacity: 0.75; }
 <body>
 
 <header style="display:flex;align-items:center;gap:12px">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6LT_avN6Yhg_zRRR3t0Vdo-6r0MkwFZSdQjdXCgarnAjniQWvfaMZoPU&s=10" alt="City School Logo" style="height:55px;width:auto;border-radius:4px">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6LT_avN6Yhg_zRRR3t0Vdo-6r0MkwFZSdQjdXCgarnAjniQWvfaMZoPU&s=10" alt="City School Logo" style="height:55px;width:auto;border-radius:4px;mix-blend-mode:multiply;">
   <div style="flex:1">
     <h1 style="margin:0;font-size:18px;font-weight:700">KG2-A System</h1>
     <p style="margin:0;font-size:12px;opacity:0.9">City Private School — Parent Management</p>
@@ -237,10 +237,10 @@ header p { font-size: 12px; opacity: 0.75; }
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
         <label style="margin-bottom:0;">💬 Message</label>
         <button id="aiBtn" type="button" class="btn btn-sm" style="background:linear-gradient(135deg, #6d28d9, #4c1d95); color:white; border:none; padding:6px 12px; cursor:pointer;" onclick="improveTextWithAI()">
-          ✨ تحسين بالذكاء الاصطناعي
+          ✨ AI Enhance
         </button>
       </div>
-      <textarea id="composeBody" placeholder="اكتب مسودتك هنا ثم اضغط على زر التحسين..."></textarea>
+      <textarea id="composeBody" placeholder="Enter your draft here..."></textarea>
     </div>
 
     <div class="fg">
@@ -1068,7 +1068,6 @@ async function handleLogout() {
 function showDataMenu() { document.getElementById('dataMenuOverlay').classList.add('open'); }
 function closeDataMenu() { document.getElementById('dataMenuOverlay').classList.remove('open'); }
 
-// ── EXPORT / IMPORT JSON & EXCEL ──
 function exportData() {
   const data = {students, templates, exported: new Date().toISOString()};
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
@@ -1289,25 +1288,23 @@ async function improveTextWithAI() {
   const text = bodyEl.value.trim();
   
   if (!text) { 
-    toast('يرجى كتابة مسودة رسالة أولاً!', 'err'); 
+    toast('Please write a draft message first!', 'err'); 
     return; 
   }
 
   const btn = document.getElementById('aiBtn');
   const originalBtnText = btn.innerHTML;
-  btn.innerHTML = '⏳ جاري التحسين...';
+  btn.innerHTML = '⏳ Enhancing...';
   btn.disabled = true;
 
   const API_KEY = 'AIzaSyAPt2NSGyTv1QLwiwrVJw4yDVnfp5tFw-w'; 
-  
-  // 💡 التعديل هنا: استخدمنا gemini-pro بدلاً من flash لضمان عمله 100%
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
   const prompt = `
-  أنت مساعد ذكي لمعلمة روضة (KG2-A) في مدرسة (City Private School).
-  المطلوب: أعد صياغة النص التالي ليكون إيميلاً احترافياً وودوداً موجهاً لأولياء الأمور.
-  ملاحظة هامة جداً: إذا كان النص الأصلي باللغة الإنجليزية، يجب أن تكون الصياغة والإيميل باللغة الإنجليزية. وإذا كان بالعربية فبالعربية.
-  النص الأصلي:
+  You are an AI assistant for a Kindergarten teacher (KG2-A) named Ms. Doaa at City Private School in Ajman.
+  Task: Rewrite the following text to be a professional, friendly, and clear email addressed to parents.
+  Important: If the original text is in English, the output MUST be in English. If it is in Arabic, the output MUST be in Arabic. Do not add fake information.
+  Original text:
   ${text}
   `;
 
@@ -1325,15 +1322,15 @@ async function improveTextWithAI() {
     if (response.ok && data.candidates && data.candidates.length > 0) {
       const improvedText = data.candidates[0].content.parts[0].text;
       bodyEl.value = improvedText.trim();
-      toast('✨ تم تحسين النص بنجاح', 'ok');
+      toast('✨ Text enhanced successfully!', 'ok');
     } else {
       console.error("API Error Details:", data);
-      const errorMsg = data.error ? data.error.message : 'خطأ غير معروف من السيرفر';
-      toast('❌ فشل: ' + errorMsg, 'err');
+      const errorMsg = data.error ? data.error.message : 'Unknown server error';
+      toast('❌ Failed: ' + errorMsg, 'err');
     }
   } catch(err) {
     console.error('Network/Fetch Error:', err);
-    toast('❌ حدث خطأ في الاتصال بالإنترنت', 'err');
+    toast('❌ Network or connection error', 'err');
   } finally {
     btn.innerHTML = originalBtnText;
     btn.disabled = false;
