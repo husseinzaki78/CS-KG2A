@@ -1299,9 +1299,10 @@ async function improveTextWithAI() {
   btn.disabled = true;
 
   const API_KEY = 'AIzaSyAPt2NSGyTv1QLwiwrVJw4yDVnfp5tFw-w'; 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+  
+  // 💡 التعديل هنا: استخدمنا gemini-pro بدلاً من flash لضمان عمله 100%
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
 
-  // تم تعديل التوجيه ليدعم الإنجليزية والعربية معاً
   const prompt = `
   أنت مساعد ذكي لمعلمة روضة (KG2-A) في مدرسة (City Private School).
   المطلوب: أعد صياغة النص التالي ليكون إيميلاً احترافياً وودوداً موجهاً لأولياء الأمور.
@@ -1327,7 +1328,6 @@ async function improveTextWithAI() {
       toast('✨ تم تحسين النص بنجاح', 'ok');
     } else {
       console.error("API Error Details:", data);
-      // هذا السطر سيطبع لك سبب رفض جوجل للطلب في المربع الأحمر
       const errorMsg = data.error ? data.error.message : 'خطأ غير معروف من السيرفر';
       toast('❌ فشل: ' + errorMsg, 'err');
     }
