@@ -1,935 +1,199 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KG2-A System - نظام الأطفال المبهج</title>
+<title>KG2-A System</title>
 
 <style>
-/* ═══════════════════════════════════════════════
-   KG2-A CHILD-FRIENDLY DESIGN SYSTEM
-   Cheerful, animated, and playful for kids!
-   ═══════════════════════════════════════════════ */
-
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes wiggle {
-  0%, 100% { transform: rotate(-3deg); }
-  50% { transform: rotate(3deg); }
-}
-
-@keyframes popIn {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes slideInRight {
-  from { transform: translateX(60px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(255,200,0,0.4); }
-  50% { box-shadow: 0 0 25px rgba(255,200,0,0.9); }
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-30px); }
-  100% { transform: translateX(30px); }
-}
-
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1) rotate(180deg); }
-}
-
-@keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  14% { transform: scale(1.1); }
-  28% { transform: scale(1); }
-  42% { transform: scale(1.1); }
-  70% { transform: scale(1); }
-}
-
 :root {
-  --primary: #FF6B6B;
-  --primary-light: #FFE0E0;
-  --secondary: #4ECDC4;
-  --secondary-light: #E0F7F5;
-  --accent: #FFD93D;
-  --accent-light: #FFF8DC;
-  --purple: #C084FC;
-  --purple-light: #F0E0FF;
-  --green: #6BCB77;
-  --green-light: #E0F7E8;
-  --orange: #FF9F45;
-  --orange-light: #FFF0E0;
-  --pink: #FF6B9D;
-  --pink-light: #FFE0EC;
-  --blue: #6C5CE7;
-  --blue-light: #E0DCFF;
-  --bg: linear-gradient(135deg, #FFF5F5 0%, #F0FFF4 25%, #FFF8E7 50%, #F0F7FF 75%, #FFF0F5 100%);
+  --primary: #1a4f7a;
+  --primary-light: #e8f4fd;
+  --accent: #f0a500;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --bg: #f0f5fa;
   --card: #ffffff;
-  --text: #2D3436;
-  --muted: #636E72;
-  --border: #FFE0E0;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #d1e3f0;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); direction: ltr; }
 
-body { 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-  background: var(--bg);
-  background-size: 400% 400%;
-  animation: gradientMove 20s ease infinite;
-  color: var(--text); 
-  direction: rtl;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.floating-shapes {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.shape {
-  position: absolute;
-  opacity: 0.06;
-  animation: float 8s ease-in-out infinite;
-}
-
-.shape:nth-child(1) { top: 5%; left: 5%; width: 80px; height: 80px; background: var(--primary); border-radius: 50%; animation-delay: 0s; }
-.shape:nth-child(2) { top: 15%; right: 8%; width: 50px; height: 50px; background: var(--secondary); border-radius: 15px; animation-delay: 1s; }
-.shape:nth-child(3) { top: 55%; left: 10%; width: 60px; height: 60px; background: var(--accent); border-radius: 50%; animation-delay: 2s; }
-.shape:nth-child(4) { top: 35%; right: 15%; width: 45px; height: 45px; background: var(--purple); transform: rotate(45deg); animation-delay: 3s; }
-.shape:nth-child(5) { top: 75%; left: 45%; width: 55px; height: 55px; background: var(--orange); border-radius: 50%; animation-delay: 4s; }
-.shape:nth-child(6) { top: 10%; left: 55%; width: 40px; height: 40px; background: var(--pink); border-radius: 10px; animation-delay: 5s; }
-.shape:nth-child(7) { top: 85%; right: 25%; width: 70px; height: 70px; background: var(--green); border-radius: 50%; animation-delay: 6s; }
-.shape:nth-child(8) { top: 45%; left: 75%; width: 35px; height: 35px; background: var(--blue); border-radius: 8px; animation-delay: 7s; }
-
+/* ── HEADER ── */
 header {
-  background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D, #4ECDC4);
-  background-size: 300% 300%;
-  animation: gradientMove 8s ease infinite;
-  color: white; padding: 18px 24px;
-  display: flex; align-items: center; gap: 16px;
-  box-shadow: 0 8px 32px rgba(255,107,107,0.4);
+  background: linear-gradient(135deg, #1a4f7a, #0d3057);
+  color: white; padding: 16px 20px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 4px 20px rgba(26,79,122,0.3);
   position: sticky; top: 0; z-index: 100;
-  border-radius: 0 0 35px 35px;
-  animation: slideInRight 0.6s ease;
 }
+.logo { width: 120px; height: 120px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+header h1 { font-size: 18px; font-weight: 900; }
+header p { font-size: 12px; opacity: 0.75; }
+.header-badge { margin-right: auto; background: rgba(240,165,0,0.2); border: 1px solid var(--accent); color: var(--accent); padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
 
-header h1 { 
-  font-size: 22px; 
-  font-weight: 900; 
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.15);
-}
+/* ── TABS ── */
+.tabs { display: flex; background: white; border-bottom: 2px solid var(--border); position: sticky; top: 78px; z-index: 99; }
+.tab { flex: 1; padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tab-icon { font-size: 18px; display: block; margin-bottom: 2px; }
 
-header p { 
-  font-size: 14px; 
-  opacity: 0.9; 
-  font-weight: 700;
-}
+/* ── PAGE ── */
+.page { display: none; padding: 16px; }
+.page.active { display: block; }
 
-.header-badge { 
-  margin-left: auto; 
-  background: rgba(255,255,255,0.3); 
-  border: 2px solid rgba(255,255,255,0.5); 
-  color: white; 
-  padding: 8px 18px; 
-  border-radius: 30px; 
-  font-size: 14px; 
-  font-weight: 900; 
-  white-space: nowrap;
-  backdrop-filter: blur(10px);
-  animation: bounce 2.5s ease infinite;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
+/* ── SEARCH BAR ── */
+.search-wrap { position: relative; margin-bottom: 14px; }
+.search-wrap input { width: 100%; padding: 12px 44px 12px 16px; border: 2px solid var(--border); border-radius: 12px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; outline: none; background: white; direction: ltr; }
+.search-wrap input:focus { border-color: var(--primary); }
+.search-wrap .si { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--muted); pointer-events: none; }
 
-.tabs { 
-  display: flex; 
-  background: rgba(255,255,255,0.95); 
-  border-bottom: 3px solid var(--border); 
-  position: sticky; 
-  top: 82px; 
-  z-index: 99;
-  backdrop-filter: blur(15px);
-  border-radius: 0 0 25px 25px;
-  margin: 0 12px;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.1);
-  overflow: hidden;
-}
+/* ── ACTION ROW ── */
+.action-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+.count-badge { background: var(--primary-light); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: var(--primary); }
 
-.tab { 
-  flex: 1; 
-  padding: 16px 8px; 
-  text-align: center; 
-  font-size: 14px; 
-  font-weight: 900; 
-  color: var(--muted); 
-  cursor: pointer; 
-  border-bottom: 4px solid transparent; 
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border-radius: 0 0 16px 16px;
-  position: relative;
-}
+/* ── BUTTONS ── */
+.btn { padding: 9px 18px; border-radius: 10px; border: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: #0d3057; }
+.btn-accent { background: var(--accent); color: white; }
+.btn-accent:active { background: #d4940a; }
+.btn-success { background: var(--success); color: white; }
+.btn-warning { background: var(--warning); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-outline { background: white; color: var(--primary); border: 2px solid var(--border); }
+.btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+.btn-icon { padding: 8px; border-radius: 8px; font-size: 16px; }
 
-.tab.active { 
-  color: var(--primary); 
-  border-bottom-color: var(--primary);
-  background: linear-gradient(to bottom, transparent, var(--primary-light));
-  transform: translateY(-2px);
-}
-
-.tab:hover:not(.active) {
-  color: var(--secondary);
-  background: var(--secondary-light);
-  transform: translateY(-2px);
-}
-
-.tab-icon { 
-  font-size: 26px; 
-  display: block; 
-  margin-bottom: 5px;
-  animation: wiggle 4s ease infinite;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-}
-
-.page { display: none; padding: 18px; position: relative; z-index: 1; }
-.page.active { display: block; animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-.search-wrap { position: relative; margin-bottom: 18px; }
-
-.search-wrap input { 
-  width: 100%; 
-  padding: 16px 55px 16px 20px; 
-  border: 3px solid var(--border); 
-  border-radius: 24px; 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-  font-size: 16px; 
-  outline: none; 
-  background: white; 
-  direction: rtl; 
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.search-wrap input:focus { 
-  border-color: var(--primary); 
-  box-shadow: 0 8px 30px rgba(255,107,107,0.25);
-  transform: translateY(-3px) scale(1.01);
-}
-
-.search-wrap .si { 
-  position: absolute; 
-  left: 18px; 
-  top: 50%; 
-  transform: translateY(-50%); 
-  font-size: 22px; 
-  color: var(--primary); 
-  pointer-events: none;
-  animation: bounce 2s ease infinite;
-}
-
-.action-row { 
-  display: flex; 
-  gap: 12px; 
-  margin-bottom: 18px; 
-  flex-wrap: wrap; 
-  align-items: center; 
-}
-
-.count-badge { 
-  background: linear-gradient(135deg, var(--primary-light), var(--secondary-light), var(--accent-light)); 
-  border: 2px solid var(--border); 
-  border-radius: 30px; 
-  padding: 10px 20px; 
-  font-size: 14px; 
-  font-weight: 900; 
-  color: var(--primary);
-  box-shadow: 0 6px 20px rgba(255,107,107,0.12);
-  animation: float 4s ease infinite;
-}
-
-.btn { 
-  padding: 12px 22px; 
-  border-radius: 20px; 
-  border: none; 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-  font-size: 15px; 
-  font-weight: 900; 
-  cursor: pointer; 
-  display: inline-flex; 
-  align-items: center; 
-  gap: 10px; 
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 0; height: 0;
-  background: rgba(255,255,255,0.3);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.btn:hover::before {
-  width: 300px; height: 300px;
-}
-
-.btn:hover {
-  transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
-}
-
-.btn:active {
-  transform: translateY(-1px) scale(0.97);
-}
-
-.btn-primary { 
-  background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D); 
-  color: white; 
-}
-
-.btn-accent { 
-  background: linear-gradient(135deg, #FFD93D, #FF9F45, #FF6B6B); 
-  color: white; 
-}
-
-.btn-success { 
-  background: linear-gradient(135deg, #6BCB77, #4ECDC4, #6C5CE7); 
-  color: white; 
-}
-
-.btn-warning { 
-  background: linear-gradient(135deg, #FF9F45, #FFD93D, #6BCB77); 
-  color: white; 
-}
-
-.btn-danger { 
-  background: linear-gradient(135deg, #FF6B6B, #EE5A6F, #C084FC); 
-  color: white; 
-}
-
-.btn-outline { 
-  background: white; 
-  color: var(--primary); 
-  border: 3px solid var(--border);
-}
-
-.btn-sm { padding: 10px 16px; font-size: 13px; border-radius: 14px; }
-.btn-icon { padding: 12px; border-radius: 14px; font-size: 20px; }
-
+/* ── CONTACT CARD ── */
 .contact-card {
-  background: white; 
-  border-radius: 28px; 
-  padding: 20px 22px;
-  margin-bottom: 16px; 
-  border: 3px solid transparent;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  overflow: hidden;
+  background: white; border-radius: 14px; padding: 14px 16px;
+  margin-bottom: 10px; border: 2px solid transparent;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: border 0.2s;
 }
-
-.contact-card::before {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 120px; height: 120px;
-  background: linear-gradient(135deg, var(--primary-light), transparent);
-  border-radius: 0 28px 0 100%;
-  opacity: 0.6;
-}
-
-.contact-card::after {
-  content: '';
-  position: absolute;
-  bottom: -20px; left: -20px;
-  width: 60px; height: 60px;
-  background: linear-gradient(135deg, var(--secondary-light), transparent);
-  border-radius: 50%;
-  opacity: 0.4;
-}
-
-.contact-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 16px 50px rgba(255,107,107,0.2);
-  border-color: var(--primary-light);
-}
-
-.contact-card.selected { 
-  border-color: var(--accent); 
-  background: linear-gradient(135deg, #FFF8DC, #FFF0E0, #FFE0E0);
-  animation: pulse-glow 2.5s ease infinite;
-}
-
-.card-top { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; position: relative; z-index: 1; }
-
-.avatar { 
-  width: 56px; 
-  height: 56px; 
-  border-radius: 50%; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  font-size: 20px; 
-  font-weight: 900; 
-  flex-shrink: 0;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  animation: wiggle 5s ease infinite;
-  border: 4px solid white;
-  position: relative;
-  z-index: 1;
-}
-
-.avatar::after {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 2px dashed var(--accent);
-  animation: rotate-slow 10s linear infinite;
-}
-
-.av0{background:linear-gradient(135deg,#FF6B6B,#FF8E53);color:white}
-.av1{background:linear-gradient(135deg,#4ECDC4,#6BCB77);color:white}
-.av2{background:linear-gradient(135deg,#FFD93D,#FF9F45);color:#2D3436}
-.av3{background:linear-gradient(135deg,#C084FC,#FF6B9D);color:white}
-.av4{background:linear-gradient(135deg,#6BCB77,#4ECDC4);color:white}
-.av5{background:linear-gradient(135deg,#FF9F45,#FFD93D);color:#2D3436}
-
-.card-name { font-size: 16px; font-weight: 900; line-height: 1.3; position: relative; z-index: 1; }
-.card-id { font-size: 13px; color: var(--muted); margin-top: 3px; font-weight: 700; position: relative; z-index: 1; }
-.card-emails { margin-bottom: 14px; position: relative; z-index: 1; }
-
-.email-row { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  padding: 8px 0; 
-  font-size: 14px; 
-  border-bottom: 2px dashed #f0f5fa; 
-}
-
+.contact-card.selected { border-color: var(--accent); background: #fffbf0; }
+.card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; flex-shrink: 0; }
+.av0{background:#dbeafe;color:#1d4ed8} .av1{background:#dcfce7;color:#15803d}
+.av2{background:#fef9c3;color:#92400e} .av3{background:#fce7f3;color:#9d174d}
+.av4{background:#ede9fe;color:#6d28d9} .av5{background:#ffedd5;color:#c2410c}
+.card-name { font-size: 13px; font-weight: 700; line-height: 1.3; flex: 1; }
+.card-id { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.card-emails { margin-bottom: 10px; }
+.email-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; border-bottom: 1px solid #f0f5fa; }
 .email-row:last-child { border-bottom: none; }
+.elabel { background: var(--primary-light); border-radius: 5px; padding: 2px 7px; font-size: 10px; font-weight: 700; color: var(--primary); flex-shrink: 0; }
+.evalue { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: left; font-size: 11px; flex: 1; }
+.no-email { color: #cbd5e1; font-style: italic; font-size: 11px; }
+.card-actions { display: flex; gap: 6px; }
 
-.elabel { 
-  background: linear-gradient(135deg, var(--primary-light), var(--secondary-light)); 
-  border-radius: 12px; 
-  padding: 4px 12px; 
-  font-size: 12px; 
-  font-weight: 900; 
-  color: var(--primary); 
-  flex-shrink: 0;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-}
+/* ── SELECT ALL BAR ── */
+.select-bar { background: white; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.select-bar .slabel { font-weight: 700; font-size: 13px; flex: 1; }
 
-.evalue { 
-  color: var(--muted); 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
-  direction: ltr; 
-  text-align: right; 
-  font-size: 13px; 
-  flex: 1;
-  font-weight: 700;
-}
-
-.no-email { color: #CBD5E1; font-style: italic; font-size: 13px; }
-
-.card-actions { display: flex; gap: 10px; position: relative; z-index: 1; }
-
-.select-bar { 
-  background: white; 
-  border-radius: 24px; 
-  padding: 16px 20px; 
-  margin-bottom: 16px; 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  flex-wrap: wrap; 
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  border: 3px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.select-bar::before {
-  content: '';
-  position: absolute;
-  top: -30px; right: -30px;
-  width: 80px; height: 80px;
-  background: linear-gradient(135deg, var(--accent-light), transparent);
-  border-radius: 50%;
-  opacity: 0.5;
-}
-
-.select-bar .slabel { font-weight: 900; font-size: 15px; flex: 1; position: relative; z-index: 1; }
-
-.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); }
+/* ── MODAL ── */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; align-items: flex-end; justify-content: center; }
 .overlay.open { display: flex; }
+.modal { background: white; border-radius: 20px 20px 0 0; width: 100%; max-height: 92vh; overflow-y: auto; animation: slideUp 0.25s ease; }
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-head { background: linear-gradient(135deg, #1a4f7a, #0d3057); color: white; padding: 18px 20px; border-radius: 20px 20px 0 0; display: flex; align-items: center; justify-content: space-between; }
+.modal-head h2 { font-size: 16px; font-weight: 700; }
+.modal-head p { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+.close-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal-body { padding: 20px; }
+.modal-foot { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; background: #f8fbff; border-radius: 0 0 0 0; }
 
-.modal { 
-  background: white; 
-  border-radius: 35px 35px 0 0; 
-  width: 100%; 
-  max-height: 92vh; 
-  overflow-y: auto; 
-  animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 -25px 70px rgba(0,0,0,0.2);
-  position: relative;
-}
-
-.modal::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 60px; height: 5px;
-  background: var(--border);
-  border-radius: 10px;
-  margin-top: 12px;
-}
-
-@keyframes slideUp { 
-  from { transform: translateY(80px); opacity: 0; } 
-  to { transform: translateY(0); opacity: 1; } 
-}
-
-.modal-head { 
-  background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D, #4ECDC4); 
-  background-size: 300% 300%;
-  animation: gradientMove 6s ease infinite;
-  color: white; 
-  padding: 24px 28px; 
-  border-radius: 35px 35px 0 0; 
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-}
-
-.modal-head::after {
-  content: '✨';
-  position: absolute;
-  top: -15px; right: 30px;
-  font-size: 80px;
-  opacity: 0.15;
-  animation: float 4s ease infinite;
-}
-
-.modal-head h2 { font-size: 20px; font-weight: 900; position: relative; z-index: 1; }
-.modal-head p { font-size: 13px; opacity: 0.9; margin-top: 4px; font-weight: 700; position: relative; z-index: 1; }
-
-.close-btn { 
-  background: rgba(255,255,255,0.35); 
-  border: none; 
-  color: white; 
-  width: 40px; 
-  height: 40px; 
-  border-radius: 50%; 
-  font-size: 20px; 
-  cursor: pointer; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  z-index: 1;
-}
-
-.close-btn:hover {
-  background: rgba(255,255,255,0.55);
-  transform: rotate(90deg) scale(1.1);
-}
-
-.modal-body { padding: 28px; }
-.modal-foot { 
-  padding: 18px 28px; 
-  border-top: 3px solid var(--border); 
-  display: flex; 
-  gap: 12px; 
-  justify-content: flex-end; 
-  background: linear-gradient(135deg, #FFF5F5, #F0FFF4, #FFF8E7);
-}
-
-.fg { margin-bottom: 22px; }
-.fg label { 
-  display: block; 
-  font-size: 15px; 
-  font-weight: 900; 
-  color: var(--primary); 
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
+/* ── FORM ── */
+.fg { margin-bottom: 16px; }
+.fg label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
 .fg input, .fg textarea, .fg select {
-  width: 100%; 
-  padding: 16px 18px; 
-  border: 3px solid var(--border);
-  border-radius: 20px; 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-  font-size: 15px;
-  outline: none; 
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
-  direction: rtl; 
-  background: #FFF8F8;
-  box-shadow: inset 0 3px 10px rgba(0,0,0,0.04);
+  width: 100%; padding: 11px 14px; border: 2px solid var(--border);
+  border-radius: 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px;
+  outline: none; transition: border 0.2s; direction: ltr; background: #f8fbff;
 }
+.fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--primary); background: white; }
+.fg textarea { min-height: 120px; resize: vertical; }
 
-.fg input:focus, .fg textarea:focus, .fg select:focus { 
-  border-color: var(--primary); 
-  background: white;
-  box-shadow: 0 8px 30px rgba(255,107,107,0.2), inset 0 3px 10px rgba(0,0,0,0.04);
-  transform: translateY(-3px);
-}
+/* ── ATTACHMENTS ── */
+.attach-area { border: 2px dashed var(--border); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: border 0.2s; background: #f8fbff; }
+.attach-area:hover, .attach-area.dragover { border-color: var(--primary); background: var(--primary-light); }
+.attach-area p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.attach-list { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.attach-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.attach-item .aname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: left; }
+.attach-item .asize { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.attach-item .adel { color: var(--danger); cursor: pointer; font-size: 15px; flex-shrink: 0; }
+.drive-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; background: white; cursor: pointer; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; font-weight: 700; color: var(--text); width: 100%; justify-content: center; transition: border 0.2s; }
+.drive-btn:hover { border-color: #4285f4; color: #4285f4; }
+.drive-icon { width: 20px; height: 20px; }
 
-.fg textarea { min-height: 160px; resize: vertical; }
+/* ── RECIPIENTS BOX ── */
+.rcpt-box { background: #f8fbff; border: 2px solid var(--border); border-radius: 10px; padding: 10px 14px; min-height: 50px; display: flex; flex-wrap: wrap; gap: 5px; }
+.rtag { background: var(--primary-light); border: 1px solid var(--border); border-radius: 15px; padding: 3px 10px; font-size: 11px; font-weight: 600; color: var(--primary); direction: ltr; }
 
-.attach-area { 
-  border: 3px dashed var(--border); 
-  border-radius: 24px; 
-  padding: 28px; 
-  text-align: center; 
-  cursor: pointer; 
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
-  background: linear-gradient(135deg, #FFF8F8, #F0FFF4, #FFF8E7);
-  position: relative;
-  overflow: hidden;
-}
-
-.attach-area::before {
-  content: '';
-  position: absolute;
-  top: -40px; right: -40px;
-  width: 100px; height: 100px;
-  background: var(--accent-light);
-  border-radius: 50%;
-  opacity: 0.5;
-}
-
-.attach-area:hover, .attach-area.dragover { 
-  border-color: var(--primary); 
-  background: linear-gradient(135deg, var(--primary-light), var(--secondary-light), var(--accent-light));
-  transform: scale(1.03);
-  box-shadow: 0 10px 40px rgba(255,107,107,0.2);
-}
-
-.attach-area p { font-size: 15px; color: var(--muted); margin-top: 10px; font-weight: 700; position: relative; z-index: 1; }
-
-.attach-list { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
-
-.attach-item { 
-  background: white; 
-  border: 3px solid var(--border); 
-  border-radius: 16px; 
-  padding: 12px 16px; 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  font-size: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.attach-item:hover {
-  transform: translateX(-6px);
-  border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(255,107,107,0.15);
-}
-
-.attach-item .aname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: right; font-weight: 700; }
-.attach-item .asize { color: var(--muted); font-size: 13px; white-space: nowrap; font-weight: 700; }
-.attach-item .adel { color: var(--danger); cursor: pointer; font-size: 20px; transition: all 0.4s; }
-.attach-item .adel:hover { transform: scale(1.3) rotate(90deg); }
-
-.drive-btn { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  padding: 14px 18px; 
-  border: 3px solid var(--border); 
-  border-radius: 20px; 
-  background: white; 
-  cursor: pointer; 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-  font-size: 15px; 
-  font-weight: 900; 
-  color: var(--text); 
-  width: 100%; 
-  justify-content: center; 
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-}
-
-.drive-btn:hover { 
-  border-color: #4285f4; 
-  color: #4285f4;
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(66,133,244,0.25);
-}
-
-.drive-icon { width: 28px; height: 28px; }
-
-.rcpt-box { 
-  background: linear-gradient(135deg, #FFF8F8, #F0FFF4, #FFF8E7); 
-  border: 3px solid var(--border); 
-  border-radius: 20px; 
-  padding: 14px 18px; 
-  min-height: 70px; 
-  display: flex; 
-  flex-wrap: wrap; 
-  gap: 8px; 
-}
-
-.rtag { 
-  background: linear-gradient(135deg, var(--primary-light), var(--secondary-light)); 
-  border: 2px solid var(--border); 
-  border-radius: 25px; 
-  padding: 5px 16px; 
-  font-size: 13px; 
-  font-weight: 800; 
-  color: var(--primary); 
-  direction: ltr;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.06);
-  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.toast { 
-  position: fixed; 
-  bottom: 28px; 
-  left: 50%; 
-  transform: translateX(-50%) translateY(120px); 
-  background: linear-gradient(135deg, #2D3436, #636E72); 
-  color: white; 
-  padding: 16px 32px; 
-  border-radius: 24px; 
-  font-size: 15px; 
-  font-weight: 900; 
-  z-index: 999; 
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); 
-  white-space: nowrap; 
-  box-shadow: 0 16px 50px rgba(0,0,0,0.35);
-}
-
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1e293b; color: white; padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 700; z-index: 999; transition: transform 0.3s; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
 .toast.show { transform: translateX(-50%) translateY(0); }
-.toast.ok { background: linear-gradient(135deg, #6BCB77, #4ECDC4, #6C5CE7); }
-.toast.err { background: linear-gradient(135deg, #FF6B6B, #EE5A6F, #C084FC); }
+.toast.ok { background: #15803d; }
+.toast.err { background: #dc2626; }
 
-.confirm-box { 
-  background: white; 
-  border-radius: 28px; 
-  padding: 32px 28px; 
-  width: 90%; 
-  max-width: 380px; 
-  text-align: center; 
-  box-shadow: 0 25px 70px rgba(0,0,0,0.3);
-  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border: 3px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.confirm-box::before {
-  content: '';
-  position: absolute;
-  top: -30px; left: 50%;
-  transform: translateX(-50%);
-  width: 100px; height: 100px;
-  background: linear-gradient(135deg, var(--primary-light), transparent);
-  border-radius: 50%;
-  opacity: 0.5;
-}
-
-.confirm-box h3 { font-size: 20px; font-weight: 900; margin-bottom: 12px; color: var(--primary); position: relative; z-index: 1; }
-.confirm-box p { font-size: 15px; color: var(--muted); margin-bottom: 28px; font-weight: 700; position: relative; z-index: 1; }
-.confirm-actions { display: flex; gap: 14px; position: relative; z-index: 1; }
+/* ── CONFIRM MODAL ── */
+.confirm-box { background: white; border-radius: 16px; padding: 24px 20px; width: 90%; max-width: 340px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: slideUp 0.2s ease; }
+.confirm-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.confirm-box p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.confirm-actions { display: flex; gap: 10px; }
 .confirm-actions .btn { flex: 1; justify-content: center; }
 
-.empty { text-align: center; padding: 60px 28px; color: var(--muted); }
-.empty .ei { font-size: 56px; margin-bottom: 16px; animation: float 4s ease infinite; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
-.empty p { font-size: 16px; font-weight: 700; }
-
-.stat-card {
-  background: white;
-  border-radius: 28px;
-  padding: 24px;
-  margin-bottom: 18px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  border: 3px solid transparent;
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--primary-light);
-  box-shadow: 0 16px 50px rgba(255,107,107,0.15);
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: -30px; right: -30px;
-  width: 100px; height: 100px;
-  background: linear-gradient(135deg, var(--primary-light), transparent);
-  border-radius: 50%;
-  opacity: 0.6;
-}
-
-.progress-bar {
-  height: 12px;
-  background: #E5E7EB;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: inset 0 3px 6px rgba(0,0,0,0.06);
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 6px;
-  background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
-  background-size: 200% auto;
-  transition: width 1.5s ease;
-  position: relative;
-  animation: gradientMove 3s ease infinite;
-}
-
-.progress-fill::after {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 30px; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
-  animation: shimmer 2s ease infinite;
-}
-
-#loginScreen {
-  background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D, #4ECDC4, #6BCB77) !important;
-  background-size: 400% 400% !important;
-  animation: gradientMove 12s ease infinite !important;
-}
-
-#loginScreen > div {
-  background: rgba(255,255,255,0.95) !important;
-  backdrop-filter: blur(25px);
-  border: 3px solid rgba(255,255,255,0.6);
-  box-shadow: 0 25px 70px rgba(0,0,0,0.3) !important;
-  border-radius: 28px !important;
-}
-
-.animated-emoji {
-  display: inline-block;
-  animation: bounce 2.5s ease infinite;
-}
-
-.heartbeat {
-  animation: heartbeat 1.5s ease infinite;
-}
-
-@media (max-width: 480px) {
-  header h1 { font-size: 17px; }
-  .tab { font-size: 12px; padding: 12px 4px; }
-  .tab-icon { font-size: 22px; }
-  .contact-card { padding: 16px 18px; border-radius: 22px; }
-  .avatar { width: 48px; height: 48px; font-size: 17px; }
-  .btn { padding: 10px 18px; font-size: 14px; }
-}
-
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: var(--primary-light); border-radius: 5px; }
-::-webkit-scrollbar-thumb { background: linear-gradient(var(--primary), var(--accent), var(--secondary)); border-radius: 5px; }
-::-webkit-scrollbar-thumb:hover { background: linear-gradient(var(--secondary), var(--accent), var(--primary)); }
+/* ── EMPTY ── */
+.empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+.empty .ei { font-size: 36px; margin-bottom: 8px; }
 </style>
 </head>
 <body>
 
-<div class="floating-shapes">
-  <div class="shape"></div>
-  <div class="shape"></div>
-  <div class="shape"></div>
-  <div class="shape"></div>
-  <div class="shape"></div>
-  <div class="shape"></div>
-  <div class="shape"></div>
-  <div class="shape"></div>
-</div>
-
-<header>
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6LT_avN6Yhg_zRRR3t0Vdo-6r0MkwFZSdQjdXCgarnAjniQWvfaMZoPU&s=10" 
-       alt="City School Logo" 
-       style="height:58px;width:auto;border-radius:16px;border:4px solid rgba(255,255,255,0.6);box-shadow:0 6px 20px rgba(0,0,0,0.15);animation:float 4s ease infinite">
+<header style="display:flex;align-items:center;gap:12px">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6LT_avN6Yhg_zRRR3t0Vdo-6r0MkwFZSdQjdXCgarnAjniQWvfaMZoPU&s=10" alt="City School Logo" style="height:55px;width:auto;border-radius:4px">
   <div style="flex:1">
-    <h1 style="margin:0">🎒 KG2-A System</h1>
-    <p style="margin:0">🏫 City Private School — نظام إدارة الأهل المبهج</p>
+    <h1 style="margin:0;font-size:18px;font-weight:700">KG2-A System</h1>
+    <p style="margin:0;font-size:12px;opacity:0.9">City Private School — Parent Management</p>
   </div>
-  <div class="header-badge" id="totalBadge">👶 25 طفل</div>
-  <div style="background:rgba(255,255,255,0.3);border:2px solid rgba(255,255,255,0.5);color:white;padding:8px 14px;border-radius:25px;font-size:12px;font-weight:900;display:flex;align-items:center;gap:8px;backdrop-filter:blur(10px)">
-    <span style="width:10px;height:10px;background:#6BCB77;border-radius:50%;animation:heartbeat 2s infinite"></span>✨ Firebase
+  <div class="header-badge" id="totalBadge">25 Students</div>
+  <div style="background:rgba(34,197,94,0.2);border:1px solid #22c55e;color:#15803d;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px">
+    <span style="width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite"></span>Firebase
   </div>
-  <button class="btn btn-sm" style="background:rgba(255,255,255,0.3);color:white;border:2px solid rgba(255,255,255,0.5);padding:10px 16px;font-size:13px;border-radius:16px" onclick="showDataMenu()">⚙️</button>
+  <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}</style>
+  <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);padding:6px 12px;font-size:11px" onclick="showDataMenu()">⚙️</button>
 </header>
 
 <div class="tabs">
   <div class="tab active" onclick="switchTab('contacts')">
-    <span class="tab-icon">👥</span>جهات الاتصال
+    <span class="tab-icon">👥</span>Contacts
   </div>
   <div class="tab" onclick="switchTab('email')">
-    <span class="tab-icon">✉️</span>إرسال بريد
+    <span class="tab-icon">✉️</span>Send Email
   </div>
   <div class="tab" onclick="switchTab('templates')">
-    <span class="tab-icon">📝</span>القوالب
+    <span class="tab-icon">📝</span>Templates
   </div>
   <div class="tab" onclick="switchTab('stats')">
-    <span class="tab-icon">📊</span>الإحصائيات
+    <span class="tab-icon">📊</span>Statistics
   </div>
 </div>
 
 <div class="page active" id="page-contacts">
   <div class="search-wrap">
     <span class="si">🔍</span>
-    <input type="text" id="contactSearch" placeholder="🔎 ابحث بالاسم أو رقم الطالب..." oninput="renderContacts()">
+    <input type="text" id="contactSearch" placeholder="Search Name  Student ID..." oninput="renderContacts()">
   </div>
   <div class="action-row">
-    <span class="count-badge" id="contactCount">👶 25 طفل</span>
-    <div style="display:flex;gap:12px">
-      <button class="btn btn-outline btn-sm" onclick="printContacts()">🖨️ طباعة</button>
-      <button class="btn btn-primary btn-sm" onclick="openAddModal()">➕ إضافة طفل</button>
+    <span class="count-badge" id="contactCount">25 Student</span>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-outline btn-sm" onclick="printContacts()">🖨️ Print</button>
+      <button class="btn btn-primary btn-sm" onclick="openAddModal()">➕ Add Student</button>
     </div>
   </div>
   <div id="contactsList"></div>
@@ -937,58 +201,56 @@ header p {
 
 <div class="page" id="page-email">
   <div class="select-bar">
-    <span class="slabel" id="selLabel">📌 اختر الأطفال لإرسال البريد</span>
-    <button class="btn btn-outline btn-sm" onclick="selectAll()">✅ الكل</button>
-    <button class="btn btn-outline btn-sm" onclick="deselectAll()">❌ إلغاء</button>
+    <span class="slabel" id="selLabel">Select Students Send</span>
+    <button class="btn btn-outline btn-sm" onclick="selectAll()">✅ All</button>
+    <button class="btn btn-outline btn-sm" onclick="deselectAll()">❌ Cancel</button>
   </div>
   <div class="search-wrap">
     <span class="si">🔍</span>
-    <input type="text" id="emailSearch" placeholder="🔎 ابحث في القائمة..." oninput="renderEmailList()">
+    <input type="text" id="emailSearch" placeholder="Search in..." oninput="renderEmailList()">
   </div>
   <div id="emailList"></div>
 
-  <div style="background:white;border-radius:28px;padding:26px;margin-top:18px;box-shadow:0 10px 40px rgba(0,0,0,0.1);border:3px solid var(--border);position:relative">
-    <div style="font-size:18px;font-weight:900;color:var(--primary);margin-bottom:20px;display:flex;align-items:center;gap:10px">
-      <span class="animated-emoji">✉️</span> كتابة البريد
+  <div style="background:white;border-radius:16px;padding:18px;margin-top:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+    <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:14px">✉️  </div>
+
+    <div class="fg">
+      <label>📧 Recipients</label>
+      <div class="rcpt-box" id="rcptBox"><span style="font-size:12px;color:var(--muted)">Select  from on...</span></div>
     </div>
 
     <div class="fg">
-      <label>📧 المستلمين</label>
-      <div class="rcpt-box" id="rcptBox"><span style="font-size:14px;color:var(--muted);font-weight:700">⭐ اختر الأطفال من القائمة أعلاه...</span></div>
-    </div>
-
-    <div class="fg">
-      <label>⚙️ إرسال إلى</label>
+      <label>⚙️ Send to</label>
       <select id="emailTarget" onchange="updateRecipients()">
-        <option value="both">👨👩 الأب والأم معاً</option>
-        <option value="father">👨 الأب فقط</option>
-        <option value="mother">👩 الأم فقط</option>
+        <option value="both">Father Mother with</option>
+        <option value="father">Father </option>
+        <option value="mother">Mother </option>
       </select>
     </div>
 
     <div class="fg">
-      <label>📝 الموضوع</label>
-      <input type="text" id="composeSubject" placeholder="✨ اكتب موضوع الرسالة...">
+      <label>📝 Subject</label>
+      <input type="text" id="composeSubject" placeholder=" ...">
     </div>
 
     <div class="fg">
-      <label>💬 الرسالة</label>
-      <textarea id="composeBody" placeholder="📝 اكتب رسالتك هنا..."></textarea>
-      <button class="btn btn-accent btn-sm" style="margin-top:12px;width:100%;justify-content:center" onclick="enhanceWithAI()">
-        <span class="animated-emoji">✨</span> تحسين بالذكاء الاصطناعي
+      <label>💬 Message</label>
+      <textarea id="composeBody" placeholder="Enter  ..."></textarea>
+      <button class="btn btn-accent btn-sm" style="margin-top:8px;width:100%;justify-content:center" onclick="enhanceWithAI()">
+        ✨ Enhance With AI
       </button>
     </div>
 
     <div class="fg">
-      <label>📎 المرفقات</label>
+      <label>📎 Attachments</label>
       <div class="attach-area" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-        <div style="font-size:42px" class="animated-emoji">📁</div>
-        <p style="font-weight:700">🎯 اسحب الملفات هنا أو انقر للاختيار</p>
-        <p style="font-size:13px;margin-top:8px">PDF, Word, Images — حتى 10MB</p>
+        <div style="font-size:28px">📁</div>
+        <p>   from </p>
+        <p style="font-size:11px;margin-top:4px">    </p>
       </div>
       <input type="file" id="fileInput" multiple style="display:none" onchange="handleFileSelect(event)">
 
-      <button class="drive-btn" style="margin-top:12px" onclick="openGoogleDrivePicker()">
+      <button class="drive-btn" style="margin-top:8px" onclick="openGoogleDrivePicker()">
         <svg class="drive-icon" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
           <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
           <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/>
@@ -997,87 +259,75 @@ header p {
           <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
           <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
         </svg>
-        📂 اختر من Google Drive
+         from Google Drive
       </button>
 
       <div class="attach-list" id="attachList"></div>
     </div>
 
     <div class="fg">
-      <label>📮 نوع الإرسال</label>
+      <label>📮  Send</label>
       <select id="emailSendType">
-        <option value="to">📬 To - ظاهر (جميع المستلمين يرون بعضهم)</option>
-        <option value="bcc">🔒 BCC - مخفي (كل مستلم لا يرى الآخرين)</option>
+        <option value="to">To -  (All Recipients  )</option>
+        <option value="bcc">BCC - Hidden (each recipient cannot see others)</option>
       </select>
     </div>
 
     <div class="fg">
-      <label>📧 CC - نسخة إلى المشرفين / الإدارة (اختياري)</label>
-      <input type="text" id="ccEmails" placeholder="supervisor@cityschool.ae, manager@cityschool.ae" style="direction:ltr;text-align:right">
-      <small style="font-size:13px;color:var(--muted);display:block;margin-top:8px;font-weight:700">🔸 افصل بين البريدين بفاصلة (,)</small>
+      <label>📧 CC -  in / (Optional)</label>
+      <input type="text" id="ccEmails" placeholder="supervisor@cityschool.ae, manager@cityschool.ae" style="direction:ltr;text-align:left">
+      <small style="font-size:11px;color:var(--muted);display:block;margin-top:4px">Separate  with comma (,)</small>
     </div>
 
-    <button class="btn btn-success" style="width:100%;justify-content:center;padding:18px;font-size:17px" onclick="sendEmail()">
-      <span class="animated-emoji">🚀</span> إرسال عبر Gmail
+    <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="sendEmail()">
+      🚀 Send  Gmail
     </button>
-    <button id="personalizedSendBtn" class="btn btn-accent" style="width:100%;justify-content:center;padding:18px;font-size:17px;display:none;margin-top:14px" onclick="sendPersonalizedEmails()">
-      <span class="animated-emoji">✨</span> إرسال بريد مخصص (قالب)
+    <button id="personalizedSendBtn" class="btn btn-accent" style="width:100%;justify-content:center;padding:14px;font-size:15px;display:none;margin-top:10px" onclick="sendPersonalizedEmails()">
+      ✨ Send Email  ()
     </button>
   </div>
 </div>
 
 <div class="page" id="page-templates">
-  <div style="background:white;border-radius:28px;padding:26px;margin-bottom:18px;box-shadow:0 10px 40px rgba(0,0,0,0.1);border:3px solid var(--border);position:relative">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-      <div style="font-size:18px;font-weight:900;color:var(--primary);display:flex;align-items:center;gap:10px">
-        <span class="animated-emoji">📝</span> قوالب البريد المحفوظة
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="openTemplateModal()">➕ قالب جديد</button>
+  <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:700;color:var(--primary)">📝 Saved Email Templates</div>
+      <button class="btn btn-primary btn-sm" onclick="openTemplateModal()">➕ Add Template</button>
     </div>
     <div id="templatesList"></div>
   </div>
 </div>
 
 <div class="page" id="page-stats">
-  <div style="background:white;border-radius:28px;padding:26px;margin-bottom:18px;box-shadow:0 10px 40px rgba(0,0,0,0.1);border:3px solid var(--border);position:relative">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
-      <div style="font-size:20px;font-weight:900;color:var(--primary);display:flex;align-items:center;gap:10px">
-        <span class="animated-emoji">📊</span> إحصائيات الفصل
-      </div>
-      <span class="count-badge" id="totalBadge">👶 25 طفل</span>
+  <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:16px;font-weight:700;color:var(--primary)">📊 Statistics </div>
+      <span class="count-badge" id="totalBadge">25 Student</span>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
-      <div style="background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFD93D);color:white;padding:24px;border-radius:24px;box-shadow:0 10px 30px rgba(255,107,107,0.35);position:relative;overflow:hidden;animation:float 5s ease infinite">
-        <div style="font-size:13px;opacity:0.9;margin-bottom:8px;font-weight:800">👶 إجمالي الأطفال</div>
-        <div style="font-size:32px;font-weight:900" id="statTotal">25</div>
-        <div style="position:absolute;top:-15px;left:-15px;font-size:60px;opacity:0.2;animation:rotate-slow 20s linear infinite">🎒</div>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:16px;border-radius:12px">
+        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Total Students</div>
+        <div style="font-size:24px;font-weight:700" id="statTotal">25</div>
       </div>
-      <div style="background:linear-gradient(135deg,#4ECDC4,#6BCB77,#6C5CE7);color:white;padding:24px;border-radius:24px;box-shadow:0 10px 30px rgba(78,205,196,0.35);position:relative;overflow:hidden;animation:float 5s ease infinite;animation-delay:1s">
-        <div style="font-size:13px;opacity:0.9;margin-bottom:8px;font-weight:800">👨👩 أولياء الأمور</div>
-        <div style="font-size:32px;font-weight:900" id="statParents">25</div>
-        <div style="position:absolute;top:-15px;left:-15px;font-size:60px;opacity:0.2;animation:rotate-slow 20s linear infinite;animation-direction:reverse">👨‍👩‍👧</div>
+      <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;padding:16px;border-radius:12px">
+        <div style="font-size:11px;opacity:0.9;margin-bottom:4px"> Mother</div>
+        <div style="font-size:24px;font-weight:700" id="statParents">25</div>
       </div>
     </div>
-
-    <div class="stat-card">
-      <div style="font-size:15px;font-weight:900;color:var(--primary);margin-bottom:18px;display:flex;align-items:center;gap:10px">
-        <span class="animated-emoji">👥</span> توزيع الجنس
-      </div>
+    
+    <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">👥 Gender</div>
       <div id="genderStats"></div>
     </div>
-
-    <div class="stat-card">
-      <div style="font-size:15px;font-weight:900;color:var(--primary);margin-bottom:18px;display:flex;align-items:center;gap:10px">
-        <span class="animated-emoji">🌍</span> الجنسيات
-      </div>
+    
+    <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">🌍 Nationalities</div>
       <div id="nationalityStats"></div>
     </div>
-
-    <div class="stat-card">
-      <div style="font-size:15px;font-weight:900;color:var(--primary);margin-bottom:18px;display:flex;align-items:center;gap:10px">
-        <span class="animated-emoji">📞</span> معلومات التواصل
-      </div>
+    
+    <div style="background:#f8fbff;border-radius:12px;padding:16px">
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📞 Contact Information</div>
       <div id="contactStats"></div>
     </div>
   </div>
@@ -1087,102 +337,96 @@ header p {
   <div class="modal" style="max-height:90vh;overflow-y:auto">
     <div class="modal-head">
       <div>
-        <h2 id="editTitle">➕ إضافة طفل جديد</h2>
-        <p id="editSubtitle">🎯 أدخل بيانات الطالب الكاملة</p>
+        <h2 id="editTitle">➕ Add Student</h2>
+        <p id="editSubtitle">  Student </p>
       </div>
       <button class="close-btn" onclick="closeEditModal()">✕</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="editId">
-
-      <div style="background:linear-gradient(135deg,var(--primary-light),var(--secondary-light),var(--accent-light));padding:14px;border-radius:16px;margin-bottom:18px;font-size:13px;font-weight:800;color:var(--primary);border:3px solid var(--border)">
-        💡 <strong>نصيحة ذكية:</strong> املأ جميع الحقول لقاعدة بيانات كاملة ومبهجة!
+      
+      <div style="background:#e0f2fe;padding:10px;border-radius:8px;margin-bottom:12px;font-size:11px">
+        💡 <strong>Tip:</strong> Fill all fields for complete database
       </div>
-
+      
       <div class="fg">
-        <label>🪪 رقم الطالب</label>
-        <input type="number" id="editStudentId" placeholder="🎯 مثال: 11353">
+        <label>🪪 Student ID</label>
+        <input type="number" id="editStudentId" placeholder="Example: 11353">
       </div>
-
+      
       <div class="fg">
-        <label>👤 اسم الطالب الكامل</label>
-        <input type="text" id="editName" placeholder="✨ اسم الطالب (بالأحرف الكبيرة)">
+        <label>👤 Full Student Name</label>
+        <input type="text" id="editName" placeholder="Name  (CAPITAL LETTERS)">
       </div>
-
+      
       <div class="fg">
-        <label>⚧️ الجنس</label>
+        <label>⚧️ Gender</label>
         <select id="editGender">
-          <option value="">⭐ اختر الجنس</option>
-          <option value="Male">👨 ولد (Male)</option>
-          <option value="Female">👩 بنت (Female)</option>
+          <option value="">Select Gender</option>
+          <option value="Male">👨 Male (Male)</option>
+          <option value="Female">👩 Female (Female)</option>
         </select>
       </div>
-
+      
       <div class="fg">
-        <label>🌍 الجنسية</label>
-        <input type="text" id="editNationality" placeholder="🌟 مصري، يمني، أردني، إلخ">
+        <label>🌍 Nationality</label>
+        <input type="text" id="editNationality" placeholder="Egyptian, Yemeni, Jordanian, etc.">
       </div>
-
+      
       <div class="fg">
-        <label>🕌 الديانة</label>
-        <input type="text" id="editReligion" placeholder="✨ مسلم، مسيحي، إلخ">
+        <label>🕌 Religion</label>
+        <input type="text" id="editReligion" placeholder="Muslim, Christian, etc.">
       </div>
-
-      <hr style="border:none;border-top:3px dashed #e5e7eb;margin:24px 0">
-      <div style="font-size:15px;font-weight:900;color:var(--primary);margin-bottom:18px;display:flex;align-items:center;gap:10px">
-        <span class="animated-emoji">👨</span> بيانات الأب
-      </div>
-
+      
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👨  Father</div>
+      
       <div class="fg">
-        <label>📞 هاتف الأب</label>
-        <input type="tel" id="editFatherMobile" placeholder="📱 05XXXXXXXX" style="direction:ltr;text-align:right">
+        <label>📞 Father Phone</label>
+        <input type="tel" id="editFatherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left">
       </div>
-
+      
       <div class="fg">
-        <label>📧 بريد الأب</label>
-        <input type="email" id="editFather" placeholder="📧 father@email.com" style="direction:ltr;text-align:right">
+        <label>📧 Father Email</label>
+        <input type="email" id="editFather" placeholder="father@email.com" style="direction:ltr;text-align:left">
       </div>
-
-      <hr style="border:none;border-top:3px dashed #e5e7eb;margin:24px 0">
-      <div style="font-size:15px;font-weight:900;color:var(--primary);margin-bottom:18px;display:flex;align-items:center;gap:10px">
-        <span class="animated-emoji">👩</span> بيانات الأم
-      </div>
-
+      
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👩  Mother</div>
+      
       <div class="fg">
-        <label>📞 هاتف الأم</label>
-        <input type="tel" id="editMotherMobile" placeholder="📱 05XXXXXXXX" style="direction:ltr;text-align:right">
+        <label>📞 Mother Phone</label>
+        <input type="tel" id="editMotherMobile" placeholder="05XXXXXXXX" style="direction:ltr;text-align:left">
       </div>
-
+      
       <div class="fg">
-        <label>📧 بريد الأم</label>
-        <input type="email" id="editMother" placeholder="📧 mother@email.com" style="direction:ltr;text-align:right">
+        <label>📧 Mother Email</label>
+        <input type="email" id="editMother" placeholder="mother@email.com" style="direction:ltr;text-align:left">
       </div>
-
-      <hr style="border:none;border-top:3px dashed #e5e7eb;margin:24px 0">
-      <div style="font-size:15px;font-weight:900;color:var(--primary);margin-bottom:18px;display:flex;align-items:center;gap:10px">
-        <span class="animated-emoji">🎓</span> بيانات الطالب
-      </div>
-
+      
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">🎓  Student</div>
+      
       <div class="fg">
-        <label>📧 بريد الطالب</label>
-        <input type="email" id="editEmail" placeholder="📧 student@cityschool.ae" style="direction:ltr;text-align:right">
+        <label>📧 Student Email</label>
+        <input type="email" id="editEmail" placeholder="student@cityschool.ae" style="direction:ltr;text-align:left">
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="closeEditModal()">❌ إلغاء</button>
-      <button class="btn btn-primary" onclick="saveStudent()">💾 حفظ الطفل</button>
+      <button class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStudent()">💾 Save</button>
     </div>
   </div>
 </div>
 
 <div class="overlay" id="confirmOverlay" style="align-items:center">
   <div class="confirm-box">
-    <div style="font-size:56px;margin-bottom:16px;animation:wiggle 2s ease infinite">🗑️</div>
-    <h3>🚨 حذف الطفل</h3>
-    <p id="confirmName">⚠️ هل أنت متأكد من حذف هذا الطفل؟</p>
+    <div style="font-size:36px;margin-bottom:8px">🗑️</div>
+    <h3>Delete Student</h3>
+    <p id="confirmName">   from Delete  Student</p>
     <div class="confirm-actions">
-      <button class="btn btn-outline" onclick="closeConfirm()">❌ إلغاء</button>
-      <button class="btn btn-danger" onclick="confirmDelete()">🗑️ حذف</button>
+      <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
     </div>
   </div>
 </div>
@@ -1190,25 +434,23 @@ header p {
 <div class="toast" id="toast"></div>
 
 <div class="overlay" id="dataMenuOverlay" style="align-items:center">
-  <div style="background:white;border-radius:28px;width:90%;max-width:380px;padding:0;animation:slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);box-shadow:0 25px 70px rgba(0,0,0,0.3);border:3px solid var(--border);position:relative;overflow:hidden">
-    <div style="background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFD93D,#4ECDC4);color:white;padding:20px 28px;border-radius:28px 28px 0 0;font-size:18px;font-weight:900;display:flex;align-items:center;gap:12px">
-      <span class="animated-emoji">⚙️</span> إدارة البيانات
-    </div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
-      <button class="btn btn-success" style="width:100%;justify-content:center" onclick="exportExcel()">📊 تصدير Excel</button>
-      <button class="btn btn-warning" style="width:100%;justify-content:center;color:white" onclick="document.getElementById('importExcelFile').click()">📑 استيراد Excel (مزامنة ذكية)</button>
+  <div style="background:white;border-radius:20px;width:90%;max-width:340px;padding:0;animation:slideUp 0.25s ease">
+    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:16px 20px;border-radius:20px 20px 0 0;font-size:15px;font-weight:700">⚙️ Data Management</div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-success" style="width:100%;justify-content:center" onclick="exportExcel()">📊 Export Excel</button>
+      <button class="btn btn-warning" style="width:100%;justify-content:center;color:white" onclick="document.getElementById('importExcelFile').click()">📑 Import Excel (Smart Sync)</button>
       <input type="file" id="importExcelFile" accept=".xlsx, .xls, .csv" style="display:none" onchange="importExcel(event)">
-
-      <hr style="border:none;border-top:3px dashed #e5e7eb;margin:6px 0">
-
-      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="exportData()">📤 تصدير البيانات (JSON)</button>
-      <button class="btn btn-accent" style="width:100%;justify-content:center" onclick="document.getElementById('importFile').click()">📥 استيراد البيانات (JSON)</button>
+      
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:4px 0">
+      
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="exportData()">📤 Export Data (JSON)</button>
+      <button class="btn btn-accent" style="width:100%;justify-content:center" onclick="document.getElementById('importFile').click()">📥 Import Data (JSON)</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:4px 0">
 
-      <hr style="border:none;border-top:3px dashed #e5e7eb;margin:6px 0">
-
-      <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="handleLogout()">🚪 تسجيل الخروج</button>
-      <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeDataMenu()">❌ إلغاء</button>
+      <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="handleLogout()">🚪 Logout</button>
+      <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeDataMenu()">Cancel</button>
     </div>
   </div>
 </div>
@@ -1217,29 +459,29 @@ header p {
   <div class="modal">
     <div class="modal-head">
       <div>
-        <h2 id="templateTitle">📝 قالب جديد</h2>
-        <p>المتغيرات: [Student Name] = STUDENT_NAME | [Student ID] = STUDENT_ID</p>
+        <h2 id="templateTitle">📝 New Template</h2>
+        <p>: [Student Name]  STUDENT_NAME  [Student ID]  STUDENT_ID </p>
       </div>
       <button class="close-btn" onclick="closeTemplateModal()">✕</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="templateId">
       <div class="fg">
-        <label>📌 اسم القالب</label>
-        <input type="text" id="templateName" placeholder="مثال: بريد الترحيب">
+        <label>📌 Template Name</label>
+        <input type="text" id="templateName" placeholder="Example:   from">
       </div>
       <div class="fg">
-        <label>📝 الموضوع</label>
-        <input type="text" id="templateSubject" placeholder="استخدم [Student Name] للاسم">
+        <label>📝 Subject</label>
+        <input type="text" id="templateSubject" placeholder=" Use [Student Name]">
       </div>
       <div class="fg">
-        <label>💬 الرسالة</label>
-        <textarea id="templateBody" placeholder="مثال: عزيزي ولي أمر [Student Name]..."></textarea>
+        <label>💬 Message</label>
+        <textarea id="templateBody" placeholder="Example:   Mother [Student Name]..."></textarea>
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-outline" onclick="closeTemplateModal()">إلغاء</button>
-      <button class="btn btn-primary" onclick="saveTemplate()">💾 حفظ القالب</button>
+      <button class="btn btn-outline" onclick="closeTemplateModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTemplate()">💾 Save </button>
     </div>
   </div>
 </div>
@@ -1248,14 +490,14 @@ header p {
   <div class="modal" style="max-width:500px">
     <div class="modal-head">
       <div>
-        <h2><span class="animated-emoji">✨</span> رسائل مخصصة</h2>
+        <h2>✨ Personalized Emails</h2>
         <p id="personalizedCount"></p>
       </div>
       <button class="close-btn" onclick="closePersonalizedModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div style="background:linear-gradient(135deg,var(--primary-light),var(--secondary-light));border:2px solid var(--border);border-radius:14px;padding:14px;margin-bottom:18px;font-size:13px;color:var(--primary);line-height:1.7;font-weight:700">
-        📌 <strong>طريقة العمل:</strong> سيتم فتح Gmail لكل طفل على حدة. اضغط "إرسال" لكل طفل ← سيعود النظام للقائمة ← استمر مع الباقي
+      <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#0369a1;line-height:1.6">
+        📌 <strong>How it works:</strong> All Student   from .  "📧 Send" All Student ← will open Gmail ←  Send ← return to list and continue remaining 
       </div>
       <div id="personalizedList"></div>
     </div>
@@ -1263,42 +505,48 @@ header p {
 </div>
 
 <div class="overlay" id="sendOverlay" style="align-items:center">
-  <div style="background:white;border-radius:24px;width:92%;max-width:420px;max-height:85vh;overflow-y:auto;animation:slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);box-shadow:0 20px 60px rgba(0,0,0,0.25);border:3px solid var(--border)">
-    <div style="background:linear-gradient(135deg,#FF6B6B,#FF8E53,#FFD93D);color:white;padding:20px 24px;border-radius:24px 24px 0 0;display:flex;align-items:center;justify-content:space-between">
-      <div><div style="font-size:18px;font-weight:900"><span class="animated-emoji">📧</span> تأكيد الإرسال</div><div style="font-size:12px;opacity:0.85;margin-top:3px;font-weight:600">راجع التفاصيل قبل الإرسال</div></div>
+  <div style="background:white;border-radius:20px;width:92%;max-width:400px;max-height:85vh;overflow-y:auto;animation:slideUp 0.25s ease">
+    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:18px 20px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:16px;font-weight:700">📧  Send</div><div style="font-size:11px;opacity:0.75;margin-top:2px">   Send</div></div>
       <button class="close-btn" onclick="document.getElementById('sendOverlay').classList.remove('open')">✕</button>
     </div>
-    <div style="padding:24px;display:flex;flex-direction:column;gap:16px">
+    <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
 
-      <div style="background:linear-gradient(135deg,#FFF8F8,#F0FFF4);border-radius:14px;padding:14px;border:2px solid var(--border)">
-        <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px">📧 المستلمين</div>
-        <div id="sendEmails" style="font-size:13px;color:var(--text);direction:ltr;text-align:right;word-break:break-all;font-weight:600"></div>
+      <div style="background:#f8fbff;border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📧 Recipients</div>
+        <div id="sendEmails" style="font-size:12px;color:var(--text);direction:ltr;text-align:left;word-break:break-all"></div>
       </div>
 
-      <div style="background:linear-gradient(135deg,#FFF8F8,#F0FFF4);border-radius:14px;padding:14px;border:2px solid var(--border)">
-        <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px">📝 الموضوع</div>
-        <div id="sendSubject" style="font-size:14px;font-weight:800"></div>
+      <div style="background:#f8fbff;border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📝 Subject</div>
+        <div id="sendSubject" style="font-size:13px;font-weight:600"></div>
       </div>
 
-      <div style="background:linear-gradient(135deg,#FFF8F8,#F0FFF4);border-radius:14px;padding:14px;border:2px solid var(--border)">
-        <div style="font-size:12px;font-weight:900;color:var(--primary);margin-bottom:6px">💬 الرسالة</div>
-        <div id="sendBody" style="font-size:13px;color:var(--text);white-space:pre-wrap;max-height:120px;overflow-y:auto;font-weight:600"></div>
+      <div style="background:#f8fbff;border-radius:10px;padding:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">💬 </div>
+        <div id="sendBody" style="font-size:12px;color:var(--text);white-space:pre-wrap;max-height:100px;overflow-y:auto"></div>
       </div>
 
-      <div style="background:linear-gradient(135deg,#FFF0E0,#FFF8DC);border:2px solid #fed7aa;border-radius:14px;padding:14px">
-        <div id="attachStatus" style="font-size:12px;font-weight:900;color:#c2410c;margin-bottom:8px">📎 المرفقات</div>
+      <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px">
+        <div id="attachStatus" style="font-size:11px;font-weight:700;color:#c2410c;margin-bottom:6px">Attachments</div>
         <div id="sendAttachList"></div>
-        <div style="margin-top:10px;padding:10px;background:#fef3c7;border-radius:10px;font-size:12px;color:#92400e;line-height:1.7;font-weight:700">
-          ⚠️ <strong>تنبيه:</strong> المرفقات لا تُرسل تلقائياً عبر Gmail. على Android، افتح Gmail يدوياً وأرفق الملفات من "المرفقات"
+        <div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:8px;font-size:11px;color:#92400e;line-height:1.6">
+          ⚠️ <strong>:</strong>   Gmail in Attachments  from   Attach in Gmail  Android       
         </div>
       </div>
 
-      <button class="btn btn-success" style="width:100%;justify-content:center;padding:16px;font-size:16px" onclick="confirmSend()">
-        <span class="animated-emoji">🚀</span> فتح Gmail وإرسال
+      <button class="btn btn-success" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="confirmSend()">
+        🚀  Gmail Send
       </button>
     </div>
   </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <script>
 // ── DATA ──
 let templates = [];
@@ -2400,6 +1648,7 @@ async function init() {
   document.body.style.opacity = '1';
 }
 
+</script>
 
 <div id="loginScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1a4f7a,#0d3057);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px">
   <div style="background:white;border-radius:20px;padding:32px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
