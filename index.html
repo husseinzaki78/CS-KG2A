@@ -5,182 +5,312 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KG2-A System</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --primary: #1a4f7a;
-  --primary-light: #e8f4fd;
-  --accent: #f0a500;
-  --success: #16a34a;
-  --danger: #dc2626;
-  --warning: #d97706;
-  --bg: #f0f5fa;
+  --primary: #6c3fc5;
+  --primary-light: #f0ebff;
+  --accent: #ff6b6b;
+  --accent2: #ffd93d;
+  --accent3: #6bcb77;
+  --success: #4cc97a;
+  --danger: #ff4757;
+  --warning: #ffa502;
+  --bg: #fdf6ff;
   --card: #ffffff;
-  --text: #1e293b;
-  --muted: #64748b;
-  --border: #d1e3f0;
+  --text: #2d1b69;
+  --muted: #8a7db5;
+  --border: #e4d9ff;
+  --pink: #ff85a1;
+  --teal: #4ecdc4;
+  --orange: #ff9f43;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); direction: ltr; }
+body {
+  font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg); color: var(--text); direction: ltr;
+  background-image: radial-gradient(circle at 20% 20%, rgba(108,63,197,0.06) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(255,107,107,0.06) 0%, transparent 50%);
+  min-height: 100vh;
+}
+
+/* ── FLOATING BUBBLES BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(circle 40px at 10% 15%, rgba(108,63,197,0.08) 0%, transparent 70%),
+    radial-gradient(circle 25px at 85% 10%, rgba(255,107,107,0.1) 0%, transparent 70%),
+    radial-gradient(circle 30px at 50% 90%, rgba(78,205,196,0.1) 0%, transparent 70%),
+    radial-gradient(circle 20px at 95% 50%, rgba(255,217,61,0.12) 0%, transparent 70%);
+}
 
 /* ── HEADER ── */
 header {
-  background: linear-gradient(135deg, #1a4f7a, #0d3057);
-  color: white; padding: 16px 20px;
+  background: linear-gradient(135deg, #6c3fc5 0%, #a855f7 50%, #ec4899 100%);
+  color: white; padding: 14px 18px;
   display: flex; align-items: center; gap: 12px;
-  box-shadow: 0 4px 20px rgba(26,79,122,0.3);
+  box-shadow: 0 6px 30px rgba(108,63,197,0.4);
   position: sticky; top: 0; z-index: 100;
+  border-radius: 0 0 24px 24px;
 }
-.logo { width: 120px; height: 120px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-header h1 { font-size: 18px; font-weight: 900; }
-header p { font-size: 12px; opacity: 0.75; }
-.header-badge { margin-right: auto; background: rgba(240,165,0,0.2); border: 1px solid var(--accent); color: var(--accent); padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.logo { width: 120px; height: 120px; background: rgba(255,255,255,0.2); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); }
+header h1 { font-size: 17px; font-weight: 900; letter-spacing: -0.3px; }
+header p { font-size: 11px; opacity: 0.85; font-weight: 600; }
+.header-badge {
+  margin-right: auto;
+  background: rgba(255,255,255,0.22);
+  border: 2px solid rgba(255,255,255,0.4);
+  color: white;
+  padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; white-space: nowrap;
+  backdrop-filter: blur(8px);
+  animation: badgePulse 3s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
 
 /* ── TABS ── */
-.tabs { display: flex; background: white; border-bottom: 2px solid var(--border); position: sticky; top: 78px; z-index: 99; }
-.tab { flex: 1; padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
-.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-.tab-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+.tabs {
+  display: flex; background: white;
+  border-bottom: none;
+  position: sticky; top: 72px; z-index: 99;
+  padding: 10px 12px 0;
+  gap: 6px;
+  box-shadow: 0 4px 20px rgba(108,63,197,0.08);
+}
+.tab {
+  flex: 1; padding: 10px 6px 12px; text-align: center; font-size: 11px; font-weight: 800;
+  color: var(--muted); cursor: pointer;
+  border-radius: 16px 16px 0 0;
+  border-bottom: 3px solid transparent;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.tab.active {
+  color: var(--primary);
+  background: var(--primary-light);
+  border-bottom-color: var(--primary);
+}
+.tab-icon {
+  font-size: 22px; display: block; margin-bottom: 3px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tab:hover .tab-icon { transform: scale(1.2) rotate(-5deg); }
+.tab.active .tab-icon { animation: tabBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes tabBounce {
+  0% { transform: scale(0.8); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
 
 /* ── PAGE ── */
-.page { display: none; padding: 16px; }
+.page { display: none; padding: 14px; animation: pageIn 0.3s ease; }
 .page.active { display: block; }
+@keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ── SEARCH BAR ── */
-.search-wrap { position: relative; margin-bottom: 14px; }
-.search-wrap input { width: 100%; padding: 12px 44px 12px 16px; border: 2px solid var(--border); border-radius: 12px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; outline: none; background: white; direction: ltr; }
-.search-wrap input:focus { border-color: var(--primary); }
-.search-wrap .si { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--muted); pointer-events: none; }
+.search-wrap { position: relative; margin-bottom: 12px; }
+.search-wrap input {
+  width: 100%; padding: 13px 46px 13px 18px;
+  border: 2.5px solid var(--border); border-radius: 18px;
+  font-family: 'Nunito', 'Segoe UI', sans-serif; font-size: 14px; font-weight: 600;
+  outline: none; background: white; direction: ltr;
+  box-shadow: 0 2px 12px rgba(108,63,197,0.08);
+  transition: all 0.2s;
+}
+.search-wrap input:focus { border-color: var(--primary); box-shadow: 0 4px 20px rgba(108,63,197,0.18); transform: translateY(-1px); }
+.search-wrap input::placeholder { color: #c4b8e8; }
+.search-wrap .si { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--muted); pointer-events: none; }
 
 /* ── ACTION ROW ── */
-.action-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
-.count-badge { background: var(--primary-light); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: var(--primary); }
+.action-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+.count-badge {
+  background: linear-gradient(135deg, var(--primary-light), #ffe4f0);
+  border: 2px solid var(--border); border-radius: 20px; padding: 7px 16px;
+  font-size: 12px; font-weight: 800; color: var(--primary);
+}
 
 /* ── BUTTONS ── */
-.btn { padding: 9px 18px; border-radius: 10px; border: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
-.btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: #0d3057; }
-.btn-accent { background: var(--accent); color: white; }
-.btn-accent:active { background: #d4940a; }
-.btn-success { background: var(--success); color: white; }
-.btn-warning { background: var(--warning); color: white; }
-.btn-danger { background: var(--danger); color: white; }
-.btn-outline { background: white; color: var(--primary); border: 2px solid var(--border); }
-.btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
-.btn-icon { padding: 8px; border-radius: 8px; font-size: 16px; }
+.btn {
+  padding: 10px 18px; border-radius: 14px; border: none;
+  font-family: 'Nunito', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 800;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative; overflow: hidden;
+}
+.btn:active { transform: scale(0.94); }
+.btn::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,0); transition: background 0.15s; border-radius:inherit; }
+.btn:hover::after { background:rgba(255,255,255,0.15); }
+.btn-primary { background: linear-gradient(135deg, #6c3fc5, #a855f7); color: white; box-shadow: 0 4px 15px rgba(108,63,197,0.35); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,63,197,0.45); }
+.btn-accent { background: linear-gradient(135deg, #ff6b6b, #ff8e8e); color: white; box-shadow: 0 4px 15px rgba(255,107,107,0.35); }
+.btn-accent:hover { transform: translateY(-2px); }
+.btn-success { background: linear-gradient(135deg, #4cc97a, #22c55e); color: white; box-shadow: 0 4px 15px rgba(76,201,122,0.35); }
+.btn-success:hover { transform: translateY(-2px); }
+.btn-warning { background: linear-gradient(135deg, #ffa502, #ff9f43); color: white; box-shadow: 0 4px 15px rgba(255,165,2,0.3); }
+.btn-danger { background: linear-gradient(135deg, #ff4757, #ff6b81); color: white; box-shadow: 0 4px 15px rgba(255,71,87,0.35); }
+.btn-danger:hover { transform: translateY(-2px); }
+.btn-outline { background: white; color: var(--primary); border: 2.5px solid var(--border); box-shadow: 0 2px 8px rgba(108,63,197,0.08); }
+.btn-outline:hover { border-color: var(--primary); background: var(--primary-light); }
+.btn-sm { padding: 7px 13px; font-size: 12px; border-radius: 10px; }
+.btn-icon { padding: 8px; border-radius: 10px; font-size: 16px; }
 
 /* ── CONTACT CARD ── */
 .contact-card {
-  background: white; border-radius: 14px; padding: 14px 16px;
-  margin-bottom: 10px; border: 2px solid transparent;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: border 0.2s;
+  background: white; border-radius: 20px; padding: 15px 16px;
+  margin-bottom: 10px; border: 2.5px solid transparent;
+  box-shadow: 0 3px 15px rgba(108,63,197,0.08);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative; overflow: hidden;
 }
-.contact-card.selected { border-color: var(--accent); background: #fffbf0; }
+.contact-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #6c3fc5, #ec4899, #ff6b6b);
+  opacity: 0; transition: opacity 0.2s;
+}
+.contact-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(108,63,197,0.15); }
+.contact-card:hover::before { opacity: 1; }
+.contact-card.selected { border-color: var(--accent2); background: #fffdf0; box-shadow: 0 4px 20px rgba(255,217,61,0.2); }
+.contact-card.selected::before { opacity: 1; background: linear-gradient(90deg, #ffd93d, #ff9f43); }
 .card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; flex-shrink: 0; }
-.av0{background:#dbeafe;color:#1d4ed8} .av1{background:#dcfce7;color:#15803d}
-.av2{background:#fef9c3;color:#92400e} .av3{background:#fce7f3;color:#9d174d}
-.av4{background:#ede9fe;color:#6d28d9} .av5{background:#ffedd5;color:#c2410c}
-.card-name { font-size: 13px; font-weight: 700; line-height: 1.3; flex: 1; }
-.card-id { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 900; flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+.contact-card:hover .avatar { transform: scale(1.1) rotate(5deg); }
+.av0{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:white}
+.av1{background:linear-gradient(135deg,#34d399,#059669);color:white}
+.av2{background:linear-gradient(135deg,#fbbf24,#d97706);color:white}
+.av3{background:linear-gradient(135deg,#f472b6,#be185d);color:white}
+.av4{background:linear-gradient(135deg,#60a5fa,#1d4ed8);color:white}
+.av5{background:linear-gradient(135deg,#fb923c,#c2410c);color:white}
+.card-name { font-size: 13px; font-weight: 800; line-height: 1.3; flex: 1; color: var(--text); }
+.card-id { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 700; }
 .card-emails { margin-bottom: 10px; }
-.email-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; border-bottom: 1px solid #f0f5fa; }
+.email-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; border-bottom: 1px solid #f5f0ff; }
 .email-row:last-child { border-bottom: none; }
-.elabel { background: var(--primary-light); border-radius: 5px; padding: 2px 7px; font-size: 10px; font-weight: 700; color: var(--primary); flex-shrink: 0; }
+.elabel { background: var(--primary-light); border-radius: 8px; padding: 2px 8px; font-size: 10px; font-weight: 800; color: var(--primary); flex-shrink: 0; }
 .evalue { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: left; font-size: 11px; flex: 1; }
-.no-email { color: #cbd5e1; font-style: italic; font-size: 11px; }
+.no-email { color: #d8cef0; font-style: italic; font-size: 11px; }
 .card-actions { display: flex; gap: 6px; }
 
 /* ── SELECT ALL BAR ── */
-.select-bar { background: white; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.select-bar .slabel { font-weight: 700; font-size: 13px; flex: 1; }
+.select-bar {
+  background: linear-gradient(135deg, white, #fdf5ff);
+  border-radius: 18px; padding: 12px 16px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  box-shadow: 0 3px 15px rgba(108,63,197,0.1);
+  border: 2px solid var(--border);
+}
+.select-bar .slabel { font-weight: 800; font-size: 13px; flex: 1; color: var(--primary); }
 
 /* ── MODAL ── */
-.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; align-items: flex-end; justify-content: center; }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(45,27,105,0.6); z-index: 200; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); }
 .overlay.open { display: flex; }
-.modal { background: white; border-radius: 20px 20px 0 0; width: 100%; max-height: 92vh; overflow-y: auto; animation: slideUp 0.25s ease; }
-@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-.modal-head { background: linear-gradient(135deg, #1a4f7a, #0d3057); color: white; padding: 18px 20px; border-radius: 20px 20px 0 0; display: flex; align-items: center; justify-content: space-between; }
-.modal-head h2 { font-size: 16px; font-weight: 700; }
-.modal-head p { font-size: 11px; opacity: 0.75; margin-top: 2px; }
-.close-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal { background: white; border-radius: 28px 28px 0 0; width: 100%; max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-head { background: linear-gradient(135deg, #6c3fc5, #a855f7, #ec4899); color: white; padding: 20px 20px; border-radius: 28px 28px 0 0; display: flex; align-items: center; justify-content: space-between; }
+.modal-head h2 { font-size: 17px; font-weight: 900; }
+.modal-head p { font-size: 11px; opacity: 0.85; margin-top: 2px; font-weight: 700; }
+.close-btn { background: rgba(255,255,255,0.25); border: 2px solid rgba(255,255,255,0.4); color: white; width: 34px; height: 34px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+.close-btn:hover { transform: rotate(90deg) scale(1.1); }
 .modal-body { padding: 20px; }
-.modal-foot { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; background: #f8fbff; border-radius: 0 0 0 0; }
+.modal-foot { padding: 14px 20px; border-top: 2px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; background: #fdf6ff; }
 
 /* ── FORM ── */
 .fg { margin-bottom: 16px; }
-.fg label { display: block; font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+.fg label { display: block; font-size: 12px; font-weight: 800; color: var(--primary); margin-bottom: 7px; }
 .fg input, .fg textarea, .fg select {
-  width: 100%; padding: 11px 14px; border: 2px solid var(--border);
-  border-radius: 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px;
-  outline: none; transition: border 0.2s; direction: ltr; background: #f8fbff;
+  width: 100%; padding: 12px 14px; border: 2.5px solid var(--border);
+  border-radius: 14px; font-family: 'Nunito', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 600;
+  outline: none; transition: all 0.2s; direction: ltr; background: #fdf6ff;
 }
-.fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--primary); background: white; }
+.fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(108,63,197,0.1); }
 .fg textarea { min-height: 120px; resize: vertical; }
 
 /* ── ATTACHMENTS ── */
-.attach-area { border: 2px dashed var(--border); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: border 0.2s; background: #f8fbff; }
-.attach-area:hover, .attach-area.dragover { border-color: var(--primary); background: var(--primary-light); }
-.attach-area p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.attach-area { border: 2.5px dashed var(--border); border-radius: 18px; padding: 18px; text-align: center; cursor: pointer; transition: all 0.2s; background: #fdf6ff; }
+.attach-area:hover, .attach-area.dragover { border-color: var(--primary); background: var(--primary-light); transform: scale(1.01); }
+.attach-area p { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 600; }
 .attach-list { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
-.attach-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.attach-item { background: white; border: 2px solid var(--border); border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
 .attach-item .aname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: ltr; text-align: left; }
 .attach-item .asize { color: var(--muted); font-size: 11px; white-space: nowrap; }
-.attach-item .adel { color: var(--danger); cursor: pointer; font-size: 15px; flex-shrink: 0; }
-.drive-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; background: white; cursor: pointer; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; font-weight: 700; color: var(--text); width: 100%; justify-content: center; transition: border 0.2s; }
-.drive-btn:hover { border-color: #4285f4; color: #4285f4; }
+.attach-item .adel { color: var(--danger); cursor: pointer; font-size: 15px; flex-shrink: 0; transition: transform 0.2s; }
+.attach-item .adel:hover { transform: scale(1.2) rotate(10deg); }
+.drive-btn { display: flex; align-items: center; gap: 8px; padding: 11px 14px; border: 2.5px solid var(--border); border-radius: 14px; background: white; cursor: pointer; font-family: 'Nunito', 'Segoe UI', sans-serif; font-size: 13px; font-weight: 800; color: var(--text); width: 100%; justify-content: center; transition: all 0.2s; }
+.drive-btn:hover { border-color: #4285f4; color: #4285f4; background: #f0f7ff; transform: translateY(-1px); }
 .drive-icon { width: 20px; height: 20px; }
 
 /* ── RECIPIENTS BOX ── */
-.rcpt-box { background: #f8fbff; border: 2px solid var(--border); border-radius: 10px; padding: 10px 14px; min-height: 50px; display: flex; flex-wrap: wrap; gap: 5px; }
-.rtag { background: var(--primary-light); border: 1px solid var(--border); border-radius: 15px; padding: 3px 10px; font-size: 11px; font-weight: 600; color: var(--primary); direction: ltr; }
+.rcpt-box { background: #fdf6ff; border: 2.5px solid var(--border); border-radius: 14px; padding: 10px 14px; min-height: 50px; display: flex; flex-wrap: wrap; gap: 5px; }
+.rtag { background: linear-gradient(135deg, var(--primary-light), #ffe8f5); border: 1.5px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; color: var(--primary); direction: ltr; }
 
 /* ── TOAST ── */
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1e293b; color: white; padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 700; z-index: 999; transition: transform 0.3s; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: #2d1b69; color: white; padding: 13px 26px; border-radius: 20px; font-size: 13px; font-weight: 800; z-index: 999; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
 .toast.show { transform: translateX(-50%) translateY(0); }
-.toast.ok { background: #15803d; }
-.toast.err { background: #dc2626; }
+.toast.ok { background: linear-gradient(135deg, #4cc97a, #059669); }
+.toast.err { background: linear-gradient(135deg, #ff4757, #ff6b81); }
 
 /* ── CONFIRM MODAL ── */
-.confirm-box { background: white; border-radius: 16px; padding: 24px 20px; width: 90%; max-width: 340px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: slideUp 0.2s ease; }
-.confirm-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-.confirm-box p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.confirm-box { background: white; border-radius: 24px; padding: 28px 22px; width: 90%; max-width: 340px; text-align: center; box-shadow: 0 20px 60px rgba(45,27,105,0.25); animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.confirm-box h3 { font-size: 17px; font-weight: 900; margin-bottom: 8px; color: var(--text); }
+.confirm-box p { font-size: 13px; color: var(--muted); margin-bottom: 22px; font-weight: 600; }
 .confirm-actions { display: flex; gap: 10px; }
 .confirm-actions .btn { flex: 1; justify-content: center; }
 
 /* ── EMPTY ── */
 .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
-.empty .ei { font-size: 36px; margin-bottom: 8px; }
+.empty .ei { font-size: 44px; margin-bottom: 10px; animation: emptyBounce 2s ease-in-out infinite; display: block; }
+@keyframes emptyBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+/* ── STAR DECORATION ANIMATION ── */
+@keyframes starFloat {
+  0%,100%{transform:translateY(0) rotate(0deg); opacity:0.7}
+  50%{transform:translateY(-6px) rotate(10deg); opacity:1}
+}
+.floating-star { display:inline-block; animation: starFloat 2.5s ease-in-out infinite; }
 </style>
 </head>
 <body>
 
+<style>
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+</style>
 <header style="display:flex;align-items:center;gap:12px">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6LT_avN6Yhg_zRRR3t0Vdo-6r0MkwFZSdQjdXCgarnAjniQWvfaMZoPU&s=10" alt="City School Logo" style="height:55px;width:auto;border-radius:4px">
+  <div class="logo">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6LT_avN6Yhg_zRRR3t0Vdo-6r0MkwFZSdQjdXCgarnAjniQWvfaMZoPU&s=10" alt="City School Logo" style="height:52px;width:auto;border-radius:8px">
+  </div>
   <div style="flex:1">
-    <h1 style="margin:0;font-size:18px;font-weight:700">KG2-A System</h1>
-    <p style="margin:0;font-size:12px;opacity:0.9">City Private School — Parent Management</p>
+    <h1 style="margin:0">🌟 KG2-A System</h1>
+    <p style="margin:0">City Private School — Parent Management</p>
   </div>
-  <div class="header-badge" id="totalBadge">25 Students</div>
-  <div style="background:rgba(34,197,94,0.2);border:1px solid #22c55e;color:#15803d;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:4px">
-    <span style="width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite"></span>Firebase
+  <div class="header-badge" id="totalBadge">🎒 25 Students</div>
+  <div style="background:rgba(76,201,122,0.25);border:2px solid rgba(76,201,122,0.5);color:#fff;padding:5px 10px;border-radius:20px;font-size:10px;font-weight:800;display:flex;align-items:center;gap:4px">
+    <span style="width:7px;height:7px;background:#4cc97a;border-radius:50%;animation:pulse 2s infinite;box-shadow:0 0 6px #4cc97a"></span>Live
   </div>
-  <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}</style>
-  <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);padding:6px 12px;font-size:11px" onclick="showDataMenu()">⚙️</button>
+  <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.35);padding:8px 13px;font-size:13px" onclick="showDataMenu()">⚙️</button>
 </header>
 
 <div class="tabs">
   <div class="tab active" onclick="switchTab('contacts')">
-    <span class="tab-icon">👥</span>Contacts
+    <span class="tab-icon">🧒</span>Students
   </div>
   <div class="tab" onclick="switchTab('email')">
-    <span class="tab-icon">✉️</span>Send Email
+    <span class="tab-icon">💌</span>Email
   </div>
   <div class="tab" onclick="switchTab('templates')">
-    <span class="tab-icon">📝</span>Templates
+    <span class="tab-icon">📋</span>Templates
   </div>
   <div class="tab" onclick="switchTab('stats')">
-    <span class="tab-icon">📊</span>Statistics
+    <span class="tab-icon">🌈</span>Stats
   </div>
 </div>
 
@@ -211,8 +341,8 @@ header p { font-size: 12px; opacity: 0.75; }
   </div>
   <div id="emailList"></div>
 
-  <div style="background:white;border-radius:16px;padding:18px;margin-top:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
-    <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:14px">✉️  </div>
+  <div style="background:white;border-radius:22px;padding:18px;margin-top:14px;box-shadow:0 4px 20px rgba(108,63,197,0.1);border:2px solid var(--border)">
+    <div style="font-size:15px;font-weight:900;color:var(--primary);margin-bottom:14px">💌 Compose Email</div>
 
     <div class="fg">
       <label>📧 Recipients</label>
@@ -289,9 +419,9 @@ header p { font-size: 12px; opacity: 0.75; }
 </div>
 
 <div class="page" id="page-templates">
-  <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+  <div style="background:white;border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 4px 20px rgba(108,63,197,0.1);border:2px solid var(--border)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-      <div style="font-size:14px;font-weight:700;color:var(--primary)">📝 Saved Email Templates</div>
+      <div style="font-size:15px;font-weight:900;color:var(--primary)">📋 Saved Email Templates</div>
       <button class="btn btn-primary btn-sm" onclick="openTemplateModal()">➕ Add Template</button>
     </div>
     <div id="templatesList"></div>
@@ -299,35 +429,37 @@ header p { font-size: 12px; opacity: 0.75; }
 </div>
 
 <div class="page" id="page-stats">
-  <div style="background:white;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+  <div style="background:white;border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 4px 20px rgba(108,63,197,0.1);border:2px solid var(--border)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:16px;font-weight:700;color:var(--primary)">📊 Statistics </div>
-      <span class="count-badge" id="totalBadge">25 Student</span>
+      <div style="font-size:16px;font-weight:900;color:var(--primary)">🌈 Class Statistics</div>
+      <span class="count-badge" id="totalBadge2">25 Student</span>
     </div>
     
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-      <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:16px;border-radius:12px">
-        <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Total Students</div>
-        <div style="font-size:24px;font-weight:700" id="statTotal">25</div>
+      <div style="background:linear-gradient(135deg,#6c3fc5,#a855f7);color:white;padding:18px;border-radius:18px;box-shadow:0 6px 20px rgba(108,63,197,0.3)">
+        <div style="font-size:28px;margin-bottom:4px">🎒</div>
+        <div style="font-size:11px;opacity:0.9;margin-bottom:4px;font-weight:700">Total Students</div>
+        <div style="font-size:28px;font-weight:900" id="statTotal">25</div>
       </div>
-      <div style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;padding:16px;border-radius:12px">
-        <div style="font-size:11px;opacity:0.9;margin-bottom:4px"> Mother</div>
-        <div style="font-size:24px;font-weight:700" id="statParents">25</div>
+      <div style="background:linear-gradient(135deg,#ec4899,#f472b6);color:white;padding:18px;border-radius:18px;box-shadow:0 6px 20px rgba(236,72,153,0.3)">
+        <div style="font-size:28px;margin-bottom:4px">👨‍👩‍👧</div>
+        <div style="font-size:11px;opacity:0.9;margin-bottom:4px;font-weight:700">Parent Emails</div>
+        <div style="font-size:28px;font-weight:900" id="statParents">25</div>
       </div>
     </div>
     
-    <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">👥 Gender</div>
+    <div style="background:linear-gradient(135deg,#fdf6ff,#f0ebff);border-radius:18px;padding:16px;margin-bottom:12px;border:2px solid var(--border)">
+      <div style="font-size:13px;font-weight:900;color:var(--primary);margin-bottom:12px">👧👦 Gender</div>
       <div id="genderStats"></div>
     </div>
     
-    <div style="background:#f8fbff;border-radius:12px;padding:16px;margin-bottom:12px">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">🌍 Nationalities</div>
+    <div style="background:linear-gradient(135deg,#fff8f0,#ffeedd);border-radius:18px;padding:16px;margin-bottom:12px;border:2px solid #ffdab9">
+      <div style="font-size:13px;font-weight:900;color:#c2410c;margin-bottom:12px">🌍 Nationalities</div>
       <div id="nationalityStats"></div>
     </div>
     
-    <div style="background:#f8fbff;border-radius:12px;padding:16px">
-      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:12px">📞 Contact Information</div>
+    <div style="background:linear-gradient(135deg,#f0fff4,#dcfce7);border-radius:18px;padding:16px;border:2px solid #bbf7d0">
+      <div style="font-size:13px;font-weight:900;color:#15803d;margin-bottom:12px">📞 Contact Information</div>
       <div id="contactStats"></div>
     </div>
   </div>
@@ -345,8 +477,8 @@ header p { font-size: 12px; opacity: 0.75; }
     <div class="modal-body">
       <input type="hidden" id="editId">
       
-      <div style="background:#e0f2fe;padding:10px;border-radius:8px;margin-bottom:12px;font-size:11px">
-        💡 <strong>Tip:</strong> Fill all fields for complete database
+      <div style="background:linear-gradient(135deg,#fdf6ff,#ffe8f5);padding:12px;border-radius:14px;margin-bottom:12px;font-size:11px;border:2px solid var(--border);font-weight:700">
+        ✨ <strong>Tip:</strong> Fill all fields for complete student profile!
       </div>
       
       <div class="fg">
@@ -404,8 +536,8 @@ header p { font-size: 12px; opacity: 0.75; }
         <input type="email" id="editMother" placeholder="mother@email.com" style="direction:ltr;text-align:left">
       </div>
       
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
-      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">🎓  Student</div>
+      <hr style="border:none;border-top:2px solid var(--border);margin:16px 0">
+      <div style="font-size:13px;font-weight:900;color:var(--primary);margin-bottom:12px">🎓 Student Account</div>
       
       <div class="fg">
         <label>📧 Student Email</label>
@@ -421,12 +553,12 @@ header p { font-size: 12px; opacity: 0.75; }
 
 <div class="overlay" id="confirmOverlay" style="align-items:center">
   <div class="confirm-box">
-    <div style="font-size:36px;margin-bottom:8px">🗑️</div>
-    <h3>Delete Student</h3>
-    <p id="confirmName">   from Delete  Student</p>
+    <div style="font-size:44px;margin-bottom:10px;animation:emptyBounce 1.5s ease-in-out infinite">⚠️</div>
+    <h3>Delete Student?</h3>
+    <p id="confirmName" style="color:var(--danger);font-weight:800">This cannot be undone!</p>
     <div class="confirm-actions">
-      <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
-      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+      <button class="btn btn-outline" onclick="closeConfirm()">✕ Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">🗑️ Delete</button>
     </div>
   </div>
 </div>
@@ -434,20 +566,20 @@ header p { font-size: 12px; opacity: 0.75; }
 <div class="toast" id="toast"></div>
 
 <div class="overlay" id="dataMenuOverlay" style="align-items:center">
-  <div style="background:white;border-radius:20px;width:90%;max-width:340px;padding:0;animation:slideUp 0.25s ease">
-    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:16px 20px;border-radius:20px 20px 0 0;font-size:15px;font-weight:700">⚙️ Data Management</div>
+  <div style="background:white;border-radius:28px;width:90%;max-width:340px;padding:0;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1)">
+    <div style="background:linear-gradient(135deg,#6c3fc5,#a855f7,#ec4899);color:white;padding:18px 20px;border-radius:28px 28px 0 0;font-size:16px;font-weight:900">⚙️ Data Management</div>
     <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
       <button class="btn btn-success" style="width:100%;justify-content:center" onclick="exportExcel()">📊 Export Excel</button>
       <button class="btn btn-warning" style="width:100%;justify-content:center;color:white" onclick="document.getElementById('importExcelFile').click()">📑 Import Excel (Smart Sync)</button>
       <input type="file" id="importExcelFile" accept=".xlsx, .xls, .csv" style="display:none" onchange="importExcel(event)">
       
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:4px 0">
+      <hr style="border:none;border-top:2px solid var(--border);margin:4px 0">
       
       <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="exportData()">📤 Export Data (JSON)</button>
       <button class="btn btn-accent" style="width:100%;justify-content:center" onclick="document.getElementById('importFile').click()">📥 Import Data (JSON)</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
       
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:4px 0">
+      <hr style="border:none;border-top:2px solid var(--border);margin:4px 0">
 
       <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="handleLogout()">🚪 Logout</button>
       <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeDataMenu()">Cancel</button>
@@ -496,8 +628,8 @@ header p { font-size: 12px; opacity: 0.75; }
       <button class="close-btn" onclick="closePersonalizedModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#0369a1;line-height:1.6">
-        📌 <strong>How it works:</strong> All Student   from .  "📧 Send" All Student ← will open Gmail ←  Send ← return to list and continue remaining 
+      <div style="background:linear-gradient(135deg,#fdf6ff,#f0ebff);border:2px solid var(--border);border-radius:14px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--primary);line-height:1.6;font-weight:700">
+        🌟 <strong>How it works:</strong> Click "📧 Send" for each student to open Gmail and send individually.
       </div>
       <div id="personalizedList"></div>
     </div>
@@ -505,25 +637,25 @@ header p { font-size: 12px; opacity: 0.75; }
 </div>
 
 <div class="overlay" id="sendOverlay" style="align-items:center">
-  <div style="background:white;border-radius:20px;width:92%;max-width:400px;max-height:85vh;overflow-y:auto;animation:slideUp 0.25s ease">
-    <div style="background:linear-gradient(135deg,#1a4f7a,#0d3057);color:white;padding:18px 20px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between">
-      <div><div style="font-size:16px;font-weight:700">📧  Send</div><div style="font-size:11px;opacity:0.75;margin-top:2px">   Send</div></div>
+  <div style="background:white;border-radius:28px;width:92%;max-width:400px;max-height:85vh;overflow-y:auto;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1)">
+    <div style="background:linear-gradient(135deg,#6c3fc5,#a855f7,#ec4899);color:white;padding:20px;border-radius:28px 28px 0 0;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-size:16px;font-weight:900">📧 Send Email</div><div style="font-size:11px;opacity:0.85;margin-top:2px;font-weight:700">Review before sending</div></div>
       <button class="close-btn" onclick="document.getElementById('sendOverlay').classList.remove('open')">✕</button>
     </div>
     <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
 
-      <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📧 Recipients</div>
+      <div style="background:var(--primary-light);border-radius:14px;padding:12px;border:2px solid var(--border)">
+        <div style="font-size:11px;font-weight:800;color:var(--primary);margin-bottom:4px">📧 Recipients</div>
         <div id="sendEmails" style="font-size:12px;color:var(--text);direction:ltr;text-align:left;word-break:break-all"></div>
       </div>
 
-      <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">📝 Subject</div>
-        <div id="sendSubject" style="font-size:13px;font-weight:600"></div>
+      <div style="background:var(--primary-light);border-radius:14px;padding:12px;border:2px solid var(--border)">
+        <div style="font-size:11px;font-weight:800;color:var(--primary);margin-bottom:4px">📝 Subject</div>
+        <div id="sendSubject" style="font-size:13px;font-weight:700"></div>
       </div>
 
-      <div style="background:#f8fbff;border-radius:10px;padding:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:4px">💬 </div>
+      <div style="background:var(--primary-light);border-radius:14px;padding:12px;border:2px solid var(--border)">
+        <div style="font-size:11px;font-weight:800;color:var(--primary);margin-bottom:4px">💬 Message</div>
         <div id="sendBody" style="font-size:12px;color:var(--text);white-space:pre-wrap;max-height:100px;overflow-y:auto"></div>
       </div>
 
@@ -621,16 +753,16 @@ function renderContacts() {
     const av = avColors[students.indexOf(s) % avColors.length];
     const genderIcon = s.gender === 'Male' ? '👨' : '👩';
     
-    // Info rows with better styling
+    // Info rows with colorful styling
     const infoRows = `
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;font-size:11px">
-        <div style="background:#f8fbff;padding:6px 8px;border-radius:6px">
-          <div style="color:var(--muted);font-size:10px;margin-bottom:2px">Gender</div>
-          <div style="font-weight:700">${genderIcon} ${s.gender === 'Male' ? 'Male' : 'Female'}</div>
+        <div style="background:linear-gradient(135deg,#fdf6ff,#f0ebff);padding:7px 10px;border-radius:12px;border:1.5px solid var(--border)">
+          <div style="color:var(--muted);font-size:10px;margin-bottom:2px;font-weight:700">Gender</div>
+          <div style="font-weight:800">${genderIcon} ${s.gender === 'Male' ? 'Male' : 'Female'}</div>
         </div>
-        <div style="background:#f8fbff;padding:6px 8px;border-radius:6px">
-          <div style="color:var(--muted);font-size:10px;margin-bottom:2px">Nationality</div>
-          <div style="font-weight:700;font-size:10px">${s.nationality}</div>
+        <div style="background:linear-gradient(135deg,#fff8f0,#ffeedd);padding:7px 10px;border-radius:12px;border:1.5px solid #ffdab9">
+          <div style="color:#c2410c;font-size:10px;margin-bottom:2px;font-weight:700">Nationality</div>
+          <div style="font-weight:800;font-size:10px;color:#92400e">${s.nationality}</div>
         </div>
       </div>
     `;
@@ -1650,11 +1782,13 @@ async function init() {
 
 </script>
 
-<div id="loginScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1a4f7a,#0d3057);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px">
-  <div style="background:white;border-radius:20px;padding:32px 24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+<div id="loginScreen" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#6c3fc5 0%,#a855f7 50%,#ec4899 100%);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px">
+  <div style="font-size:48px;margin-bottom:16px;animation:emptyBounce 2s ease-in-out infinite">🌟</div>
+  <div style="background:white;border-radius:28px;padding:32px 24px;width:100%;max-width:360px;box-shadow:0 25px 70px rgba(45,27,105,0.4)">
     <div style="text-align:center;margin-bottom:24px">
-      <div style="width:64px;height:64px;background:var(--accent);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px">🎒</div>
-      <h1 style="font-size:20px;font-weight:900;color:var(--primary)">KG2-A System</h1>
+      <div style="width:72px;height:72px;background:linear-gradient(135deg,#6c3fc5,#ec4899);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px;box-shadow:0 8px 25px rgba(108,63,197,0.4)">🎒</div>
+      <h1 style="font-size:22px;font-weight:900;color:var(--primary)">KG2-A System</h1>
+      <p style="font-size:12px;color:var(--muted);margin-top:4px;font-weight:700">City Private School</p>
     </div>
     <div class="fg">
       <label>📧 Email</label>
@@ -1662,11 +1796,12 @@ async function init() {
     </div>
     <div class="fg">
       <label>🔒 Password</label>
-      <input type="password" id="loginPassword" placeholder="••••••••" style="direction:ltr;text-align:left">
+      <input type="password" id="loginPassword" placeholder="••••••••" style="direction:ltr;text-align:left" onkeypress="if(event.key==='Enter') handleLogin()">
     </div>
-    <div id="loginError" style="display:none;color:red;font-size:12px;margin-bottom:10px"></div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="handleLogin()">🚀 Login</button>
+    <div id="loginError" style="display:none;color:var(--danger);font-size:12px;margin-bottom:10px;font-weight:700;background:#fff0f0;border-radius:10px;padding:8px 12px"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="handleLogin()">🚀 Sign In</button>
   </div>
+  <div style="margin-top:20px;font-size:12px;color:rgba(255,255,255,0.7);font-weight:700">⭐ KG2-A Parent Management System ⭐</div>
 </div>
 
 </body>
