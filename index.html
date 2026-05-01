@@ -270,12 +270,95 @@ header p { font-size: 11px; opacity: 0.85; font-weight: 600; }
 .empty .ei { font-size: 44px; margin-bottom: 10px; animation: emptyBounce 2s ease-in-out infinite; display: block; }
 @keyframes emptyBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
-/* ── STAR DECORATION ANIMATION ── */
-@keyframes starFloat {
-  0%,100%{transform:translateY(0) rotate(0deg); opacity:0.7}
-  50%{transform:translateY(-6px) rotate(10deg); opacity:1}
+/* ── DARK MODE ── */
+body.dark {
+  --primary: #c084fc;
+  --primary-light: #2d1f4a;
+  --accent: #ff6b6b;
+  --accent2: #ffd93d;
+  --bg: #0f0a1a;
+  --card: #1a1030;
+  --text: #f0e8ff;
+  --muted: #9b8dc0;
+  --border: #3a2a5a;
+  --teal: #4ecdc4;
 }
-.floating-star { display:inline-block; animation: starFloat 2.5s ease-in-out infinite; }
+body.dark header { background: linear-gradient(135deg,#3b1f7a 0%,#6d28d9 50%,#9d174d 100%); }
+body.dark .tabs { background: #1a1030; }
+body.dark .tab { color: #7c6fa0; }
+body.dark .tab.active { background: #2d1f4a; color: var(--primary); }
+body.dark .contact-card { background: #1a1030; border-color: #3a2a5a; }
+body.dark .contact-card:hover { background: #221540; }
+body.dark .search-wrap input { background: #1a1030; color: var(--text); border-color: #3a2a5a; }
+body.dark .select-bar { background: #1a1030; border-color: #3a2a5a; }
+body.dark .btn-outline { background: #1a1030; color: var(--primary); border-color: #3a2a5a; }
+body.dark .fg input, body.dark .fg select, body.dark .fg textarea { background: #0f0a1a; color: var(--text); border-color: #3a2a5a; }
+body.dark .modal { background: #1a1030; }
+body.dark .modal-foot { background: #0f0a1a; border-color: #3a2a5a; }
+body.dark .rcpt-box { background: #0f0a1a; border-color: #3a2a5a; }
+body.dark .attach-area { background: #0f0a1a; border-color: #3a2a5a; }
+body.dark .attach-item { background: #0f0a1a; border-color: #3a2a5a; }
+body.dark .confirm-box { background: #1a1030; }
+body.dark .count-badge { background: #2d1f4a; color: var(--primary); border-color: #3a2a5a; }
+
+/* ── DARK MODE TOGGLE BUTTON ── */
+.dark-toggle {
+  background: rgba(255,255,255,0.18);
+  border: 2px solid rgba(255,255,255,0.35);
+  color: white; border-radius: 20px;
+  padding: 6px 13px; font-size: 13px; font-weight: 800;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.dark-toggle:hover { background: rgba(255,255,255,0.28); }
+
+/* ── FILTER PILLS ── */
+.filter-row {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 12px; padding: 10px 14px;
+  background: white; border-radius: 18px;
+  border: 2px solid var(--border);
+  box-shadow: 0 2px 10px rgba(108,63,197,0.07);
+}
+body.dark .filter-row { background: #1a1030; border-color: #3a2a5a; }
+.filter-pill {
+  padding: 5px 13px; border-radius: 20px; border: 2px solid var(--border);
+  background: white; color: var(--muted); font-size: 11px; font-weight: 800;
+  cursor: pointer; transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+}
+body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
+.filter-pill:hover { transform: scale(1.05); }
+.filter-pill.active { background: linear-gradient(135deg,var(--primary),#a855f7); color: white; border-color: transparent; box-shadow: 0 3px 10px rgba(108,63,197,0.3); }
+.filter-pill.active-pink { background: linear-gradient(135deg,#ec4899,#f472b6); color: white; border-color: transparent; box-shadow: 0 3px 10px rgba(236,72,153,0.3); }
+.filter-pill.active-blue { background: linear-gradient(135deg,#3b82f6,#6366f1); color: white; border-color: transparent; }
+.filter-pill.active-green { background: linear-gradient(135deg,#22c55e,#4ade80); color: white; border-color: transparent; }
+.filter-pill.active-orange { background: linear-gradient(135deg,#f97316,#fb923c); color: white; border-color: transparent; }
+
+/* ── NOTE BADGE on card ── */
+.note-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: linear-gradient(135deg,#fef9c3,#fde68a);
+  border: 1.5px solid #fcd34d; border-radius: 10px;
+  padding: 3px 9px; font-size: 10px; font-weight: 800; color: #92400e;
+  margin-top: 6px; cursor: pointer;
+  transition: all 0.2s;
+}
+.note-badge:hover { transform: scale(1.05); }
+.note-badge.note-green { background: linear-gradient(135deg,#d1fae5,#a7f3d0); border-color:#6ee7b7; color:#065f46; }
+.note-badge.note-red { background: linear-gradient(135deg,#fee2e2,#fecaca); border-color:#fca5a5; color:#991b1b; }
+.note-badge.note-blue { background: linear-gradient(135deg,#dbeafe,#bfdbfe); border-color:#93c5fd; color:#1e40af; }
+
+/* ── BIRTHDAY BADGE ── */
+.birthday-banner {
+  background: linear-gradient(135deg,#fdf6ff,#ffe8f5);
+  border: 2px solid #f9a8d4; border-radius: 16px;
+  padding: 10px 14px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 800; color: #9d174d;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
 </style>
 </head>
 <body>
@@ -297,6 +380,7 @@ header p { font-size: 11px; opacity: 0.85; font-weight: 600; }
     <span style="width:7px;height:7px;background:#4cc97a;border-radius:50%;animation:pulse 2s infinite;box-shadow:0 0 6px #4cc97a"></span>Live
   </div>
   <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.35);padding:8px 13px;font-size:13px" onclick="showDataMenu()">⚙️</button>
+  <button class="dark-toggle" onclick="toggleDark()" id="darkToggleBtn">🌙</button>
 </header>
 
 <div class="tabs">
@@ -315,9 +399,24 @@ header p { font-size: 11px; opacity: 0.85; font-weight: 600; }
 </div>
 
 <div class="page active" id="page-contacts">
+  <div id="birthdayBanner" style="display:none" class="birthday-banner">
+    🎂 <span id="birthdayText"></span>
+  </div>
   <div class="search-wrap">
     <span class="si">🔍</span>
-    <input type="text" id="contactSearch" placeholder="Search Name  Student ID..." oninput="renderContacts()">
+    <input type="text" id="contactSearch" placeholder="Search Name / Student ID..." oninput="renderContacts()">
+  </div>
+  <div class="filter-row">
+    <span style="font-size:11px;font-weight:900;color:var(--muted);margin-right:2px">Filter:</span>
+    <button class="filter-pill active" id="fpAll" onclick="setFilter('all')">🌟 All</button>
+    <button class="filter-pill" id="fpMale" onclick="setFilter('male')">👦 Boys</button>
+    <button class="filter-pill" id="fpFemale" onclick="setFilter('female')">👧 Girls</button>
+    <button class="filter-pill" id="fpEgyptian" onclick="setFilter('Egyptian')">🇪🇬</button>
+    <button class="filter-pill" id="fpYemeni" onclick="setFilter('Yemeni')">🇾🇪</button>
+    <button class="filter-pill" id="fpJordanian" onclick="setFilter('Jordanian')">🇯🇴</button>
+    <button class="filter-pill" id="fpSudanese" onclick="setFilter('Sudanese')">🇸🇩</button>
+    <button class="filter-pill" id="fpSyrian" onclick="setFilter('Syrian')">🇸🇾</button>
+    <button class="filter-pill" id="fpPalestinian" onclick="setFilter('Palestinian')">🇵🇸</button>
   </div>
   <div class="action-row">
     <span class="count-badge" id="contactCount">25 Student</span>
@@ -509,6 +608,26 @@ header p { font-size: 11px; opacity: 0.85; font-weight: 600; }
         <label>🕌 Religion</label>
         <input type="text" id="editReligion" placeholder="Muslim, Christian, etc.">
       </div>
+
+      <div class="fg">
+        <label>🎂 Birthday (Optional)</label>
+        <input type="date" id="editBirthday" style="direction:ltr;text-align:left">
+      </div>
+
+      <div class="fg">
+        <label>⭐ Quick Note (Optional)</label>
+        <select id="editNoteType">
+          <option value="">— No Note —</option>
+          <option value="yellow">⭐ Needs Follow-up</option>
+          <option value="green">✅ Excellent Student</option>
+          <option value="red">⚠️ Needs Attention</option>
+          <option value="blue">💙 Special Needs</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>📝 Note Details</label>
+        <input type="text" id="editNoteText" placeholder="e.g. Speech therapy, Outstanding reader...">
+      </div>
       
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
       <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px">👨  Father</div>
@@ -680,6 +799,22 @@ header p { font-size: 11px; opacity: 0.85; font-weight: 600; }
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
 <script>
+// ── DARK MODE ──
+function toggleDark() {
+  const isDark = document.body.classList.toggle('dark');
+  const btn = document.getElementById('darkToggleBtn');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('kg2a_dark', isDark ? '1' : '0');
+}
+function initDark() {
+  if (localStorage.getItem('kg2a_dark') === '1') {
+    document.body.classList.add('dark');
+    const btn = document.getElementById('darkToggleBtn');
+    if (btn) btn.textContent = '☀️';
+  }
+}
+initDark();
+
 // ── DATA ──
 let templates = [];
 let currentTemplate = null;
@@ -737,62 +872,128 @@ function switchTab(tab) {
   resetIdleTimer(); // Reset timer on activity
 }
 
+// ── FILTER STATE ──
+let activeFilter = 'all';
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(p => {
+    p.className = 'filter-pill';
+  });
+  const map = {all:'fpAll',male:'fpMale',female:'fpFemale',Egyptian:'fpEgyptian',Yemeni:'fpYemeni',Jordanian:'fpJordanian',Sudanese:'fpSudanese',Syrian:'fpSyrian',Palestinian:'fpPalestinian'};
+  const colorMap = {all:'active',male:'active-blue',female:'active-pink',Egyptian:'active-orange',Yemeni:'active-green',Jordanian:'active-green',Sudanese:'active-orange',Syrian:'active-blue',Palestinian:'active-green'};
+  const el = document.getElementById(map[f]);
+  if (el) el.classList.add(colorMap[f] || 'active');
+  renderContacts();
+}
+
+// ── BIRTHDAY CHECK ──
+function checkBirthdays() {
+  const today = new Date();
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  const dd = String(today.getDate()).padStart(2,'0');
+  const todayMMDD = mm+'-'+dd;
+  const upcoming = students.filter(s => {
+    if (!s.birthday) return false;
+    const parts = s.birthday.split('-');
+    if (parts.length < 3) return false;
+    const bMMDD = parts[1]+'-'+parts[2];
+    // today or within next 3 days
+    const bDate = new Date(today.getFullYear(), parseInt(parts[1])-1, parseInt(parts[2]));
+    const diff = (bDate - today) / (1000*60*60*24);
+    return diff >= 0 && diff < 3;
+  });
+  const banner = document.getElementById('birthdayBanner');
+  const textEl = document.getElementById('birthdayText');
+  if (upcoming.length && banner && textEl) {
+    textEl.textContent = upcoming.map(s => {
+      const firstName = s.name.split(' ')[0];
+      const b = new Date(s.birthday);
+      const diff = Math.round((b - new Date(new Date().toDateString())) / (1000*60*60*24));
+      return diff === 0 ? `🎉 Today is ${firstName}'s Birthday!` : `🎂 ${firstName}'s Birthday in ${diff} day${diff>1?'s':''}!`;
+    }).join('  •  ');
+    banner.style.display = 'flex';
+  } else if (banner) {
+    banner.style.display = 'none';
+  }
+}
+
 // ── CONTACTS TAB ──
 function renderContacts() {
+  checkBirthdays();
   const q = document.getElementById('contactSearch').value.trim().toLowerCase();
-  const filtered = students.filter(s =>
+  let filtered = students.filter(s =>
     s.name.toLowerCase().includes(q) || String(s.id).includes(q) ||
     (s.father||'').toLowerCase().includes(q) || (s.mother||'').toLowerCase().includes(q) ||
     (s.nationality||'').toLowerCase().includes(q)
   );
+  if (activeFilter === 'male') filtered = filtered.filter(s => s.gender === 'Male');
+  else if (activeFilter === 'female') filtered = filtered.filter(s => s.gender === 'Female');
+  else if (activeFilter !== 'all') filtered = filtered.filter(s => s.nationality === activeFilter);
+
   document.getElementById('contactCount').textContent = filtered.length + ' Student';
-  document.getElementById('totalBadge').textContent = students.length + ' Student';
+  document.getElementById('totalBadge').textContent = '🎒 ' + students.length + ' Students';
   const list = document.getElementById('contactsList');
   if (!filtered.length) { list.innerHTML = '<div class="empty"><div class="ei">🔍</div>No results found</div>'; return; }
-  list.innerHTML = filtered.map((s,i) => {
+  list.innerHTML = filtered.map((s) => {
     const av = avColors[students.indexOf(s) % avColors.length];
-    const genderIcon = s.gender === 'Male' ? '👨' : '👩';
-    
-    // Info rows with colorful styling
+    const genderIcon = s.gender === 'Male' ? '👦' : '👧';
+
+    // Birthday badge
+    let birthdayBadge = '';
+    if (s.birthday) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const parts = s.birthday.split('-');
+      const b = new Date(today.getFullYear(), parseInt(parts[1])-1, parseInt(parts[2]));
+      const diff = Math.round((b - today) / (1000*60*60*24));
+      if (diff >= 0 && diff < 7) {
+        birthdayBadge = ` <span style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#fce7f3,#fbcfe8);border:1.5px solid #f9a8d4;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:800;color:#9d174d">${diff===0?'🎂 Today!':'🎂 '+diff+'d'}</span>`;
+      }
+    }
+
+    // Note badge
+    let noteBadge = '';
+    if (s.noteType) {
+      const cls = {yellow:'note-badge',green:'note-badge note-green',red:'note-badge note-red',blue:'note-badge note-blue'}[s.noteType]||'note-badge';
+      const icon = {yellow:'⭐',green:'✅',red:'⚠️',blue:'💙'}[s.noteType]||'📌';
+      noteBadge = `<div style="margin-bottom:8px"><span class="${cls}" onclick="event.stopPropagation();openEditModal(${s.id})">${icon} ${s.noteText||'Note'}</span></div>`;
+    }
+
     const infoRows = `
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;font-size:11px">
         <div style="background:linear-gradient(135deg,#fdf6ff,#f0ebff);padding:7px 10px;border-radius:12px;border:1.5px solid var(--border)">
           <div style="color:var(--muted);font-size:10px;margin-bottom:2px;font-weight:700">Gender</div>
-          <div style="font-weight:800">${genderIcon} ${s.gender === 'Male' ? 'Male' : 'Female'}</div>
+          <div style="font-weight:800">${genderIcon} ${s.gender==='Male'?'Male':'Female'}</div>
         </div>
         <div style="background:linear-gradient(135deg,#fff8f0,#ffeedd);padding:7px 10px;border-radius:12px;border:1.5px solid #ffdab9">
           <div style="color:#c2410c;font-size:10px;margin-bottom:2px;font-weight:700">Nationality</div>
-          <div style="font-weight:800;font-size:10px;color:#92400e">${s.nationality}</div>
+          <div style="font-weight:800;font-size:10px;color:#92400e">${s.nationality||'—'}</div>
         </div>
-      </div>
-    `;
-    
-    // Parent contact rows with mobile AND email
+      </div>`;
+
     const fatherRow = `
       <div class="email-row" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0">
         <div style="font-size:10px;font-weight:700;color:var(--primary)">👨 Father</div>
-        ${s.fatherMobile ? `<a href="tel:${s.fatherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.fatherMobile}</a>` : '<span class="no-email">None </span>'}
-        ${s.father ? `<div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.father}</div>` : '<span class="no-email">None </span>'}
-      </div>
-    `;
-    
-    const motherRow = s.mother && s.mother !== s.father ? `
-      <div class="email-row" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0;border-top:1px solid #f0f5fa">
+        ${s.fatherMobile?`<a href="tel:${s.fatherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.fatherMobile}</a>`:'<span class="no-email">No phone</span>'}
+        ${s.father?`<div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.father}</div>`:'<span class="no-email">No email</span>'}
+      </div>`;
+
+    const motherRow = s.mother && s.mother!==s.father ? `
+      <div class="email-row" style="flex-direction:column;align-items:flex-start;gap:4px;padding:8px 0;border-top:1px solid #f5f0ff">
         <div style="font-size:10px;font-weight:700;color:var(--primary)">👩 Mother</div>
-        ${s.motherMobile ? `<a href="tel:${s.motherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.motherMobile}</a>` : '<span class="no-email">None </span>'}
+        ${s.motherMobile?`<a href="tel:${s.motherMobile}" style="font-size:12px;color:var(--primary);text-decoration:none;direction:ltr">📞 ${s.motherMobile}</a>`:'<span class="no-email">No phone</span>'}
         <div class="evalue" style="direction:ltr;text-align:left;font-size:11px">📧 ${s.mother}</div>
-      </div>
-    ` : '';
-    
+      </div>` : '';
+
     return `
     <div class="contact-card">
       <div class="card-top">
         <div class="avatar ${av}">${initials(s.name)}</div>
         <div style="flex:1">
-          <div class="card-name">${s.name}</div>
+          <div class="card-name">${s.name}${birthdayBadge}</div>
           <div class="card-id">🪪 ${s.id}</div>
         </div>
       </div>
+      ${noteBadge}
       ${infoRows}
       <div class="card-emails">${fatherRow}${motherRow}</div>
       <div class="card-actions">
@@ -1072,13 +1273,16 @@ function openGoogleDrivePicker() {
 // ── ADD / EDIT MODAL ──
 function openAddModal() {
   document.getElementById('editTitle').textContent = '➕ Add Student';
-  document.getElementById('editSubtitle').textContent = '  Student ';
+  document.getElementById('editSubtitle').textContent = 'New Student Profile';
   document.getElementById('editId').value = '';
   document.getElementById('editStudentId').value = '';
   document.getElementById('editName').value = '';
   document.getElementById('editGender').value = '';
   document.getElementById('editNationality').value = '';
   document.getElementById('editReligion').value = '';
+  document.getElementById('editBirthday').value = '';
+  document.getElementById('editNoteType').value = '';
+  document.getElementById('editNoteText').value = '';
   document.getElementById('editFatherMobile').value = '';
   document.getElementById('editFather').value = '';
   document.getElementById('editMotherMobile').value = '';
@@ -1090,7 +1294,7 @@ function openAddModal() {
 function openEditModal(id) {
   const s = students.find(x => x.id === id);
   if (!s) return;
-  document.getElementById('editTitle').textContent = '✏️ Edit  Student';
+  document.getElementById('editTitle').textContent = '✏️ Edit Student';
   document.getElementById('editSubtitle').textContent = s.name;
   document.getElementById('editId').value = id;
   document.getElementById('editStudentId').value = s.id;
@@ -1098,6 +1302,9 @@ function openEditModal(id) {
   document.getElementById('editGender').value = s.gender || '';
   document.getElementById('editNationality').value = s.nationality || '';
   document.getElementById('editReligion').value = s.religion || '';
+  document.getElementById('editBirthday').value = s.birthday || '';
+  document.getElementById('editNoteType').value = s.noteType || '';
+  document.getElementById('editNoteText').value = s.noteText || '';
   document.getElementById('editFatherMobile').value = s.fatherMobile || '';
   document.getElementById('editFather').value = s.father || '';
   document.getElementById('editMotherMobile').value = s.motherMobile || '';
@@ -1117,6 +1324,9 @@ function saveStudent() {
   const gender = document.getElementById('editGender').value.trim() || null;
   const nationality = document.getElementById('editNationality').value.trim() || null;
   const religion = document.getElementById('editReligion').value.trim() || null;
+  const birthday = document.getElementById('editBirthday').value.trim() || null;
+  const noteType = document.getElementById('editNoteType').value.trim() || null;
+  const noteText = document.getElementById('editNoteText').value.trim() || null;
   const fatherMobile = document.getElementById('editFatherMobile').value.trim() || null;
   const father = document.getElementById('editFather').value.trim() || null;
   const motherMobile = document.getElementById('editMotherMobile').value.trim() || null;
@@ -1126,26 +1336,19 @@ function saveStudent() {
   if (!sid || !name) { toast('ID and name are required', 'err'); return; }
 
   const studentData = {
-    id: sid,
-    name,
-    gender,
-    nationality,
-    religion,
-    father,
-    mother,
-    fatherMobile,
-    motherMobile,
-    email
+    id: sid, name, gender, nationality, religion,
+    birthday, noteType, noteText,
+    father, mother, fatherMobile, motherMobile, email
   };
 
   if (origId) {
     const idx = students.findIndex(s => s.id === parseInt(origId));
     if (idx > -1) students[idx] = studentData;
-    toast('✅ Done Edit ', 'ok');
+    toast('✅ Student updated!', 'ok');
   } else {
-    if (students.find(s => s.id === sid)) { toast('Student ID exists ', 'err'); return; }
+    if (students.find(s => s.id === sid)) { toast('Student ID already exists!', 'err'); return; }
     students.push(studentData);
-    toast('✅ Added successfully', 'ok');
+    toast('✅ Student added!', 'ok');
   }
   saveData();
   closeEditModal();
