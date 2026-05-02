@@ -887,35 +887,39 @@ function setFilter(f) {
 }
 
 // ── BIRTHDAY CHECK ──
+// ── BIRTHDAY HELPER ──
+function daysUntilBirthday(birthdayStr) {
+  if (!birthdayStr) return null;
+  const parts = birthdayStr.split('-');
+  if (parts.length < 3) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const month = parseInt(parts[1]) - 1;
+  const day   = parseInt(parts[2]);
+  let next = new Date(today.getFullYear(), month, day);
+  if (next < today) next = new Date(today.getFullYear() + 1, month, day);
+  return Math.round((next - today) / (1000*60*60*24));
+}
+
 function checkBirthdays() {
-  const today = new Date();
-  const mm = String(today.getMonth()+1).padStart(2,'0');
-  const dd = String(today.getDate()).padStart(2,'0');
-  const todayMMDD = mm+'-'+dd;
   const upcoming = students.filter(s => {
-    if (!s.birthday) return false;
-    const parts = s.birthday.split('-');
-    if (parts.length < 3) return false;
-    const bMMDD = parts[1]+'-'+parts[2];
-    // today or within next 3 days
-    const bDate = new Date(today.getFullYear(), parseInt(parts[1])-1, parseInt(parts[2]));
-    const diff = (bDate - today) / (1000*60*60*24);
-    return diff >= 0 && diff < 3;
+    const d = daysUntilBirthday(s.birthday);
+    return d !== null && d <= 3;
   });
   const banner = document.getElementById('birthdayBanner');
   const textEl = document.getElementById('birthdayText');
-  if (upcoming.length && banner && textEl) {
+  if (!banner || !textEl) return;
+  if (upcoming.length) {
     textEl.textContent = upcoming.map(s => {
       const firstName = s.name.split(' ')[0];
-      const b = new Date(s.birthday);
-      const diff = Math.round((b - new Date(new Date().toDateString())) / (1000*60*60*24));
-      return diff === 0 ? `🎉 Today is ${firstName}'s Birthday!` : `🎂 ${firstName}'s Birthday in ${diff} day${diff>1?'s':''}!`;
+      const d = daysUntilBirthday(s.birthday);
+      if (d === 0) return `🎉 Today is ${firstName}'s Birthday!`;
+      return `🎂 ${firstName}'s Birthday in ${d} day${d > 1 ? 's' : ''}!`;
     }).join('  •  ');
     banner.style.display = 'flex';
-  } else if (banner) {
+  } else {
     banner.style.display = 'none';
   }
-}
+        }
 
 // ── CONTACTS TAB ──
 function renderContacts() {
@@ -940,15 +944,12 @@ function renderContacts() {
 
     // Birthday badge
     let birthdayBadge = '';
-    if (s.birthday) {
-      const today = new Date(); today.setHours(0,0,0,0);
-      const parts = s.birthday.split('-');
-      const b = new Date(today.getFullYear(), parseInt(parts[1])-1, parseInt(parts[2]));
-      const diff = Math.round((b - today) / (1000*60*60*24));
-      if (diff >= 0 && diff < 7) {
-        birthdayBadge = ` <span style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#fce7f3,#fbcfe8);border:1.5px solid #f9a8d4;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:800;color:#9d174d">${diff===0?'🎂 Today!':'🎂 '+diff+'d'}</span>`;
-      }
-    }
+if (s.birthday) {
+  const d = daysUntilBirthday(s.birthday);
+  if (d !== null && d <= 7) {
+    birthdayBadge = ` <span style="...">${d===0?'🎂 Today!':'🎂 '+d+'d'}</span>`;
+  }
+}
 
     // Note badge
     let noteBadge = '';
