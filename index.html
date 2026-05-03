@@ -270,6 +270,27 @@ header p { font-size: 11px; opacity: 0.85; font-weight: 600; }
 .empty .ei { font-size: 44px; margin-bottom: 10px; animation: emptyBounce 2s ease-in-out infinite; display: block; }
 @keyframes emptyBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
+/* ── STUDENT PHOTO ── */
+.student-photo {
+  width: 46px; height: 46px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  border: 2.5px solid var(--border);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.contact-card:hover .student-photo { transform: scale(1.1) rotate(5deg); }
+.photo-upload-area {
+  border: 2.5px dashed var(--border); border-radius: 18px;
+  padding: 16px; text-align: center; cursor: pointer;
+  transition: all 0.2s; background: #fdf6ff;
+}
+.photo-upload-area:hover { border-color: var(--primary); background: var(--primary-light); }
+.photo-preview-wrap { position: relative; display: inline-block; margin-bottom: 8px; }
+.photo-preview-wrap img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 4px 15px rgba(108,63,197,0.25); }
+.photo-remove-btn { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(255,71,87,0.4); }
+.photo-upload-progress { height: 6px; background: var(--border); border-radius: 6px; margin-top: 10px; overflow: hidden; display: none; }
+.photo-upload-progress-bar { height: 100%; background: linear-gradient(90deg,#6c3fc5,#ec4899); border-radius: 6px; transition: width 0.3s; width: 0%; }
+
 /* ── DARK MODE ── */
 body.dark {
   --primary: #c084fc;
@@ -579,6 +600,26 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
       <div style="background:linear-gradient(135deg,#fdf6ff,#ffe8f5);padding:12px;border-radius:14px;margin-bottom:12px;font-size:11px;border:2px solid var(--border);font-weight:700">
         ✨ <strong>Tip:</strong> Fill all fields for complete student profile!
       </div>
+
+      <!-- PHOTO UPLOAD -->
+      <div class="fg">
+        <label>📸 Student Photo</label>
+        <div class="photo-upload-area" onclick="document.getElementById('photoFileInput').click()">
+          <div id="photoPreviewWrap" style="display:none" class="photo-preview-wrap">
+            <img id="photoPreviewImg" src="" alt="Student Photo">
+            <button class="photo-remove-btn" onclick="event.stopPropagation();removePhoto()">✕</button>
+          </div>
+          <div id="photoPlaceholder">
+            <div style="font-size:36px;margin-bottom:6px">📷</div>
+            <div style="font-size:12px;color:var(--muted);font-weight:700">Tap to upload photo</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">JPG or PNG • Max 2MB</div>
+          </div>
+          <div class="photo-upload-progress" id="photoProgress">
+            <div class="photo-upload-progress-bar" id="photoProgressBar"></div>
+          </div>
+        </div>
+        <input type="file" id="photoFileInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handlePhotoSelect(event)">
+      </div>
       
       <div class="fg">
         <label>🪪 Student ID</label>
@@ -815,6 +856,83 @@ function initDark() {
 }
 initDark();
 
+// ── FIREBASE INIT ──
+const firebaseConfig = {
+  apiKey: "AIzaSyCtyhfOAh3aQF9_SSzmI8hJ8YJg5jG5Q_Q",
+  authDomain: "cs-kg2a-system.firebaseapp.com",
+  databaseURL: "https://cs-kg2a-system-default-rtdb.firebaseio.com",
+  projectId: "cs-kg2a-system",
+  storageBucket: "cs-kg2a-system.firebasestorage.app",
+  messagingSenderId: "937866969676",
+  appId: "1:937866969676:web:f23e53eda3e5a55b57eae9"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.database();
+let currentUser = null;
+
+// ── PHOTO STATE (Base64 → Firebase Database) ──
+let pendingPhotoBase64 = null;  // new photo selected, not yet saved
+let currentPhotoBase64 = null;  // photo already saved for this student
+
+function handlePhotoSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 500 * 1024) { toast('⚠️ Photo must be under 500KB', 'err'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    // Compress/resize using canvas before storing
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 300;
+      let w = img.width, h = img.height;
+      if (w > h) { if (w > MAX) { h = h * MAX / w; w = MAX; } }
+      else       { if (h > MAX) { w = w * MAX / h; h = MAX; } }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const base64 = canvas.toDataURL('image/jpeg', 0.75);
+      pendingPhotoBase64 = base64;
+      showPhotoPreview(base64);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function showPhotoPreview(src) {
+  document.getElementById('photoPreviewImg').src = src;
+  document.getElementById('photoPreviewWrap').style.display = 'inline-block';
+  document.getElementById('photoPlaceholder').style.display = 'none';
+}
+
+function removePhoto() {
+  pendingPhotoBase64 = null;
+  currentPhotoBase64 = null;
+  document.getElementById('photoPreviewImg').src = '';
+  document.getElementById('photoPreviewWrap').style.display = 'none';
+  document.getElementById('photoPlaceholder').style.display = 'block';
+  document.getElementById('photoFileInput').value = '';
+}
+
+async function savePhotoToDB(studentId, base64) {
+  await db.ref(`photos/${studentId}`).set(base64);
+}
+
+async function deletePhotoFromDB(studentId) {
+  try { await db.ref(`photos/${studentId}`).remove(); } catch(e) {}
+}
+
+async function loadPhotosFromDB() {
+  try {
+    const snap = await db.ref('photos').once('value');
+    const photos = snap.val() || {};
+    students.forEach(s => {
+      if (photos[s.id]) s.photoURL = photos[s.id];
+    });
+  } catch(e) {}
+}
+
 // ── DATA ──
 let templates = [];
 let currentTemplate = null;
@@ -886,8 +1004,7 @@ function setFilter(f) {
   renderContacts();
 }
 
-// ── BIRTHDAY CHECK ──
-// ── BIRTHDAY HELPER ──
+// ── BIRTHDAY HELPER ── returns days until next birthday (0 = today)
 function daysUntilBirthday(birthdayStr) {
   if (!birthdayStr) return null;
   const parts = birthdayStr.split('-');
@@ -896,10 +1013,11 @@ function daysUntilBirthday(birthdayStr) {
   const month = parseInt(parts[1]) - 1;
   const day   = parseInt(parts[2]);
   let next = new Date(today.getFullYear(), month, day);
-  if (next < today) next = new Date(today.getFullYear() + 1, month, day);
+  if (next < today) next = new Date(today.getFullYear() + 1, month, day); // already passed this year
   return Math.round((next - today) / (1000*60*60*24));
 }
 
+// ── BIRTHDAY BANNER ──
 function checkBirthdays() {
   const upcoming = students.filter(s => {
     const d = daysUntilBirthday(s.birthday);
@@ -919,7 +1037,7 @@ function checkBirthdays() {
   } else {
     banner.style.display = 'none';
   }
-        }
+}
 
 // ── CONTACTS TAB ──
 function renderContacts() {
@@ -941,15 +1059,18 @@ function renderContacts() {
   list.innerHTML = filtered.map((s) => {
     const av = avColors[students.indexOf(s) % avColors.length];
     const genderIcon = s.gender === 'Male' ? '👦' : '👧';
+    const avatarHtml = s.photoURL
+      ? `<img src="${s.photoURL}" class="student-photo" alt="${s.name}" onerror="this.outerHTML='<div class=\\'avatar ${av}\\'>${initials(s.name)}</div>'">`
+      : `<div class="avatar ${av}">${initials(s.name)}</div>`;
 
     // Birthday badge
     let birthdayBadge = '';
-if (s.birthday) {
-  const d = daysUntilBirthday(s.birthday);
-  if (d !== null && d <= 7) {
-    birthdayBadge = ` <span style="...">${d===0?'🎂 Today!':'🎂 '+d+'d'}</span>`;
-  }
-}
+    if (s.birthday) {
+      const d = daysUntilBirthday(s.birthday);
+      if (d !== null && d <= 7) {
+        birthdayBadge = ` <span style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#fce7f3,#fbcfe8);border:1.5px solid #f9a8d4;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:800;color:#9d174d">${d===0?'🎂 Today!':'🎂 '+d+'d'}</span>`;
+      }
+    }
 
     // Note badge
     let noteBadge = '';
@@ -988,7 +1109,7 @@ if (s.birthday) {
     return `
     <div class="contact-card">
       <div class="card-top">
-        <div class="avatar ${av}">${initials(s.name)}</div>
+        ${avatarHtml}
         <div style="flex:1">
           <div class="card-name">${s.name}${birthdayBadge}</div>
           <div class="card-id">🪪 ${s.id}</div>
@@ -1289,6 +1410,9 @@ function openAddModal() {
   document.getElementById('editMotherMobile').value = '';
   document.getElementById('editMother').value = '';
   document.getElementById('editEmail').value = '';
+  // Reset photo
+  pendingPhotoBase64 = null; currentPhotoBase64 = null;
+  removePhoto();
   document.getElementById('editOverlay').classList.add('open');
 }
 
@@ -1311,6 +1435,14 @@ function openEditModal(id) {
   document.getElementById('editMotherMobile').value = s.motherMobile || '';
   document.getElementById('editMother').value = s.mother || '';
   document.getElementById('editEmail').value = s.email || '';
+  // Load photo
+  pendingPhotoBase64 = null;
+  currentPhotoBase64 = s.photoURL || null;
+  if (currentPhotoBase64) {
+    showPhotoPreview(currentPhotoBase64);
+  } else {
+    removePhoto();
+  }
   document.getElementById('editOverlay').classList.add('open');
 }
 
@@ -1318,7 +1450,7 @@ function closeEditModal() {
   document.getElementById('editOverlay').classList.remove('open');
 }
 
-function saveStudent() {
+async function saveStudent() {
   const origId = document.getElementById('editId').value;
   const sid = parseInt(document.getElementById('editStudentId').value);
   const name = document.getElementById('editName').value.trim().toUpperCase();
@@ -1336,21 +1468,38 @@ function saveStudent() {
 
   if (!sid || !name) { toast('ID and name are required', 'err'); return; }
 
+  // Handle photo — save Base64 to Firebase Database separately
+  let photoURL = currentPhotoBase64;
+  if (pendingPhotoBase64) {
+    photoURL = pendingPhotoBase64;
+    pendingPhotoBase64 = null;
+  } else if (currentPhotoBase64 === null && origId) {
+    // Photo was removed
+    await deletePhotoFromDB(parseInt(origId));
+    photoURL = null;
+  }
+
   const studentData = {
     id: sid, name, gender, nationality, religion,
     birthday, noteType, noteText,
-    father, mother, fatherMobile, motherMobile, email
+    father, mother, fatherMobile, motherMobile, email,
+    photoURL: null  // Don't store Base64 in students node — stored separately
   };
 
   if (origId) {
     const idx = students.findIndex(s => s.id === parseInt(origId));
-    if (idx > -1) students[idx] = studentData;
+    if (idx > -1) { students[idx] = studentData; students[idx].photoURL = photoURL; }
     toast('✅ Student updated!', 'ok');
   } else {
     if (students.find(s => s.id === sid)) { toast('Student ID already exists!', 'err'); return; }
+    studentData.photoURL = photoURL;
     students.push(studentData);
     toast('✅ Student added!', 'ok');
   }
+
+  // Save photo to DB separately
+  if (photoURL) await savePhotoToDB(sid, photoURL);
+
   saveData();
   closeEditModal();
   renderContacts();
@@ -1385,23 +1534,7 @@ function toast(msg, type='') {
 }
 
 // ── FIREBASE CONFIG ──
-const firebaseConfig = {
-  apiKey: "AIzaSyCtyhfOAh3aQF9_SSzmI8hJ8YJg5jG5Q_Q",
-  authDomain: "cs-kg2a-system.firebaseapp.com",
-  databaseURL: "https://cs-kg2a-system-default-rtdb.firebaseio.com",
-  projectId: "cs-kg2a-system",
-  storageBucket: "cs-kg2a-system.firebasestorage.app",
-  messagingSenderId: "937866969676",
-  appId: "1:937866969676:web:f23e53eda3e5a55b57eae9"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const auth = firebase.auth();
-
 let isSyncing = false;
-let currentUser = null;
 
 async function saveData() {
   if (isSyncing || !currentUser) return;
@@ -1979,6 +2112,7 @@ auth.onAuthStateChanged(async (user) => {
 async function init() {
   document.body.style.opacity = '0.5';
   await loadData();
+  await loadPhotosFromDB();
   renderContacts();
   renderTemplates();
   document.body.style.opacity = '1';
