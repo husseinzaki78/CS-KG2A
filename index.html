@@ -1268,32 +1268,29 @@ async function enhanceWithAI() {
   button.disabled = true;
   
   try {
-    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + MISTRAL_API_KEY
+        'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: 'mistral-small-latest',
-        messages: [{
-          role: 'user',
-          content: 'You are a professional email writing assistant for a school teacher. Enhance and improve the following email message to parents. Make it professional, clear, polite, and well-structured. Keep the same meaning and intent, but improve grammar, clarity, and tone. Only return the enhanced message without any explanations or additional text:\n\n' + originalText
-        }],
-        temperature: 0.7,
-        max_tokens: 1024
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1024,
+        system: 'You are a professional email writing assistant for a KG2 school teacher at City Private School, Ajman, UAE. Enhance and improve the following email message to parents. Make it professional, clear, polite, and well-structured. Keep the same meaning and intent, but improve grammar, clarity, and tone. Only return the enhanced message without any explanations or additional text.',
+        messages: [{ role: 'user', content: originalText }]
       })
     });
     
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || 'API Error: ' + response.status);
+      throw new Error(errorData.error?.message || 'API Error: ' + response.status);
     }
     
     const data = await response.json();
     
-    if (data.choices && data.choices[0]?.message?.content) {
-      textarea.value = data.choices[0].message.content.trim();
+    if (data.content && data.content[0]?.text) {
+      textarea.value = data.content[0].text.trim();
       toast('✨ Message enhanced successfully!', 'ok');
     } else {
       throw new Error('Unexpected API response format');
@@ -2338,25 +2335,26 @@ async function generateLearning(key, subjectLabel, color) {
   textarea.value = '';
 
   try {
-    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + MISTRAL_API_KEY
-      },
+      headers: { 'Content-Type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
-        model: 'mistral-small-latest',
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 300,
+        system: `You are a KG2 (kindergarten, age 5-6) curriculum specialist at City Private School, Ajman, UAE. 
+Write clear, concise learning objectives for a weekly plan. 
+Format: 3-4 bullet points starting with "Students will be able to..." or "Students will..."
+Keep each point short (one line). Use simple language suitable for parents to read. 
+Return ONLY the bullet points, no intro text, no subject name, no extra formatting.`,
         messages: [{
           role: 'user',
-          content: `You are a KG2 (kindergarten, age 5-6) curriculum specialist at City Private School, Ajman, UAE. Write clear, concise learning objectives for a weekly plan. Format: 3-4 bullet points starting with "Students will be able to..." or "Students will...". Keep each point short (one line). Use simple language suitable for parents to read. Return ONLY the bullet points, no intro text, no subject name, no extra formatting.\n\nSubject: ${subjectLabel}\nTopic: ${topic}\n\nWrite 3-4 learning objectives for this KG2 lesson.`
-        }],
-        temperature: 0.7,
-        max_tokens: 300
+          content: `Subject: ${subjectLabel}\nTopic: ${topic}\n\nWrite 3-4 learning objectives for this KG2 lesson.`
+        }]
       })
     });
 
     const data = await response.json();
-    const text = data?.choices?.[0]?.message?.content || '';
+    const text = data?.content?.[0]?.text || '';
     textarea.value = text.trim();
     textarea.style.borderColor = color;
     setTimeout(() => { textarea.style.borderColor = ''; }, 2000);
@@ -2409,14 +2407,12 @@ async function exportWeeklyWord() {
   toast('📄 Generating Word file...', '');
   const data = getWeeklyPlanData();
 
-  try {
   // Load docx from CDN
   if (!window.docx) {
     await new Promise((res, rej) => {
       const s = document.createElement('script');
-      s.src = 'https://unpkg.com/docx@7.8.2/build/index.js';
-      s.onload = () => { if(window.docx) res(); else rej(new Error('docx not loaded')); };
-      s.onerror = rej;
+      s.src = 'https://unpkg.com/docx@8.5.0/build/index.js';
+      s.onload = res; s.onerror = rej;
       document.head.appendChild(s);
     });
   }
@@ -2580,18 +2576,13 @@ async function exportWeeklyWord() {
     }]
   });
 
-  const blob = await Packer.toBlob(doc);
+  const buf = await Packer.toBuffer(doc);
+  const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `KG2A_Weekly_Plan_${data.dateRange.replace(/[^a-zA-Z0-9]/g,'_')}.docx`;
-  document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
   toast('✅ Word file downloaded!', 'ok');
-  } catch(err) {
-    console.error('Word export error:', err);
-    toast('❌ Export failed: ' + err.message, 'err');
-  }
 }
 
 // ── EXPORT AS PDF (print via browser) ──
