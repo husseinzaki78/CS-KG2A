@@ -414,6 +414,9 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
   <div class="tab" onclick="switchTab('templates')">
     <span class="tab-icon">📋</span>Templates
   </div>
+  <div class="tab" onclick="switchTab('weekly')">
+    <span class="tab-icon">📅</span>Weekly
+  </div>
   <div class="tab" onclick="switchTab('stats')">
     <span class="tab-icon">🌈</span>Stats
   </div>
@@ -581,6 +584,65 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
     <div style="background:linear-gradient(135deg,#f0fff4,#dcfce7);border-radius:18px;padding:16px;border:2px solid #bbf7d0">
       <div style="font-size:13px;font-weight:900;color:#15803d;margin-bottom:12px">📞 Contact Information</div>
       <div id="contactStats"></div>
+    </div>
+</div>
+</div>
+
+<!-- ══════════ WEEKLY PLAN PAGE ══════════ -->
+<div class="page" id="page-weekly">
+  <div style="background:white;border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 4px 20px rgba(108,63,197,0.1);border:2px solid var(--border)">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:16px;font-weight:900;color:var(--primary)">📅 Weekly Plan Builder</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-success btn-sm" onclick="exportWeeklyWord()">📄 Word</button>
+        <button class="btn btn-danger btn-sm" onclick="exportWeeklyPDF()">📕 PDF</button>
+      </div>
+    </div>
+
+    <!-- Week dates + notes -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div class="fg" style="margin:0">
+        <label>📆 Week Start</label>
+        <input type="date" id="wpWeekStart" style="direction:ltr" onchange="updateWeekRange()">
+      </div>
+      <div class="fg" style="margin:0">
+        <label>📆 Week End</label>
+        <input type="date" id="wpWeekEnd" style="direction:ltr" onchange="updateWeekRange()">
+      </div>
+    </div>
+
+    <div class="fg">
+      <label>📝 Notes & Reminders (shown at top of plan)</label>
+      <textarea id="wpNotes" rows="3" placeholder="Dear Parents, ..."></textarea>
+    </div>
+
+    <!-- Subjects -->
+    <div style="font-size:13px;font-weight:900;color:var(--primary);margin-bottom:10px">📚 Subjects</div>
+
+    <div id="wpSubjects" style="display:flex;flex-direction:column;gap:10px">
+    </div>
+
+    <!-- Homework table -->
+    <div style="font-size:13px;font-weight:900;color:var(--primary);margin:14px 0 10px">📋 Classwork & Homework</div>
+    <div id="wpHomework" style="display:flex;flex-direction:column;gap:8px"></div>
+
+    <!-- YouTube links -->
+    <div class="fg" style="margin-top:14px">
+      <label>🔗 Extra Learning Links (one per line)</label>
+      <textarea id="wpLinks" rows="5" placeholder="Literacy: https://youtu.be/...&#10;Math: https://youtu.be/...&#10;UTW: https://youtu.be/..."></textarea>
+    </div>
+
+    <!-- Events -->
+    <div class="fg">
+      <label>🎉 Events & Celebrations</label>
+      <input type="text" id="wpEvents" placeholder="e.g. School Trip on Thursday">
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="exportWeeklyWord()">📄 Export as Word</button>
+      <button class="btn btn-danger" style="flex:1;justify-content:center" onclick="exportWeeklyPDF()">📕 Export as PDF</button>
     </div>
   </div>
 </div>
@@ -982,12 +1044,12 @@ function formatSize(bytes) {
 
 // ── TABS ──
 function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['contacts','email','templates','stats'][i]===tab));
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['contacts','email','templates','weekly','stats'][i]===tab));
   document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id==='page-'+tab));
   if (tab==='email') renderEmailList();
   if (tab==='templates') renderTemplates();
   if (tab==='stats') renderStats();
-  resetIdleTimer(); // Reset timer on activity
+  resetIdleTimer();
 }
 
 // ── FILTER STATE ──
@@ -2115,7 +2177,476 @@ async function init() {
   await loadPhotosFromDB();
   renderContacts();
   renderTemplates();
+  initWeeklyPlan();
   document.body.style.opacity = '1';
+}
+
+// ══════════════════════════════════════════
+// ── WEEKLY PLAN BUILDER ──
+// ══════════════════════════════════════════
+
+const WP_SUBJECTS = [
+  { key:'literacy',   label:'📖 Literacy',                      color:'#6c3fc5', bg:'#f0ebff' },
+  { key:'numeracy',   label:'🔢 Numeracy',                      color:'#ec4899', bg:'#fce7f3' },
+  { key:'utw',        label:'🌍 Understanding the World (UTW)',  color:'#0891b2', bg:'#e0f7fa' },
+  { key:'readaloud',  label:'📚 Read Aloud / Story Session',     color:'#7c3aed', bg:'#ede9fe' },
+  { key:'discovery',  label:'🔬 Kinder Discovery',              color:'#059669', bg:'#d1fae5' },
+  { key:'ead',        label:'🎨 Expressive Art & Design (EAD)', color:'#d97706', bg:'#fef3c7' },
+  { key:'physical',   label:'⚽ Physical Development',          color:'#dc2626', bg:'#fee2e2' },
+  { key:'arabic',     label:'🌙 Arabic',                        color:'#16a34a', bg:'#dcfce7' },
+  { key:'islamic',    label:'☪️ Islamic Studies',               color:'#ca8a04', bg:'#fef9c3' },
+  { key:'uae',        label:'🇦🇪 All About the UAE',            color:'#b91c1c', bg:'#fee2e2' },
+  { key:'lifeskills', label:'💡 Life Skills',                   color:'#7e22ce', bg:'#f3e8ff' },
+];
+
+const WP_HW_SUBJECTS = ['Literacy','Numeracy','UTW','Arabic','Islamic'];
+
+function initWeeklyPlan() {
+  // Set default week (current Monday to Friday)
+  const today = new Date();
+  const mon = new Date(today);
+  mon.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+  const fri = new Date(mon); fri.setDate(mon.getDate() + 4);
+  document.getElementById('wpWeekStart').value = mon.toISOString().split('T')[0];
+  document.getElementById('wpWeekEnd').value   = fri.toISOString().split('T')[0];
+
+  // Build subject cards — each with Topic, Image upload, AI-generated learning
+  const container = document.getElementById('wpSubjects');
+  container.innerHTML = WP_SUBJECTS.map(s => `
+    <div style="border:2px solid ${s.color}33;border-radius:16px;overflow:hidden;margin-bottom:2px">
+      <div style="background:${s.bg};padding:10px 14px;font-size:13px;font-weight:900;color:${s.color};border-bottom:2px solid ${s.color}22">
+        ${s.label}
+      </div>
+      <div style="padding:12px;display:flex;flex-direction:column;gap:10px">
+
+        <!-- Row 1: Topic + Image upload side by side -->
+        <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start">
+          <div class="fg" style="margin:0">
+            <label style="color:${s.color};font-size:11px;font-weight:800;display:block;margin-bottom:5px">📌 Topic</label>
+            <input type="text" id="wp_topic_${s.key}"
+              placeholder="e.g. CVC words, Letter Baa, Numbers 1-20..."
+              style="width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:12px;font-family:'Nunito',sans-serif;font-size:13px;outline:none;background:#fdf6ff;transition:border 0.2s"
+              onfocus="this.style.borderColor='${s.color}'" onblur="this.style.borderColor=''">
+          </div>
+          <!-- Image upload box -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+            <label style="color:${s.color};font-size:11px;font-weight:800">🖼️ Activity Photo</label>
+            <div id="wp_img_wrap_${s.key}"
+              onclick="document.getElementById('wp_img_input_${s.key}').click()"
+              style="width:72px;height:72px;border:2px dashed ${s.color}66;border-radius:12px;background:${s.bg};display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;transition:all 0.2s"
+              title="Click to upload activity photo">
+              <span id="wp_img_placeholder_${s.key}" style="font-size:22px;display:block">📷</span>
+              <span style="font-size:9px;color:${s.color};font-weight:700;margin-top:2px" id="wp_img_label_${s.key}">Upload</span>
+              <img id="wp_img_preview_${s.key}" src="" alt=""
+                style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:10px">
+            </div>
+            <button id="wp_img_remove_${s.key}" onclick="removeSubjectImage('${s.key}')"
+              style="display:none;background:#ff4757;color:white;border:none;border-radius:8px;padding:2px 8px;font-size:10px;font-weight:800;cursor:pointer">✕ Remove</button>
+            <input type="file" id="wp_img_input_${s.key}" accept="image/*" style="display:none"
+              onchange="handleSubjectImage(event,'${s.key}')">
+          </div>
+        </div>
+
+        <!-- Row 2: What are we learning + AI button -->
+        <div class="fg" style="margin:0">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <label style="color:${s.color};font-size:11px;font-weight:800;margin:0">🎯 What are we learning</label>
+            <button id="ai_btn_${s.key}"
+              onclick="generateLearning('${s.key}', \`${s.label.replace(/`/g,"'")}\`, '${s.color}')"
+              style="background:linear-gradient(135deg,#6c3fc5,#a855f7);color:white;border:none;border-radius:10px;padding:5px 11px;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:all 0.2s;box-shadow:0 2px 8px rgba(108,63,197,0.3)">
+              ✨ AI Generate
+            </button>
+          </div>
+          <div id="ai_loading_${s.key}" style="display:none;font-size:11px;color:#a855f7;font-weight:700;padding:6px;text-align:center">
+            ⏳ Generating with AI...
+          </div>
+          <textarea id="wp_learning_${s.key}" rows="3"
+            placeholder="Click ✨ AI Generate — or type manually: Students will be able to..."
+            style="width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:12px;font-family:'Nunito',sans-serif;font-size:12px;outline:none;resize:vertical;background:#fdf6ff;transition:border 0.2s;box-sizing:border-box"
+            onfocus="this.style.borderColor='${s.color}'" onblur="this.style.borderColor=''"></textarea>
+        </div>
+
+      </div>
+    </div>
+  `).join('');
+
+  // Build homework rows
+  const hw = document.getElementById('wpHomework');
+  hw.innerHTML = WP_HW_SUBJECTS.map(sub => `
+    <div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:8px;align-items:center">
+      <div style="font-size:12px;font-weight:800;color:var(--primary)">${sub}</div>
+      <input type="text" id="wp_cw_${sub.toLowerCase()}" placeholder="Classwork..." style="padding:8px 12px;border:2px solid var(--border);border-radius:10px;font-size:12px;outline:none;background:#fdf6ff;font-family:'Nunito',sans-serif">
+      <input type="text" id="wp_hw_${sub.toLowerCase()}" placeholder="Homework..." style="padding:8px 12px;border:2px solid var(--border);border-radius:10px;font-size:12px;outline:none;background:#fdf6ff;font-family:'Nunito',sans-serif">
+    </div>
+  `).join('');
+}
+
+// ── SUBJECT IMAGE HANDLERS ──
+const wpSubjectImages = {}; // key -> base64
+
+function handleSubjectImage(event, key) {
+  const file = event.target.files[0];
+  if (!file) return;
+  // Compress to max 400px wide
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 400;
+      let w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const base64 = canvas.toDataURL('image/jpeg', 0.82);
+      wpSubjectImages[key] = base64;
+      // Show preview
+      document.getElementById(`wp_img_preview_${key}`).src = base64;
+      document.getElementById(`wp_img_preview_${key}`).style.display = 'block';
+      document.getElementById(`wp_img_placeholder_${key}`).style.display = 'none';
+      document.getElementById(`wp_img_label_${key}`).style.display = 'none';
+      document.getElementById(`wp_img_remove_${key}`).style.display = 'inline-block';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeSubjectImage(key) {
+  delete wpSubjectImages[key];
+  document.getElementById(`wp_img_preview_${key}`).src = '';
+  document.getElementById(`wp_img_preview_${key}`).style.display = 'none';
+  document.getElementById(`wp_img_placeholder_${key}`).style.display = 'block';
+  document.getElementById(`wp_img_label_${key}`).style.display = 'block';
+  document.getElementById(`wp_img_remove_${key}`).style.display = 'none';
+  document.getElementById(`wp_img_input_${key}`).value = '';
+}
+
+// ── AI GENERATE LEARNING OBJECTIVES ──
+async function generateLearning(key, subjectLabel, color) {
+  const topic = (document.getElementById(`wp_topic_${key}`)?.value || '').trim();
+  if (!topic) { toast('⚠️ Please enter a Topic first!', 'err'); return; }
+
+  const btn = document.getElementById(`ai_btn_${key}`);
+  const loading = document.getElementById(`ai_loading_${key}`);
+  const textarea = document.getElementById(`wp_learning_${key}`);
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating...';
+  btn.style.opacity = '0.7';
+  loading.style.display = 'block';
+  textarea.value = '';
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 300,
+        system: `You are a KG2 (kindergarten, age 5-6) curriculum specialist at City Private School, Ajman, UAE. 
+Write clear, concise learning objectives for a weekly plan. 
+Format: 3-4 bullet points starting with "Students will be able to..." or "Students will..."
+Keep each point short (one line). Use simple language suitable for parents to read. 
+Return ONLY the bullet points, no intro text, no subject name, no extra formatting.`,
+        messages: [{
+          role: 'user',
+          content: `Subject: ${subjectLabel}\nTopic: ${topic}\n\nWrite 3-4 learning objectives for this KG2 lesson.`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data?.content?.[0]?.text || '';
+    textarea.value = text.trim();
+    textarea.style.borderColor = color;
+    setTimeout(() => { textarea.style.borderColor = ''; }, 2000);
+    toast('✅ AI generated!', 'ok');
+  } catch(e) {
+    toast('AI error — please try again', 'err');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✨ AI Generate';
+    btn.style.opacity = '1';
+    loading.style.display = 'none';
+  }
+}
+
+function getWeeklyPlanData() {
+  const start = document.getElementById('wpWeekStart').value;
+  const end   = document.getElementById('wpWeekEnd').value;
+  const fmt = d => {
+    if (!d) return '';
+    const dt = new Date(d + 'T00:00:00');
+    const day = dt.getDate();
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const suffix = ['th','st','nd','rd'];
+    const v = day % 100;
+    const s = suffix[(v-20)%10]||suffix[v]||suffix[0];
+    return `${day}${s} ${months[dt.getMonth()]} ${dt.getFullYear()}`;
+  };
+  return {
+    dateRange: start && end ? `${fmt(start)} to ${fmt(end)}` : '',
+    notes: document.getElementById('wpNotes').value,
+    subjects: WP_SUBJECTS.map(s => ({
+      key:      s.key,
+      label:    s.label.replace(/^[^\w\u0600-\u06FF]+/,'').trim(),
+      topic:    (document.getElementById(`wp_topic_${s.key}`)?.value   || '').trim(),
+      learning: (document.getElementById(`wp_learning_${s.key}`)?.value || '').trim(),
+      imageB64: wpSubjectImages[s.key] || null,
+    })).filter(s => s.topic || s.learning),
+    homework: WP_HW_SUBJECTS.map(sub => ({
+      subject: sub,
+      cw: document.getElementById(`wp_cw_${sub.toLowerCase()}`)?.value || 'Hands-on activities',
+      hw: document.getElementById(`wp_hw_${sub.toLowerCase()}`)?.value || 'Worksheet',
+    })),
+    links:  document.getElementById('wpLinks').value,
+    events: document.getElementById('wpEvents').value,
+  };
+}
+
+// ── EXPORT AS WORD ──
+async function exportWeeklyWord() {
+  toast('📄 Generating Word file...', '');
+  const data = getWeeklyPlanData();
+
+  // Load docx from CDN
+  if (!window.docx) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://unpkg.com/docx@8.5.0/build/index.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  const {
+    Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+    AlignmentType, BorderStyle, WidthType, ShadingType, VerticalAlign,
+    HeadingLevel, PageOrientation
+  } = window.docx;
+
+  const border = { style: BorderStyle.SINGLE, size: 4, color: '6c3fc5' };
+  const borders = { top: border, bottom: border, left: border, right: border };
+  const thinBorder = { style: BorderStyle.SINGLE, size: 1, color: 'cccccc' };
+  const thinBorders = { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder };
+  const cellM = { top: 80, bottom: 80, left: 120, right: 120 };
+  const W = 9360; // content width DXA
+
+  const hdr = (txt, opts={}) => new Paragraph({
+    alignment: AlignmentType.CENTER,
+    spacing: { before: 60, after: 60 },
+    children: [new TextRun({ text: txt, bold: true, font: 'Arial', size: opts.size||22, color: opts.color||'2d1b69' })]
+  });
+
+  const cell = (children, opts={}) => new TableCell({
+    borders: opts.thin ? thinBorders : borders,
+    width: { size: opts.w || Math.round(W/3), type: WidthType.DXA },
+    shading: opts.fill ? { fill: opts.fill, type: ShadingType.CLEAR } : undefined,
+    margins: cellM,
+    verticalAlign: VerticalAlign.CENTER,
+    children: Array.isArray(children) ? children : [new Paragraph({
+      alignment: opts.center ? AlignmentType.CENTER : AlignmentType.LEFT,
+      children: [new TextRun({ text: String(children||''), font:'Arial', size: opts.size||20, bold: opts.bold||false, color: opts.color||'000000' })]
+    })]
+  });
+
+  const staticRows = [
+    // Title rows
+    new TableRow({ children: [
+      new TableCell({ borders, columnSpan:3, width:{size:W,type:WidthType.DXA}, margins:cellM,
+        shading:{fill:'6c3fc5',type:ShadingType.CLEAR},
+        children:[new Paragraph({alignment:AlignmentType.CENTER,children:[
+          new TextRun({text:'CITY PRIVATE SCHOOL, AJMAN',bold:true,font:'Arial',size:28,color:'FFFFFF'})
+        ]}),
+        new Paragraph({alignment:AlignmentType.CENTER,children:[
+          new TextRun({text:'ACADEMIC YEAR 2026-27',font:'Arial',size:20,color:'FFFFFF'})
+        ]}),
+        new Paragraph({alignment:AlignmentType.CENTER,children:[
+          new TextRun({text:'KG2 Weekly Learning Planner & Weekend Homework',bold:true,font:'Arial',size:22,color:'FFFFFF'})
+        ]}),
+        new Paragraph({alignment:AlignmentType.CENTER,children:[
+          new TextRun({text:data.dateRange,font:'Arial',size:20,color:'FFFFFF'})
+        ]}),
+      ]})
+    ]}),
+    // Teachers row
+    new TableRow({ children: [
+      new TableCell({ borders, columnSpan:3, width:{size:W,type:WidthType.DXA}, margins:cellM,
+        shading:{fill:'f0ebff',type:ShadingType.CLEAR},
+        children:[new Paragraph({children:[
+          new TextRun({text:'KG Supervisor: ',bold:true,font:'Arial',size:18}),
+          new TextRun({text:'Ms. Sanober Shafiq    ',font:'Arial',size:18}),
+          new TextRun({text:'KG2 A Class Teacher: ',bold:true,font:'Arial',size:18}),
+          new TextRun({text:'Ms. Doaa Elsayed    ',font:'Arial',size:18}),
+          new TextRun({text:'Teacher Assistant: ',bold:true,font:'Arial',size:18}),
+          new TextRun({text:'Ms. Alka Arif',font:'Arial',size:18}),
+        ]})]
+      })
+    ]}),
+    ...(data.notes ? [new TableRow({ children: [
+      new TableCell({ borders, columnSpan:3, width:{size:W,type:WidthType.DXA}, margins:cellM,
+        shading:{fill:'fef9c3',type:ShadingType.CLEAR},
+        children:[
+          new Paragraph({children:[new TextRun({text:'Notes and Reminders',bold:true,font:'Arial',size:20,color:'92400e'})]}),
+          new Paragraph({children:[new TextRun({text:data.notes,font:'Arial',size:18,color:'44403c'})]}),
+        ]
+      })
+    ]})] : []),
+    new TableRow({
+      tableHeader: true,
+      children: [
+        cell('Subject',  {w:Math.round(W*0.2), fill:'6c3fc5', bold:true, color:'FFFFFF', center:true, size:18}),
+        cell('Topic',    {w:Math.round(W*0.35), fill:'6c3fc5', bold:true, color:'FFFFFF', center:true, size:18}),
+        cell('What are we learning', {w:Math.round(W*0.45), fill:'6c3fc5', bold:true, color:'FFFFFF', center:true, size:18}),
+      ]
+    }),
+  ];
+
+  // Subject rows — topic cell includes image if uploaded
+  const subjectRows = await Promise.all(data.subjects.map(async (s, i) => {
+      const fill = i%2===0 ? 'f9f6ff' : 'ffffff';
+      const topicChildren = [
+        new Paragraph({children:[new TextRun({text:s.topic, font:'Arial', size:17, bold:true})]})
+      ];
+      if (s.imageB64) {
+        try {
+          const base64Data = s.imageB64.split(',')[1];
+          const binaryStr = atob(base64Data);
+          const bytes = new Uint8Array(binaryStr.length);
+          for (let b=0; b<binaryStr.length; b++) bytes[b] = binaryStr.charCodeAt(b);
+          topicChildren.push(new Paragraph({
+            spacing:{before:60},
+            children:[new window.docx.ImageRun({ data:bytes, transformation:{width:120,height:90}, type:'jpg' })]
+          }));
+        } catch(e) {}
+      }
+      return new TableRow({ children: [
+        cell(s.label,   {w:Math.round(W*0.2), fill, bold:true, size:17}),
+        new TableCell({ borders, width:{size:Math.round(W*0.35),type:WidthType.DXA},
+          shading:{fill, type:ShadingType.CLEAR}, margins:cellM,
+          verticalAlign:VerticalAlign.CENTER, children:topicChildren }),
+        cell(s.learning,{w:Math.round(W*0.45), fill, size:17}),
+      ]});
+  }));
+
+  const rows = [...staticRows, ...subjectRows];
+
+  // Homework table
+  const hwHeader = new TableRow({ tableHeader:true, children:[
+    cell('Subject', {w:Math.round(W*0.25), fill:'ec4899', bold:true, color:'FFFFFF', center:true, size:18}),
+    cell('Classwork', {w:Math.round(W*0.375), fill:'ec4899', bold:true, color:'FFFFFF', center:true, size:18}),
+    cell('Homework',  {w:Math.round(W*0.375), fill:'ec4899', bold:true, color:'FFFFFF', center:true, size:18}),
+  ]});
+  const hwRows = data.homework.map((h,i) => new TableRow({ children:[
+    cell(h.subject, {w:Math.round(W*0.25), fill:i%2===0?'fce7f3':'ffffff', bold:true, size:17}),
+    cell(h.cw, {w:Math.round(W*0.375), fill:i%2===0?'fce7f3':'ffffff', size:17}),
+    cell(h.hw, {w:Math.round(W*0.375), fill:i%2===0?'fce7f3':'ffffff', size:17}),
+  ]}));
+
+  // Links section
+  const linkParas = data.links ? data.links.split('\n').filter(Boolean).map(l =>
+    new Paragraph({children:[new TextRun({text:l,font:'Arial',size:17})]})
+  ) : [];
+
+  const doc = new Document({
+    sections:[{
+      properties:{
+        page:{
+          size:{ width:12240, height:15840 },
+          margin:{ top:720, right:720, bottom:720, left:720 }
+        }
+      },
+      children:[
+        new Table({ width:{size:W,type:WidthType.DXA}, columnWidths:[Math.round(W*0.2),Math.round(W*0.35),Math.round(W*0.45)], rows }),
+        new Paragraph({spacing:{before:200}}),
+        ...(data.events ? [
+          new Paragraph({children:[new TextRun({text:'🎉 Events & Celebrations: '+data.events, bold:true, font:'Arial', size:18, color:'6c3fc5'})]}),
+          new Paragraph({spacing:{before:100}}),
+        ] : []),
+        new Paragraph({children:[new TextRun({text:'Classwork & Homework', bold:true, font:'Arial', size:22, color:'ec4899'})]}),
+        new Paragraph({spacing:{before:80}}),
+        new Table({ width:{size:W,type:WidthType.DXA}, columnWidths:[Math.round(W*0.25),Math.round(W*0.375),Math.round(W*0.375)], rows:[hwHeader,...hwRows] }),
+        new Paragraph({spacing:{before:200}}),
+        ...(data.links ? [
+          new Paragraph({children:[new TextRun({text:'Extra Learning Reference Material', bold:true, font:'Arial', size:20, color:'059669'})]}),
+          ...linkParas,
+          new Paragraph({spacing:{before:100}}),
+        ] : []),
+        new Paragraph({alignment:AlignmentType.CENTER, spacing:{before:200}, children:[new TextRun({text:'Best Regards,', bold:true, font:'Arial', size:20})]}),
+        new Paragraph({alignment:AlignmentType.CENTER, children:[new TextRun({text:'Kindergarten Department, City Private School.', font:'Arial', size:18})]}),
+      ]
+    }]
+  });
+
+  const buf = await Packer.toBuffer(doc);
+  const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `KG2A_Weekly_Plan_${data.dateRange.replace(/[^a-zA-Z0-9]/g,'_')}.docx`;
+  a.click();
+  toast('✅ Word file downloaded!', 'ok');
+}
+
+// ── EXPORT AS PDF (print via browser) ──
+function exportWeeklyPDF() {
+  const data = getWeeklyPlanData();
+  const subjectRows = data.subjects.map((s,i) => `
+    <tr style="background:${i%2===0?'#f9f6ff':'#fff'}">
+      <td style="padding:8px 10px;font-weight:700;font-size:12px;border:1px solid #e0d5ff;color:#4c1d95;vertical-align:top">${s.label}</td>
+      <td style="padding:8px 10px;font-size:12px;border:1px solid #e0d5ff;vertical-align:top">
+        <div style="font-weight:700;margin-bottom:${s.imageB64?'6px':'0'}">${s.topic}</div>
+        ${s.imageB64 ? `<img src="${s.imageB64}" style="max-width:130px;max-height:95px;border-radius:8px;object-fit:cover;border:1px solid #e0d5ff;display:block">` : ''}
+      </td>
+      <td style="padding:8px 10px;font-size:12px;border:1px solid #e0d5ff;vertical-align:top">${s.learning}</td>
+    </tr>`).join('');
+
+  const hwRows = data.homework.map((h,i) => `
+    <tr style="background:${i%2===0?'#fce7f3':'#fff'}">
+      <td style="padding:8px 10px;font-weight:700;font-size:12px;border:1px solid #f9a8d4">${h.subject}</td>
+      <td style="padding:8px 10px;font-size:12px;border:1px solid #f9a8d4">${h.cw}</td>
+      <td style="padding:8px 10px;font-size:12px;border:1px solid #f9a8d4">${h.hw}</td>
+    </tr>`).join('');
+
+  const links = data.links ? data.links.split('\n').filter(Boolean).map(l=>`<div style="font-size:11px;margin:2px 0">${l}</div>`).join('') : '';
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <style>
+    body{font-family:Arial,sans-serif;margin:20px;color:#1a1a2e}
+    table{width:100%;border-collapse:collapse;margin-bottom:16px}
+    th{padding:10px;color:white;font-size:12px;text-align:left}
+    @media print{body{margin:10px}.no-print{display:none}}
+  </style></head><body>
+  <div style="background:linear-gradient(135deg,#6c3fc5,#a855f7,#ec4899);color:white;padding:20px;border-radius:12px;margin-bottom:16px;text-align:center">
+    <div style="font-size:18px;font-weight:900">CITY PRIVATE SCHOOL, AJMAN</div>
+    <div style="font-size:13px;opacity:0.9">ACADEMIC YEAR 2026-27</div>
+    <div style="font-size:15px;font-weight:700;margin-top:4px">KG2 Weekly Learning Planner &amp; Weekend Homework</div>
+    <div style="font-size:13px;margin-top:4px">${data.dateRange}</div>
+  </div>
+  <div style="background:#f0ebff;padding:10px 14px;border-radius:10px;margin-bottom:12px;font-size:12px">
+    <b>KG Supervisor:</b> Ms. Sanober Shafiq &nbsp;|&nbsp; <b>Class Teacher:</b> Ms. Doaa Elsayed &nbsp;|&nbsp; <b>TA:</b> Ms. Alka Arif
+  </div>
+  ${data.notes ? `<div style="background:#fef9c3;padding:10px 14px;border-radius:10px;margin-bottom:12px;font-size:12px"><b>Notes:</b> ${data.notes}</div>` : ''}
+  <table>
+    <thead><tr style="background:#6c3fc5"><th>Subject</th><th>Topic</th><th>What are we learning</th></tr></thead>
+    <tbody>${subjectRows}</tbody>
+  </table>
+  ${data.events ? `<div style="background:#fce7f3;padding:10px;border-radius:10px;margin-bottom:12px;font-size:12px"><b>🎉 Events:</b> ${data.events}</div>` : ''}
+  <div style="font-size:14px;font-weight:700;color:#ec4899;margin-bottom:8px">Classwork &amp; Homework</div>
+  <table>
+    <thead><tr style="background:#ec4899"><th>Subject</th><th>Classwork</th><th>Homework</th></tr></thead>
+    <tbody>${hwRows}</tbody>
+  </table>
+  ${links ? `<div style="background:#d1fae5;padding:10px;border-radius:10px;font-size:11px"><b style="color:#059669">Extra Learning Links:</b><br>${links}</div>` : ''}
+  <div style="text-align:center;margin-top:20px;font-size:12px;color:#6c3fc5">
+    <b>Best Regards,</b><br>Kindergarten Department, City Private School.
+  </div>
+  <script>window.onload=()=>window.print()<\/script>
+  </body></html>`;
+
+  const w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
 }
 
 </script>
