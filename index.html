@@ -2841,39 +2841,6 @@ function wsCollectSlots() {
   return ordered;
 }
 
-// ── Sizing helper: returns px sizes for preview and mm sizes for PDF based on count ──
-function wsGetSizing(count) {
-  // A4 usable area after 12mm margins: ~257mm tall, 186mm wide
-  // Title block ~22mm (3-img) / 18mm (4-img), gap between rows
-  if (count <= 3) {
-    return {
-      imgMaxH: 148,   // px for preview img
-      imgMaxW: 170,
-      rowMb: 28,      // px margin-bottom between rows
-      titleMb: 28,    // px margin-bottom after title block
-      lineGap: 18,    // px between each writing line
-      // PDF mm values
-      pImgH: '138px', pImgW: '160px',
-      pRowMb: '18mm', pTitleMb: '12mm', pLineGap: '12px',
-      // DOCX DXA values
-      dImgW: 170, dImgH: 148,  // pts (will be used as px≈pts for docx)
-      dRowGap: 400, dLineH: 560
-    };
-  } else {
-    return {
-      imgMaxH: 110,
-      imgMaxW: 135,
-      rowMb: 14,
-      titleMb: 18,
-      lineGap: 12,
-      pImgH: '100px', pImgW: '130px',
-      pRowMb: '10mm', pTitleMb: '8mm', pLineGap: '9px',
-      dImgW: 135, dImgH: 110,
-      dRowGap: 220, dLineH: 400
-    };
-  }
-}
-
 function wsBuildWorksheet() {
   const mainTitle = document.getElementById('wsMainTitle').value.trim();
   const subTitle  = document.getElementById('wsSubTitle').value.trim();
@@ -2883,32 +2850,31 @@ function wsBuildWorksheet() {
   if (!mainTitle) { toast('Please enter a worksheet title', 'err'); return; }
   if (images.length === 0) { toast('Please add at least one image', 'err'); return; }
 
-  const s = wsGetSizing(images.length);
   const preview = document.getElementById('wsPreviewArea');
   preview.style.display = 'block';
   preview.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   const lineBorder = lineStyle === 'dashed' ? '2.5px dashed #555' : '2px solid #333';
-  const linesHtml = `
-    <div style="border-bottom:${lineBorder};margin-bottom:${s.lineGap}px;padding-bottom:2px;"></div>
-    <div style="border-bottom:${lineBorder};margin-bottom:${s.lineGap}px;padding-bottom:2px;"></div>
-    <div style="border-bottom:${lineBorder};padding-bottom:2px;"></div>`;
 
   const rows = images.map(img => `
-    <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:${s.rowMb}px;page-break-inside:avoid">
-      <div style="flex:1">${linesHtml}</div>
-      <div style="width:${s.imgMaxW}px;flex-shrink:0;text-align:center">
-        <img src="${img.dataUrl}" style="max-width:${s.imgMaxW}px;max-height:${s.imgMaxH}px;object-fit:contain;display:block;margin:0 auto">
+    <div style="flex:1;display:flex;align-items:center;gap:16px;min-height:0;padding:6px 0;">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;align-self:flex-end;padding-bottom:4px">
+        <div style="border-bottom:${lineBorder};"></div>
+        <div style="border-bottom:${lineBorder};"></div>
+        <div style="border-bottom:${lineBorder};"></div>
+      </div>
+      <div style="width:38%;flex-shrink:0;display:flex;align-items:center;justify-content:center;height:100%">
+        <img src="${img.dataUrl}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
       </div>
     </div>`).join('');
 
   preview.innerHTML = `
-    <div id="wsPreviewDoc" style="background:white;border-radius:20px;border:2px solid var(--border);padding:22px;font-family:'Nunito',sans-serif">
-      <div style="text-align:center;margin-bottom:${s.titleMb}px">
-        <div style="font-size:18px;font-weight:900;text-decoration:underline;color:#111">${mainTitle}</div>
-        ${subTitle ? `<div style="font-size:13px;font-weight:700;color:#555;margin-top:5px">${subTitle}</div>` : ''}
+    <div id="wsPreviewDoc" style="background:white;border-radius:20px;border:2px solid var(--border);padding:18px 20px;font-family:'Nunito',sans-serif;aspect-ratio:210/297;display:flex;flex-direction:column;">
+      <div style="text-align:center;margin-bottom:12px;flex-shrink:0">
+        <div style="font-size:clamp(14px,2vw,20px);font-weight:900;text-decoration:underline;color:#111">${mainTitle}</div>
+        ${subTitle ? `<div style="font-size:clamp(11px,1.5vw,14px);font-weight:700;color:#555;margin-top:4px">${subTitle}</div>` : ''}
       </div>
-      ${rows}
+      <div style="flex:1;display:flex;flex-direction:column;gap:0;min-height:0">${rows}</div>
     </div>
     <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
       <button class="btn btn-primary" onclick="wsDownloadPDF()" style="flex:1;justify-content:center">📄 Download PDF</button>
@@ -2922,49 +2888,51 @@ function wsDownloadPDF() {
   const subTitle  = document.getElementById('wsSubTitle').value.trim();
   const images    = wsCollectSlots().filter(Boolean);
   const lineStyle = document.getElementById('wsLineStyle').value;
-  const s = wsGetSizing(images.length);
+  const n = images.length;
 
   const lineBorder = lineStyle === 'dashed' ? '2.5px dashed #555' : '2px solid #333';
-  const lineEl = `
-    <div style="border-bottom:${lineBorder};margin-bottom:${s.pLineGap};padding-bottom:2px;"></div>
-    <div style="border-bottom:${lineBorder};margin-bottom:${s.pLineGap};padding-bottom:2px;"></div>
-    <div style="border-bottom:${lineBorder};padding-bottom:2px;"></div>`;
+
+  // Each row gets equal share of usable page height
+  // A4 = 297mm, margins 12mm top+bottom = 273mm usable
+  // Title block ~22mm → rows share (273 - 22)mm
+  const titleH = subTitle ? 26 : 20; // mm
+  const usable = 273 - titleH;
+  const rowH = (usable / n).toFixed(1);
 
   const rows = images.map(img => `
-    <div style="display:flex;align-items:flex-end;gap:14px;margin-bottom:${s.pRowMb};page-break-inside:avoid">
-      <div style="flex:1">${lineEl}</div>
-      <div style="width:${s.pImgW};flex-shrink:0;text-align:center">
-        <img src="${img.dataUrl}" style="max-width:${s.pImgW};max-height:${s.pImgH};object-fit:contain;display:block;margin:0 auto">
+    <div style="height:${rowH}mm;display:flex;align-items:center;gap:14px;border-bottom:none;box-sizing:border-box;padding:4px 0;">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:${Math.max(6, rowH/5)}px;align-self:flex-end;padding-bottom:6px">
+        <div style="border-bottom:${lineBorder};"></div>
+        <div style="border-bottom:${lineBorder};"></div>
+        <div style="border-bottom:${lineBorder};"></div>
+      </div>
+      <div style="width:38%;flex-shrink:0;height:${rowH - 10}mm;display:flex;align-items:center;justify-content:center;">
+        <img src="${img.dataUrl}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;">
       </div>
     </div>`).join('');
 
-  // Title font size: smaller for 4 images
-  const titleSize = images.length >= 4 ? '20px' : '22px';
-
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Nunito',Arial,sans-serif;background:white}
-    .sheet{width:186mm;min-height:257mm;padding:10mm 12mm;margin:0 auto}
+    html,body{width:210mm;height:297mm}
+    body{font-family:'Nunito',Arial,sans-serif;background:white;padding:12mm 14mm;display:flex;flex-direction:column;}
+    .no-print{background:#6c3fc5;color:white;padding:8px 14px;border-radius:8px;margin-bottom:10px;font-size:12px;font-weight:700;text-align:center;flex-shrink:0}
     @media print{
-      body{margin:0}
       .no-print{display:none}
-      @page{size:A4 portrait;margin:12mm}
-      .sheet{padding:0;width:100%}
+      html,body{width:210mm;height:297mm;padding:12mm 14mm}
+      @page{size:A4 portrait;margin:0}
     }
   </style></head><body>
-  <div class="no-print" style="background:#6c3fc5;color:white;padding:10px 16px;margin-bottom:12px;font-size:13px;font-weight:700;text-align:center">
-    📄 Print dialog will open — choose "Save as PDF" &nbsp;|&nbsp; Make sure margins are set to "None" or "Minimum"
+  <div class="no-print">📄 Print dialog opening — choose "Save as PDF" | Set margins to None in print settings</div>
+  <div style="text-align:center;margin-bottom:8mm;flex-shrink:0">
+    <div style="font-size:16pt;font-weight:900;text-decoration:underline;letter-spacing:0.3px">${mainTitle}</div>
+    ${subTitle ? `<div style="font-size:11pt;font-weight:700;color:#555;margin-top:4px">${subTitle}</div>` : ''}
   </div>
-  <div class="sheet">
-    <div style="text-align:center;margin-bottom:${s.pTitleMb}">
-      <div style="font-size:${titleSize};font-weight:900;text-decoration:underline;letter-spacing:0.3px">${mainTitle}</div>
-      ${subTitle ? `<div style="font-size:13px;font-weight:700;color:#555;margin-top:5px">${subTitle}</div>` : ''}
-    </div>
+  <div style="flex:1;display:flex;flex-direction:column;">
     ${rows}
   </div>
-  <script>window.onload=()=>setTimeout(()=>window.print(),600)<\/script>
+  <script>window.onload=()=>setTimeout(()=>window.print(),700)<\/script>
   </body></html>`;
 
   const w = window.open('', '_blank');
@@ -2981,30 +2949,39 @@ async function wsDownloadDocx() {
     const subTitle  = document.getElementById('wsSubTitle').value.trim();
     const images    = wsCollectSlots().filter(Boolean);
     const lineStyle = document.getElementById('wsLineStyle').value;
-    const s = wsGetSizing(images.length);
+    const n = images.length;
 
-    // Page: A4 = 11906 x 16838 DXA; margins 720 each side → usable W = 10466
+    // A4 page in DXA: 11906 wide × 16838 tall. 1 inch = 1440 DXA. 1 mm = ~56.7 DXA
     const PAGE_W = 11906, PAGE_H = 16838;
-    const MARGIN = 720; // ~12.7mm
-    const W = PAGE_W - MARGIN * 2; // 10466 DXA usable width
+    const MARGIN_H = 680;  // ~12mm top/bottom
+    const MARGIN_W = 794;  // ~14mm left/right
+    const W = PAGE_W - MARGIN_W * 2; // usable width ~10318 DXA
 
-    const lineW = Math.round(W * 0.60);
-    const imgW  = Math.round(W * 0.37);
+    // Usable height minus title area
+    const titleH = subTitle ? 1000 : 760; // DXA
+    const usableH = PAGE_H - MARGIN_H * 2 - titleH;
+    const rowH = Math.floor(usableH / n); // DXA per row
+    const lineH = Math.floor((rowH - 400) / 3); // 3 lines sharing most of row height
+
+    const lineW = Math.round(W * 0.58);
+    const imgW  = Math.round(W * 0.40);
+    // image dimensions in px (Word uses English Metric Units: 1px ≈ 9144/96 EMU, docx lib takes px)
+    const imgPxH = Math.round((rowH - 400) / 56.7 * 0.85); // mm to px approx, leave padding
+    const imgPxW = Math.round(imgW / 56.7 * 0.75);
 
     const borderSide = lineStyle === 'dashed'
       ? { style: BorderStyle.DASHED, size: 6, color: '333333' }
       : { style: BorderStyle.SINGLE, size: 6, color: '333333' };
     const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
 
-    // Title
     const titlePara = new Paragraph({
       alignment: AlignmentType.CENTER,
-      spacing: { after: images.length >= 4 ? 160 : 240 },
-      children: [new TextRun({ text: mainTitle, bold: true, underline: {}, font: 'Arial', size: images.length >= 4 ? 30 : 34 })]
+      spacing: { after: subTitle ? 120 : 200 },
+      children: [new TextRun({ text: mainTitle, bold: true, underline: {}, font: 'Arial', size: 34 })]
     });
     const subPara = subTitle ? new Paragraph({
       alignment: AlignmentType.CENTER,
-      spacing: { after: images.length >= 4 ? 120 : 180 },
+      spacing: { after: 160 },
       children: [new TextRun({ text: subTitle, font: 'Arial', size: 22, color: '555555' })]
     }) : null;
 
@@ -3017,51 +2994,48 @@ async function wsDownloadDocx() {
       const mimeMatch = img.dataUrl.match(/data:(image\/\w+);/);
       const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
       const typeMap = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif', 'image/webp': 'webp' };
-      const imgType = typeMap[mime] || 'jpg';
 
       const imgRun = new ImageRun({
         data: bytes,
-        transformation: { width: s.dImgW, height: s.dImgH },
-        type: imgType
+        transformation: { width: Math.max(60, imgPxW), height: Math.max(50, imgPxH) },
+        type: typeMap[mime] || 'jpg'
       });
 
       const makeLineCell = () => new TableCell({
         width: { size: lineW, type: WidthType.DXA },
         borders: { top: noBorder, left: noBorder, right: noBorder, bottom: borderSide },
-        children: [new Paragraph({ spacing: { after: 80 } })]
+        children: [new Paragraph({})]
       });
 
       const lineTable = new Table({
         width: { size: lineW, type: WidthType.DXA },
         layout: TableLayoutType.FIXED,
         rows: [
-          new TableRow({ height: { value: s.dLineH, rule: HeightRule.EXACT }, children: [makeLineCell()] }),
-          new TableRow({ height: { value: s.dLineH, rule: HeightRule.EXACT }, children: [makeLineCell()] }),
-          new TableRow({ height: { value: s.dLineH, rule: HeightRule.EXACT }, children: [makeLineCell()] }),
+          new TableRow({ height: { value: lineH, rule: HeightRule.EXACT }, children: [makeLineCell()] }),
+          new TableRow({ height: { value: lineH, rule: HeightRule.EXACT }, children: [makeLineCell()] }),
+          new TableRow({ height: { value: lineH, rule: HeightRule.EXACT }, children: [makeLineCell()] }),
         ],
         borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder, insideH: noBorder, insideV: noBorder }
       });
 
       const lineCell = new TableCell({
         width: { size: lineW, type: WidthType.DXA },
+        verticalAlign: 'bottom',
         borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder },
         children: [lineTable]
       });
       const imgCell = new TableCell({
         width: { size: imgW, type: WidthType.DXA },
         borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder },
-        children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [imgRun] })]
+        children: [new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 40, after: 40 }, children: [imgRun] })]
       });
 
-      const row = new Table({
+      imageRows.push(new Table({
         width: { size: W, type: WidthType.DXA },
         layout: TableLayoutType.FIXED,
-        rows: [new TableRow({ children: [lineCell, imgCell] })],
+        rows: [new TableRow({ height: { value: rowH, rule: HeightRule.EXACT }, children: [lineCell, imgCell] })],
         borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder, insideH: noBorder, insideV: noBorder }
-      });
-
-      imageRows.push(row);
-      imageRows.push(new Paragraph({ spacing: { before: s.dRowGap, after: 0 } }));
+      }));
     }
 
     const children = [titlePara, ...(subPara ? [subPara] : []), ...imageRows];
@@ -3071,7 +3045,7 @@ async function wsDownloadDocx() {
         properties: {
           page: {
             size: { width: PAGE_W, height: PAGE_H },
-            margin: { top: MARGIN, right: MARGIN, bottom: MARGIN, left: MARGIN }
+            margin: { top: MARGIN_H, right: MARGIN_W, bottom: MARGIN_H, left: MARGIN_W }
           }
         },
         children,
