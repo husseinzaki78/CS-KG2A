@@ -875,6 +875,7 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
       <hr style="border:none;border-top:2px solid var(--border);margin:4px 0">
 
       <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="handleLogout()">🚪 Logout</button>
+      <button class="btn btn-outline" style="width:100%;justify-content:center;background:linear-gradient(135deg,#6c3fc5,#a855f7);color:white;border:none" onclick="closeDataMenu();openUserMgmt()">👥 إدارة المستخدمين</button>
       <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeDataMenu()">Cancel</button>
     </div>
   </div>
@@ -1003,6 +1004,9 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.database();
 let currentUser = null;
+
+// ── SESSION-ONLY persistence: user must re-login after closing tab or auto-logout ──
+auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(()=>{});
 
 // ── PHOTO STATE (Base64 → Firebase Database) ──
 let pendingPhotoBase64 = null;  // new photo selected, not yet saved
@@ -1719,11 +1723,11 @@ setInterval(async () => {
 
 // ── LOGOUT ──
 async function handleLogout() {
-  if (confirm('Logout')) {
-    await auth.signOut();
-    closeDataMenu();
-    showLogin();
-  }
+  closeDataMenu();
+  await saveData();
+  await auth.signOut();
+  showLogin();
+  toast('👋 تم تسجيل الخروج', 'ok');
 }
 
 function showDataMenu() { document.getElementById('dataMenuOverlay').classList.add('open'); }
@@ -2201,11 +2205,12 @@ function checkIdle() {
 }
 
 async function autoLogout() {
-  console.log('Auto logout due to inactivity');
-  await saveData(); // Save before logout
-  toast('Done Logout    ', 'info');
-  setTimeout(() => {
-    handleLogout();
+  clearTimeout(idleTimer);
+  await saveData();
+  toast('⏰ تم تسجيل الخروج تلقائياً بسبب عدم النشاط', 'info');
+  setTimeout(async () => {
+    await auth.signOut();
+    showLogin();
   }, 2000);
 }
 
@@ -2951,12 +2956,13 @@ async function wsDownloadDocx() {
   try {
     toast('⏳ Building Word file...', '');
 
-    // Load docx from CDN if not already loaded
-    if (typeof docx === 'undefined') {
+    // Load docx from CDN - same version as weekly plan
+    if (!window.docx) {
       await new Promise((res, rej) => {
         const s = document.createElement('script');
-        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js';
-        s.onload = res; s.onerror = rej;
+        s.src = 'https://unpkg.com/docx@7.8.2/build/index.js';
+        s.onload = () => { setTimeout(res, 200); };
+        s.onerror = rej;
         document.head.appendChild(s);
       });
     }
@@ -2965,7 +2971,7 @@ async function wsDownloadDocx() {
       Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
       WidthType, AlignmentType, ImageRun, BorderStyle, HeightRule,
       TableLayoutType, VerticalAlign
-    } = docx;
+    } = window.docx;
 
     const mainTitle = document.getElementById('wsMainTitle').value.trim();
     const subTitle  = document.getElementById('wsSubTitle').value.trim();
@@ -3134,6 +3140,122 @@ async function wsDownloadDocx() {
   </div>
   <div style="margin-top:20px;font-size:12px;color:rgba(255,255,255,0.7);font-weight:700">⭐ KG2-A Parent Management System ⭐</div>
 </div>
+
+<!-- ══════════ USER MANAGEMENT MODAL ══════════ -->
+<div class="overlay" id="userMgmtOverlay" style="align-items:flex-start;padding-top:0;overflow-y:auto">
+  <div style="background:white;border-radius:0 0 28px 28px;width:100%;max-width:480px;margin:0 auto;animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);padding-bottom:30px">
+    <div style="background:linear-gradient(135deg,#6c3fc5,#a855f7,#ec4899);color:white;padding:18px 20px;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:16px;font-weight:900">👥 إدارة المستخدمين</div>
+      <button onclick="closeUserMgmt()" style="background:rgba(255,255,255,0.2);border:none;color:white;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer">✕</button>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+
+      <!-- ADD USER -->
+      <div style="background:var(--primary-light);border-radius:16px;padding:14px;border:2px solid var(--border)">
+        <div style="font-size:13px;font-weight:900;color:var(--primary);margin-bottom:10px">➕ إضافة مستخدم جديد</div>
+        <div class="fg" style="margin-bottom:8px">
+          <label>📧 البريد الإلكتروني</label>
+          <input type="email" id="newUserEmail" placeholder="example@school.ae" style="direction:ltr;text-align:left">
+        </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>🔒 كلمة السر</label>
+          <div style="position:relative">
+            <input type="password" id="newUserPassword" placeholder="6 أحرف على الأقل" style="direction:ltr;text-align:left;padding-left:40px">
+            <span onclick="togglePwVis('newUserPassword',this)" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px">👁️</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="addUser()">➕ إضافة المستخدم</button>
+      </div>
+
+      <!-- RESET PASSWORD -->
+      <div style="background:#fff7ed;border-radius:16px;padding:14px;border:2px solid #fed7aa">
+        <div style="font-size:13px;font-weight:900;color:#c2410c;margin-bottom:10px">🔑 إعادة ضبط كلمة السر</div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>📧 البريد الإلكتروني للمستخدم</label>
+          <input type="email" id="resetUserEmail" placeholder="example@school.ae" style="direction:ltr;text-align:left">
+        </div>
+        <button class="btn btn-warning" style="width:100%;justify-content:center;color:white" onclick="resetUserPassword()">📨 إرسال رابط إعادة الضبط على الإيميل</button>
+      </div>
+
+      <!-- DELETE USER (Firebase Console link) -->
+      <div style="background:#fff0f0;border-radius:16px;padding:14px;border:2px solid #fecaca">
+        <div style="font-size:13px;font-weight:900;color:var(--danger);margin-bottom:6px">🗑️ حذف مستخدم</div>
+        <div style="font-size:11px;color:#666;margin-bottom:10px;font-weight:700;line-height:1.6">⚠️ حذف المستخدمين يتطلب صلاحيات المشرف عبر Firebase Console. اضغط الزر للفتح مباشرة.</div>
+        <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="window.open('https://console.firebase.google.com/project/cs-kg2a-system/authentication/users','_blank')">🔗 فتح Firebase Console لحذف المستخدمين</button>
+      </div>
+
+      <div style="background:var(--primary-light);border-radius:12px;padding:12px;font-size:11px;color:var(--muted);font-weight:700;line-height:1.8;text-align:right">
+        ℹ️ إضافة مستخدم تتطلب اتصال بالإنترنت ويتم إنشاؤه مباشرة في Firebase.<br>
+        📨 رابط إعادة الضبط يُرسل على إيميل المستخدم مباشرة.
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openUserMgmt() {
+  document.getElementById('userMgmtOverlay').classList.add('open');
+}
+function closeUserMgmt() {
+  document.getElementById('userMgmtOverlay').classList.remove('open');
+  document.getElementById('newUserEmail').value = '';
+  document.getElementById('newUserPassword').value = '';
+  document.getElementById('resetUserEmail').value = '';
+}
+
+function togglePwVis(id, btn) {
+  const inp = document.getElementById(id);
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁️'; }
+}
+
+async function addUser() {
+  const email = document.getElementById('newUserEmail').value.trim();
+  const password = document.getElementById('newUserPassword').value;
+  if (!email || !password) { toast('❌ أدخل الإيميل وكلمة السر', 'err'); return; }
+  if (password.length < 6) { toast('❌ كلمة السر 6 أحرف على الأقل', 'err'); return; }
+
+  try {
+    toast('⏳ جاري إضافة المستخدم...', '');
+    // Create user using Admin approach via secondary app instance
+    const secondaryApp = firebase.initializeApp(firebaseConfig, 'secondary_' + Date.now());
+    const secondaryAuth = secondaryApp.auth();
+    await secondaryAuth.createUserWithEmailAndPassword(email, password);
+    await secondaryAuth.signOut();
+    await secondaryApp.delete();
+
+    document.getElementById('newUserEmail').value = '';
+    document.getElementById('newUserPassword').value = '';
+    toast('✅ تم إضافة المستخدم: ' + email, 'ok');
+  } catch(err) {
+    const msgs = {
+      'auth/email-already-in-use': '❌ هذا الإيميل مسجل بالفعل',
+      'auth/invalid-email': '❌ صيغة الإيميل غير صحيحة',
+      'auth/weak-password': '❌ كلمة السر ضعيفة جداً',
+      'auth/network-request-failed': '❌ تحقق من الاتصال بالإنترنت',
+    };
+    toast(msgs[err.code] || '❌ خطأ: ' + err.message, 'err');
+  }
+}
+
+async function resetUserPassword() {
+  const email = document.getElementById('resetUserEmail').value.trim();
+  if (!email) { toast('❌ أدخل الإيميل أولاً', 'err'); return; }
+  try {
+    await auth.sendPasswordResetEmail(email);
+    toast('📨 تم إرسال رابط إعادة الضبط على: ' + email, 'ok');
+    document.getElementById('resetUserEmail').value = '';
+  } catch(err) {
+    const msgs = {
+      'auth/user-not-found': '❌ لا يوجد مستخدم بهذا الإيميل',
+      'auth/invalid-email': '❌ صيغة الإيميل غير صحيحة',
+      'auth/network-request-failed': '❌ تحقق من الاتصال بالإنترنت',
+    };
+    toast(msgs[err.code] || '❌ خطأ: ' + err.message, 'err');
+  }
+}
+</script>
 
 </body>
 </html>
