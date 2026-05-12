@@ -2266,8 +2266,8 @@ async function init() {
   const emailKey = emailFull.replace(/\./g, '_').replace(/@/g, '__');
   try {
     const snap = await db.ref('userRoles/' + emailKey).once('value');
-    currentUserRole = snap.val() || 'teacher';
-  } catch(e) { currentUserRole = 'teacher'; }
+    currentUserRole = snap.val() || 'admin'; // default admin if no role set yet
+  } catch(e) { currentUserRole = 'admin'; }
 
   // ── Apply role restrictions ──
   applyRoleRestrictions();
@@ -2282,9 +2282,17 @@ async function init() {
 
 function applyRoleRestrictions() {
   const isAdmin = currentUserRole === 'admin';
-  // Show/hide user management button in data menu
   const umBtn = document.getElementById('userMgmtMenuBtn');
   if (umBtn) umBtn.style.display = isAdmin ? 'flex' : 'none';
+  // Update role badge in header
+  const badge = document.getElementById('headerUserBadge');
+  if (badge) {
+    const emailFull = currentUser ? currentUser.email || '' : '';
+    const displayName = emailFull.split('@')[0];
+    const roleIcon = isAdmin ? '👑' : '👩‍🏫';
+    badge.textContent = roleIcon + ' ' + displayName;
+    badge.title = isAdmin ? 'Admin' : 'Teacher';
+  }
 }
 
 // ══════════════════════════════════════════
