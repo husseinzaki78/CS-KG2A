@@ -423,6 +423,7 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
     <span style="width:7px;height:7px;background:#4cc97a;border-radius:50%;animation:pulse 2s infinite;box-shadow:0 0 6px #4cc97a"></span>Live
   </div>
   <button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.35);padding:8px 13px;font-size:13px" onclick="showDataMenu()">⚙️</button>
+  <div id="headerUserBadge" style="display:none;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.35);color:white;padding:5px 11px;border-radius:20px;font-size:10px;font-weight:800;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="showDataMenu()"></div>
   <button class="dark-toggle" onclick="toggleDark()" id="darkToggleBtn">🌙</button>
 </header>
 
@@ -875,7 +876,7 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
       <hr style="border:none;border-top:2px solid var(--border);margin:4px 0">
 
       <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="handleLogout()">🚪 Logout</button>
-      <button class="btn btn-outline" style="width:100%;justify-content:center;background:linear-gradient(135deg,#6c3fc5,#a855f7);color:white;border:none" onclick="closeDataMenu();openUserMgmt()">👥 إدارة المستخدمين</button>
+      <button id="userMgmtMenuBtn" class="btn btn-outline" style="width:100%;justify-content:center;background:linear-gradient(135deg,#6c3fc5,#a855f7);color:white;border:none" onclick="closeDataMenu();openUserMgmt()">👥 إدارة المستخدمين</button>
       <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeDataMenu()">Cancel</button>
     </div>
   </div>
@@ -1004,6 +1005,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.database();
 let currentUser = null;
+let currentUserRole = 'teacher'; // default until loaded
 
 // ── SESSION-ONLY persistence: user must re-login after closing tab or auto-logout ──
 auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(()=>{});
@@ -2252,12 +2254,37 @@ auth.onAuthStateChanged(async (user) => {
 
 async function init() {
   document.body.style.opacity = '0.5';
+
+  // ── Show username in header ──
+  const emailFull = currentUser.email || '';
+  const displayName = emailFull.split('@')[0];
+  const badge = document.getElementById('headerUserBadge');
+  badge.style.display = 'flex';
+  badge.textContent = '👤 ' + displayName;
+
+  // ── Load user role from Firebase ──
+  const emailKey = emailFull.replace(/\./g, '_').replace(/@/g, '__');
+  try {
+    const snap = await db.ref('userRoles/' + emailKey).once('value');
+    currentUserRole = snap.val() || 'teacher';
+  } catch(e) { currentUserRole = 'teacher'; }
+
+  // ── Apply role restrictions ──
+  applyRoleRestrictions();
+
   await loadData();
   await loadPhotosFromDB();
   renderContacts();
   renderTemplates();
   initWeeklyPlan();
   document.body.style.opacity = '1';
+}
+
+function applyRoleRestrictions() {
+  const isAdmin = currentUserRole === 'admin';
+  // Show/hide user management button in data menu
+  const umBtn = document.getElementById('userMgmtMenuBtn');
+  if (umBtn) umBtn.style.display = isAdmin ? 'flex' : 'none';
 }
 
 // ══════════════════════════════════════════
@@ -3157,14 +3184,38 @@ async function wsDownloadDocx() {
           <label>📧 البريد الإلكتروني</label>
           <input type="email" id="newUserEmail" placeholder="example@school.ae" style="direction:ltr;text-align:left">
         </div>
-        <div class="fg" style="margin-bottom:10px">
+        <div class="fg" style="margin-bottom:8px">
           <label>🔒 كلمة السر</label>
           <div style="position:relative">
-            <input type="password" id="newUserPassword" placeholder="6 أحرف على الأقل" style="direction:ltr;text-align:left;padding-left:40px">
-            <span onclick="togglePwVis('newUserPassword',this)" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px">👁️</span>
+            <input type="password" id="newUserPassword" placeholder="6 أحرف على الأقل" style="direction:ltr;text-align:left;padding-right:44px">
+            <span onclick="togglePwVis('newUserPassword',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;user-select:none">👁️</span>
           </div>
         </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>🎭 الصلاحية</label>
+          <select id="newUserRole" style="font-weight:700">
+            <option value="teacher">👩‍🏫 Teacher — مدرس</option>
+            <option value="admin">👑 Admin — مشرف</option>
+          </select>
+        </div>
         <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="addUser()">➕ إضافة المستخدم</button>
+      </div>
+
+      <!-- SET ROLE -->
+      <div style="background:#f0fdf4;border-radius:16px;padding:14px;border:2px solid #bbf7d0">
+        <div style="font-size:13px;font-weight:900;color:#15803d;margin-bottom:10px">🎭 تغيير صلاحية مستخدم موجود</div>
+        <div class="fg" style="margin-bottom:8px">
+          <label>📧 البريد الإلكتروني</label>
+          <input type="email" id="roleUserEmail" placeholder="example@school.ae" style="direction:ltr;text-align:left">
+        </div>
+        <div class="fg" style="margin-bottom:10px">
+          <label>🎭 الصلاحية الجديدة</label>
+          <select id="roleUserRole" style="font-weight:700">
+            <option value="teacher">👩‍🏫 Teacher — مدرس</option>
+            <option value="admin">👑 Admin — مشرف</option>
+          </select>
+        </div>
+        <button class="btn btn-success" style="width:100%;justify-content:center" onclick="setUserRole()">💾 حفظ الصلاحية</button>
       </div>
 
       <!-- RESET PASSWORD -->
@@ -3180,13 +3231,13 @@ async function wsDownloadDocx() {
       <!-- DELETE USER (Firebase Console link) -->
       <div style="background:#fff0f0;border-radius:16px;padding:14px;border:2px solid #fecaca">
         <div style="font-size:13px;font-weight:900;color:var(--danger);margin-bottom:6px">🗑️ حذف مستخدم</div>
-        <div style="font-size:11px;color:#666;margin-bottom:10px;font-weight:700;line-height:1.6">⚠️ حذف المستخدمين يتطلب صلاحيات المشرف عبر Firebase Console. اضغط الزر للفتح مباشرة.</div>
+        <div style="font-size:11px;color:#666;margin-bottom:10px;font-weight:700;line-height:1.6">⚠️ حذف المستخدمين يتطلب Firebase Console. اضغط الزر للفتح مباشرة.</div>
         <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="window.open('https://console.firebase.google.com/project/cs-kg2a-system/authentication/users','_blank')">🔗 فتح Firebase Console لحذف المستخدمين</button>
       </div>
 
       <div style="background:var(--primary-light);border-radius:12px;padding:12px;font-size:11px;color:var(--muted);font-weight:700;line-height:1.8;text-align:right">
-        ℹ️ إضافة مستخدم تتطلب اتصال بالإنترنت ويتم إنشاؤه مباشرة في Firebase.<br>
-        📨 رابط إعادة الضبط يُرسل على إيميل المستخدم مباشرة.
+        👑 <strong>Admin:</strong> يرى كل الأقسام بما فيها إدارة المستخدمين<br>
+        👩‍🏫 <strong>Teacher:</strong> يستخدم النظام بدون إدارة المستخدمين
       </div>
 
     </div>
@@ -3199,9 +3250,9 @@ function openUserMgmt() {
 }
 function closeUserMgmt() {
   document.getElementById('userMgmtOverlay').classList.remove('open');
-  document.getElementById('newUserEmail').value = '';
-  document.getElementById('newUserPassword').value = '';
-  document.getElementById('resetUserEmail').value = '';
+  ['newUserEmail','newUserPassword','resetUserEmail','roleUserEmail'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
 }
 
 function togglePwVis(id, btn) {
@@ -3210,32 +3261,50 @@ function togglePwVis(id, btn) {
   else { inp.type = 'password'; btn.textContent = '👁️'; }
 }
 
-async function addUser() {
-  const email = document.getElementById('newUserEmail').value.trim();
-  const password = document.getElementById('newUserPassword').value;
-  if (!email || !password) { toast('❌ أدخل الإيميل وكلمة السر', 'err'); return; }
-  if (password.length < 6) { toast('❌ كلمة السر 6 أحرف على الأقل', 'err'); return; }
+function emailToKey(email) {
+  return email.trim().toLowerCase().replace(/\./g,'_').replace(/@/g,'__');
+}
 
+async function addUser() {
+  const email    = document.getElementById('newUserEmail').value.trim();
+  const password = document.getElementById('newUserPassword').value;
+  const role     = document.getElementById('newUserRole').value;
+  if (!email || !password) { toast('❌ أدخل الإيميل وكلمة السر', 'err'); return; }
+  if (password.length < 6)  { toast('❌ كلمة السر 6 أحرف على الأقل', 'err'); return; }
   try {
     toast('⏳ جاري إضافة المستخدم...', '');
-    // Create user using Admin approach via secondary app instance
-    const secondaryApp = firebase.initializeApp(firebaseConfig, 'secondary_' + Date.now());
-    const secondaryAuth = secondaryApp.auth();
-    await secondaryAuth.createUserWithEmailAndPassword(email, password);
-    await secondaryAuth.signOut();
-    await secondaryApp.delete();
-
+    const secondary = firebase.initializeApp(firebaseConfig, 'sec_' + Date.now());
+    const secAuth   = secondary.auth();
+    await secAuth.createUserWithEmailAndPassword(email, password);
+    await secAuth.signOut();
+    await secondary.delete();
+    await db.ref('userRoles/' + emailToKey(email)).set(role);
     document.getElementById('newUserEmail').value = '';
     document.getElementById('newUserPassword').value = '';
-    toast('✅ تم إضافة المستخدم: ' + email, 'ok');
+    const roleLabel = role === 'admin' ? '👑 Admin' : '👩‍🏫 Teacher';
+    toast('✅ تم إضافة المستخدم كـ ' + roleLabel + ': ' + email, 'ok');
   } catch(err) {
     const msgs = {
       'auth/email-already-in-use': '❌ هذا الإيميل مسجل بالفعل',
-      'auth/invalid-email': '❌ صيغة الإيميل غير صحيحة',
-      'auth/weak-password': '❌ كلمة السر ضعيفة جداً',
-      'auth/network-request-failed': '❌ تحقق من الاتصال بالإنترنت',
+      'auth/invalid-email':        '❌ صيغة الإيميل غير صحيحة',
+      'auth/weak-password':        '❌ كلمة السر ضعيفة جداً',
+      'auth/network-request-failed':'❌ تحقق من الاتصال بالإنترنت',
     };
-    toast(msgs[err.code] || '❌ خطأ: ' + err.message, 'err');
+    toast(msgs[err.code] || '❌ ' + err.message, 'err');
+  }
+}
+
+async function setUserRole() {
+  const email = document.getElementById('roleUserEmail').value.trim();
+  const role  = document.getElementById('roleUserRole').value;
+  if (!email) { toast('❌ أدخل الإيميل أولاً', 'err'); return; }
+  try {
+    await db.ref('userRoles/' + emailToKey(email)).set(role);
+    const roleLabel = role === 'admin' ? '👑 Admin' : '👩‍🏫 Teacher';
+    toast('✅ تم ضبط صلاحية ' + email + ' كـ ' + roleLabel, 'ok');
+    document.getElementById('roleUserEmail').value = '';
+  } catch(err) {
+    toast('❌ فشل حفظ الصلاحية: ' + err.message, 'err');
   }
 }
 
@@ -3248,11 +3317,11 @@ async function resetUserPassword() {
     document.getElementById('resetUserEmail').value = '';
   } catch(err) {
     const msgs = {
-      'auth/user-not-found': '❌ لا يوجد مستخدم بهذا الإيميل',
-      'auth/invalid-email': '❌ صيغة الإيميل غير صحيحة',
-      'auth/network-request-failed': '❌ تحقق من الاتصال بالإنترنت',
+      'auth/user-not-found':        '❌ لا يوجد مستخدم بهذا الإيميل',
+      'auth/invalid-email':         '❌ صيغة الإيميل غير صحيحة',
+      'auth/network-request-failed':'❌ تحقق من الاتصال بالإنترنت',
     };
-    toast(msgs[err.code] || '❌ خطأ: ' + err.message, 'err');
+    toast(msgs[err.code] || '❌ ' + err.message, 'err');
   }
 }
 </script>
