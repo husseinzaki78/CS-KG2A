@@ -392,6 +392,19 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
 .ws-slot-inner:hover { background: var(--primary-light); }
 .ws-slot-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
+/* ── APPRECIATION CARD ── */
+.ac-cat-btn {
+  border: 2.5px solid var(--border); border-radius: 16px; padding: 12px 8px;
+  background: white; cursor: pointer; transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  font-family: 'Nunito','Segoe UI',sans-serif; color: var(--text); text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.ac-cat-btn:hover { transform: translateY(-3px); border-color: var(--primary); }
+.ac-cat-btn.active { background: linear-gradient(135deg,#6c3fc5,#a855f7); color: white; border-color: transparent; box-shadow: 0 6px 20px rgba(108,63,197,0.35); transform: translateY(-3px); }
+.ac-subject-row { display:flex; align-items:flex-start; gap:8px; }
+.ac-subject-label { font-size:11px; font-weight:900; color:var(--primary); min-width:90px; padding-top:10px; }
+.ac-subject-row textarea { flex:1; min-height:60px; font-size:12px; }
+
 /* ── BIRTHDAY BADGE ── */
 .birthday-banner {
   background: linear-gradient(135deg,#fdf6ff,#ffe8f5);
@@ -445,6 +458,9 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
   </div>
   <div class="tab" onclick="switchTab('worksheet')">
     <span class="tab-icon">📝</span>Worksheet
+  </div>
+  <div class="tab" onclick="switchTab('appreciation')">
+    <span class="tab-icon">🏅</span>Card
   </div>
 </div>
 
@@ -658,6 +674,89 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
 
   <!-- PREVIEW AREA -->
   <div id="wsPreviewArea" style="display:none;padding-bottom:30px"></div>
+</div>
+
+<!-- ══════════ APPRECIATION CARD PAGE ══════════ -->
+<div class="page" id="page-appreciation">
+  <div style="background:white;border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 4px 20px rgba(108,63,197,0.1);border:2px solid var(--border)">
+    <div style="font-size:16px;font-weight:900;color:var(--primary);margin-bottom:4px">🏅 Appreciation Card Builder</div>
+    <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:18px">Generate a beautiful appreciation card for any student</div>
+
+    <!-- STUDENT NAME -->
+    <div class="fg">
+      <label>👤 Student Name <span style="color:var(--accent)">*</span></label>
+      <input type="text" id="acStudentName" placeholder="e.g. Karam" oninput="acUpdatePreview()">
+    </div>
+
+    <!-- STUDENT PHOTO -->
+    <div class="fg">
+      <label>📸 Student Photo <span style="color:var(--accent)">*</span></label>
+      <div class="photo-upload-area" onclick="document.getElementById('acPhotoInput').click()" id="acPhotoArea">
+        <div id="acPhotoPreviewWrap" style="display:none" class="photo-preview-wrap">
+          <img id="acPhotoPreviewImg" src="" alt="Student Photo" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid var(--primary)">
+          <button class="photo-remove-btn" onclick="event.stopPropagation();acRemovePhoto()">✕</button>
+        </div>
+        <div id="acPhotoPlaceholder">
+          <div style="font-size:36px;margin-bottom:6px">📷</div>
+          <div style="font-size:12px;color:var(--muted);font-weight:700">Tap to upload student photo</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">JPG or PNG</div>
+        </div>
+      </div>
+      <input type="file" id="acPhotoInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="acHandlePhoto(event)">
+    </div>
+
+    <!-- CATEGORY -->
+    <div class="fg">
+      <label>🎯 Student Category <span style="color:var(--accent)">*</span></label>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px">
+        <button class="ac-cat-btn active" id="acBtnHA" onclick="acSetCategory('HA')">
+          <div style="font-size:20px">⭐</div>
+          <div style="font-size:12px;font-weight:900">HA</div>
+          <div style="font-size:10px;opacity:0.8">High Achiever</div>
+        </button>
+        <button class="ac-cat-btn" id="acBtnMA" onclick="acSetCategory('MA')">
+          <div style="font-size:20px">🌟</div>
+          <div style="font-size:12px;font-weight:900">MA</div>
+          <div style="font-size:10px;opacity:0.8">Mid Achiever</div>
+        </button>
+        <button class="ac-cat-btn" id="acBtnLA" onclick="acSetCategory('LA')">
+          <div style="font-size:20px">💪</div>
+          <div style="font-size:12px;font-weight:900">LA</div>
+          <div style="font-size:10px;opacity:0.8">Low Achiever</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- COMMENTS SECTION -->
+    <div style="background:linear-gradient(135deg,#fdf6ff,#f0ebff);border-radius:16px;padding:14px;border:2px solid var(--border);margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:13px;font-weight:900;color:var(--primary)">💬 Comments by Subject</div>
+        <button class="btn btn-outline btn-sm" onclick="acResetComments()">🔄 Reset to Default</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="acCommentsContainer">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <!-- BUILD BUTTON -->
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="acBuildCard()">
+      🎨 Generate Card
+    </button>
+  </div>
+
+  <!-- CARD PREVIEW -->
+  <div id="acPreviewArea" style="display:none;padding-bottom:30px">
+    <div style="background:white;border-radius:22px;padding:18px;box-shadow:0 4px 20px rgba(108,63,197,0.1);border:2px solid var(--border)">
+      <div style="font-size:14px;font-weight:900;color:var(--primary);margin-bottom:14px">👁️ Card Preview</div>
+      <div id="acCardWrapper" style="position:relative;width:100%;max-width:480px;margin:0 auto">
+        <canvas id="acCanvas" style="width:100%;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.15)"></canvas>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn btn-success" style="flex:1;justify-content:center" onclick="acDownloadCard()">⬇️ Download PNG</button>
+        <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="acPrintCard()">🖨️ Print Card</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════ WEEKLY PLAN PAGE ══════════ -->
@@ -3332,6 +3431,395 @@ async function resetUserPassword() {
     toast(msgs[err.code] || '❌ ' + err.message, 'err');
   }
 }
+</script>
+
+<!-- ══════════ APPRECIATION CARD SCRIPT ══════════ -->
+<script>
+// ── State ──
+let acCategory = 'HA';
+let acPhotoDataUrl = null;
+
+// ── Default comments per category ──
+const AC_DEFAULTS = {
+  HA: {
+    intro: 'has demonstrated a remarkable talent for establishing objectives and consistently exceeding them.',
+    Literacy: "The student reads simple words and digraphs confidently and enjoys forming sentences independently. They show excellent progress and a great love for learning English. Keep up the fantastic work!",
+    Numeracy: "The student writes numbers from 1 to 100 accurately and solves addition and subtraction problems with confidence. They have shown excellent growth from Term 1 to Term 2. Fantastic progress!",
+    'Understanding the World': "Exhibits a profound sense of curiosity and poses insightful, in-depth questions. Interacts meaningfully with every subject of learning.",
+    'Physical Development': "Shows excellent coordination and self-assurance in physical activities. Engages actively and with enthusiasm.",
+    Arabic: "The student shows strong letter recognition and can read and write all letters accurately.",
+    Islamic: "The student shows excellent Qur'an memorization and beautiful recitation with correct pronunciation."
+  },
+  MA: {
+    intro: 'is a motivated learner who approaches class activities with positivity and a strong desire to improve.',
+    Literacy: "The student is making good progress in reading simple words and digraphs. With continued practice, they are improving their sentence writing and becoming more confident every day. Great effort!",
+    Numeracy: "The student is making good progress in writing numbers and solving addition and subtraction problems. With continued practice, they are becoming more confident and skilled every day. Well done!",
+    'Understanding the World': "Shows curiosity about classroom themes and enjoys discovering new information through hands-on exploration.",
+    'Physical Development': "Participates enthusiastically in activities and continues to develop both fine and gross motor skills.",
+    Arabic: "The student is developing their Arabic letter recognition with regular practice and guidance.",
+    Islamic: "The student shows good ability in memorizing the Qur'an and demonstrates commitment to learning."
+  },
+  LA: {
+    intro: 'is a motivated learner who approaches class activities with positivity and a strong desire to improve.',
+    Literacy: "The student is developing their reading skills and beginning to form simple sentences. With regular practice and support, they are making noticeable progress. Keep going — you are doing well!",
+    Numeracy: "The student is improving in writing numbers and working on addition and subtraction. Their efforts are paying off, and with continued support, they will keep making great progress. Keep up the hard work!",
+    'Understanding the World': "He actively participates in class and shows curiosity. We are focusing on improving the application of his understanding in independent assignments.",
+    'Physical Development': "He is a supportive teammate with good coordination. He is working on building self-assurance in new physical challenges.",
+    Arabic: "The student shows strong letter recognition and can read and write all letters accurately.",
+    Islamic: "The student is eager to learn, hardworking, and shows excellent listening skills. They need a little more practice and repetition to fully grasp and apply the Islamic teachings."
+  }
+};
+
+const AC_SUBJECTS = ['Literacy','Numeracy','Understanding the World','Physical Development','Arabic','Islamic'];
+
+// ── Init comments fields ──
+function acInitComments() {
+  const c = document.getElementById('acCommentsContainer');
+  c.innerHTML = '';
+  const defaults = AC_DEFAULTS[acCategory];
+  // Intro line
+  const introRow = document.createElement('div');
+  introRow.className = 'ac-subject-row';
+  introRow.innerHTML = `
+    <div class="ac-subject-label">✨ Intro</div>
+    <textarea class="fg" id="acIntro" style="flex:1;min-height:60px;font-size:12px;padding:10px 12px;border:2.5px solid var(--border);border-radius:12px;font-family:Nunito,sans-serif;font-weight:600;resize:vertical;outline:none;background:#fdf6ff">${defaults.intro}</textarea>
+  `;
+  c.appendChild(introRow);
+  // Subject rows
+  AC_SUBJECTS.forEach(sub => {
+    const row = document.createElement('div');
+    row.className = 'ac-subject-row';
+    const icons = {Literacy:'📚',Numeracy:'🔢','Understanding the World':'🌍','Physical Development':'⚽',Arabic:'🔤',Islamic:'☪️'};
+    row.innerHTML = `
+      <div class="ac-subject-label">${icons[sub]||'•'} ${sub}</div>
+      <textarea id="acSub_${sub.replace(/\s+/g,'_')}" style="flex:1;min-height:70px;font-size:12px;padding:10px 12px;border:2.5px solid var(--border);border-radius:12px;font-family:Nunito,sans-serif;font-weight:600;resize:vertical;outline:none;background:#fdf6ff">${defaults[sub]||''}</textarea>
+    `;
+    c.appendChild(row);
+  });
+}
+
+function acSetCategory(cat) {
+  acCategory = cat;
+  ['HA','MA','LA'].forEach(c => {
+    document.getElementById('acBtn'+c).classList.toggle('active', c === cat);
+  });
+  acInitComments();
+}
+
+function acHandlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    acPhotoDataUrl = ev.target.result;
+    document.getElementById('acPhotoPreviewImg').src = acPhotoDataUrl;
+    document.getElementById('acPhotoPreviewWrap').style.display = 'block';
+    document.getElementById('acPhotoPlaceholder').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function acRemovePhoto() {
+  acPhotoDataUrl = null;
+  document.getElementById('acPhotoPreviewWrap').style.display = 'none';
+  document.getElementById('acPhotoPlaceholder').style.display = 'block';
+  document.getElementById('acPhotoInput').value = '';
+}
+
+function acResetComments() {
+  acInitComments();
+  toast('🔄 Comments reset to default', 'ok');
+}
+
+// ── Canvas card renderer ──
+function acGetComments() {
+  const intro = (document.getElementById('acIntro')||{}).value || '';
+  const subjects = {};
+  AC_SUBJECTS.forEach(sub => {
+    const el = document.getElementById('acSub_'+sub.replace(/\s+/g,'_'));
+    subjects[sub] = el ? el.value : '';
+  });
+  return {intro, subjects};
+}
+
+function acBuildCard() {
+  const name = document.getElementById('acStudentName').value.trim();
+  if (!name) { toast('❌ Enter student name first', 'err'); return; }
+
+  const {intro, subjects} = acGetComments();
+
+  // Card dimensions: A4-ish portrait ratio
+  const W = 900, PAD = 48;
+  const canvas = document.getElementById('acCanvas');
+
+  // Category theme
+  const themes = {
+    HA: { bg:'#fdf6ff', border:'#6c3fc5', title:'#6c3fc5', accent:'#a855f7', label:'#6c3fc5', labelBg:'#f0ebff', closing:'#6c3fc5' },
+    MA: { bg:'#f0fffe', border:'#0d9488', title:'#0d9488', accent:'#14b8a6', label:'#0d9488', labelBg:'#ccfbf1', closing:'#0d9488' },
+    LA: { bg:'#fffbeb', border:'#d97706', title:'#d97706', accent:'#f59e0b', label:'#b45309', labelBg:'#fef3c7', closing:'#d97706' }
+  };
+  const T = themes[acCategory];
+
+  // First pass: measure total height needed
+  // We'll render to a temp big canvas then crop
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = W;
+  tmpCanvas.height = 4000;
+  const ctx = tmpCanvas.getContext('2d');
+
+  function wrapText(ctx, text, x, y, maxW, lineH) {
+    const words = text.split(' ');
+    let line = '';
+    let cy = y;
+    words.forEach((word,i) => {
+      const test = line + word + ' ';
+      if (ctx.measureText(test).width > maxW && i > 0) {
+        ctx.fillText(line.trim(), x, cy);
+        line = word + ' ';
+        cy += lineH;
+      } else { line = test; }
+    });
+    if (line.trim()) { ctx.fillText(line.trim(), x, cy); cy += lineH; }
+    return cy;
+  }
+
+  function measureWrap(ctx, text, maxW, lineH) {
+    const words = text.split(' ');
+    let line = '', lines = 0;
+    words.forEach((word,i) => {
+      const test = line + word + ' ';
+      if (ctx.measureText(test).width > maxW && i > 0) { line = word + ' '; lines++; }
+      else { line = test; }
+    });
+    if (line.trim()) lines++;
+    return lines * lineH;
+  }
+
+  const IW = W - PAD*2; // inner width
+
+  function drawRoundRect(ctx, x, y, w, h, r, fill, stroke, sw) {
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+    ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+    ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
+    ctx.closePath();
+    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = sw||2; ctx.stroke(); }
+  }
+
+  // ── Draw function (returns final height) ──
+  function draw(ctx, W, PAD) {
+    const IW = W - PAD*2;
+    let y = PAD;
+
+    // Background
+    ctx.fillStyle = T.bg;
+    ctx.fillRect(0, 0, W, 5000);
+
+    // Grid pattern background (subtle)
+    ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+    ctx.lineWidth = 1;
+    for (let gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,5000); ctx.stroke(); }
+    for (let gy = 0; gy < 5000; gy += 40) { ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+
+    // Border frame
+    drawRoundRect(ctx, 14, 14, W-28, 4900, 30, null, T.border, 8);
+    drawRoundRect(ctx, 22, 22, W-44, 4900, 26, null, T.accent+'44', 3);
+
+    // ── HEADER ICONS (ABC block left, books right) ──
+    // Left decoration block
+    ctx.font = 'bold 36px serif'; ctx.textAlign = 'center';
+    // ABC block squares
+    const blkColors = ['#f97316','#6c3fc5','#3b82f6','#22c55e'];
+    [[PAD,y+10,'A','#f97316'],[PAD+36,y+10,'B','#6c3fc5'],[PAD,y+46,'C','#3b82f6']].forEach(([bx,by,lt,col])=>{
+      drawRoundRect(ctx,bx,by,32,32,6,col,null);
+      ctx.fillStyle='white'; ctx.font='bold 18px Arial'; ctx.textAlign='center';
+      ctx.fillText(lt, bx+16, by+22);
+    });
+    // pencil emoji
+    ctx.font='28px serif'; ctx.textAlign='left';
+    ctx.fillText('✏️', PAD+72, y+42);
+    ctx.fillText('✱', PAD+108, y+20);
+
+    // Right decoration
+    ctx.textAlign='right';
+    ctx.font='28px serif';
+    ctx.fillText('📚', W-PAD-10, y+50);
+    ctx.fillText('✱', W-PAD-60, y+16);
+    ctx.fillText('✱', W-PAD-10, y+16);
+
+    y += 90;
+
+    // ── STUDENT PHOTO ──
+    const photoSize = 130;
+    const photoX = (W - photoSize) / 2;
+    const photoY = y;
+    // Draw circle clip for photo
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(photoX + photoSize/2, photoY + photoSize/2, photoSize/2, 0, Math.PI*2);
+    ctx.clip();
+    if (acPhotoDataUrl) {
+      const img = new Image();
+      img.src = acPhotoDataUrl;
+      ctx.drawImage(img, photoX, photoY, photoSize, photoSize);
+    } else {
+      ctx.fillStyle = '#e0d4f7';
+      ctx.fillRect(photoX, photoY, photoSize, photoSize);
+      ctx.fillStyle = '#9b8dc0'; ctx.font = 'bold 48px Arial'; ctx.textAlign='center';
+      ctx.fillText('👤', photoX+photoSize/2, photoY+photoSize/2+18);
+    }
+    ctx.restore();
+    // Photo border
+    ctx.beginPath();
+    ctx.arc(photoX + photoSize/2, photoY + photoSize/2, photoSize/2+3, 0, Math.PI*2);
+    ctx.strokeStyle = T.border; ctx.lineWidth = 5; ctx.stroke();
+
+    y = photoY + photoSize + 22;
+
+    // ── STUDENT NAME ──
+    ctx.fillStyle = T.title; ctx.font = 'bold 38px Arial'; ctx.textAlign = 'center';
+    ctx.fillText(name, W/2, y);
+    y += 44;
+
+    // ── INTRO LINE ──
+    ctx.fillStyle = '#444'; ctx.font = '500 22px Arial'; ctx.textAlign = 'center';
+    const introFull = name + ' ' + intro;
+    y = wrapText(ctx, introFull, W/2, y, IW - 40, 30);
+    y += 18;
+
+    // ── SUBJECT BLOCKS ──
+    const subIcons = {Literacy:'📚',Numeracy:'🔢','Understanding the World':'🌍','Physical Development':'⚽',Arabic:'🔤',Islamic:'☪️'};
+    AC_SUBJECTS.forEach(sub => {
+      const txt = subjects[sub];
+      if (!txt) return;
+      const blockH = 36 + Math.max(measureWrap(ctx, txt, IW - 130, 28), 28) + 20;
+      // Block bg
+      drawRoundRect(ctx, PAD, y, IW, blockH, 14, 'rgba(255,255,255,0.6)', T.border+'33', 1.5);
+      // Label pill
+      drawRoundRect(ctx, PAD+10, y+10, 140, 28, 8, T.labelBg, null);
+      ctx.fillStyle = T.label; ctx.font = 'bold 17px Arial'; ctx.textAlign = 'left';
+      ctx.fillText((subIcons[sub]||'•')+' In '+sub+',', PAD+18, y+28);
+      // Text
+      ctx.fillStyle = '#333'; ctx.font = '500 20px Arial';
+      wrapText(ctx, txt, PAD+160, y+29, IW-170, 28);
+      // Actually re-calc y properly: draw text starting at left
+      // Re-do: label takes left, then text below label
+      // Actually let's put text below label for cleaner look:
+      ctx.clearRect(PAD, y, IW, blockH + 5);
+      drawRoundRect(ctx, PAD, y, IW, blockH+10, 14, 'rgba(255,255,255,0.6)', T.border+'33', 1.5);
+      drawRoundRect(ctx, PAD+10, y+10, 150, 28, 8, T.labelBg, null);
+      ctx.fillStyle = T.label; ctx.font = 'bold 17px Arial'; ctx.textAlign = 'left';
+      ctx.fillText((subIcons[sub]||'•') + ' In ' + sub + ',', PAD+18, y+29);
+      ctx.fillStyle = '#333'; ctx.font = '500 19px Arial'; ctx.textAlign = 'center';
+      const endY = wrapText(ctx, txt, W/2, y+50, IW-60, 28);
+      y = endY + 18;
+    });
+
+    y += 10;
+
+    // ── CLOSING LINE ──
+    ctx.fillStyle = T.closing; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'center';
+    const closingLines = [
+      'We are proud of their progress and look forward to supporting',
+      'their continued learning journey.'
+    ];
+    closingLines.forEach(line => {
+      ctx.fillText(line, W/2, y); y += 30;
+    });
+    y += 20;
+
+    // ── SIGNATURE + FOOTER ──
+    // Signature line
+    ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(W/2-80, y+30); ctx.lineTo(W/2+80, y+30); ctx.stroke();
+    // signature text (simulated cursive using italic)
+    ctx.fillStyle = '#555'; ctx.font = 'italic bold 26px Georgia,serif'; ctx.textAlign = 'center';
+    ctx.fillText('Doaa', W/2, y+26);
+    y += 40;
+    ctx.fillStyle = '#333'; ctx.font = 'bold 18px Arial'; ctx.textAlign = 'center';
+    ctx.fillText('Ms. Doaa El Sayed', W/2, y+16);
+    ctx.fillStyle = '#666'; ctx.font = '600 15px Arial';
+    ctx.fillText('Class Teacher', W/2, y+36);
+    y += 50;
+
+    // Bottom decorations
+    ctx.font = '28px serif'; ctx.textAlign = 'center';
+    ctx.fillText('🎓  3+3  🌟  💡  🎓', W/2, y+20);
+    y += 50;
+
+    return y;
+  }
+
+  // First pass to measure
+  ctx.clearRect(0,0,W,4000);
+  const finalH = draw(ctx, W, PAD) + PAD;
+
+  // Real canvas with proper height
+  canvas.width = W;
+  canvas.height = finalH;
+  const rctx = canvas.getContext('2d');
+
+  // If we have photo, preload image first
+  if (acPhotoDataUrl) {
+    const img = new Image();
+    img.onload = () => {
+      acPhotoDataUrl = img.src; // ensure loaded
+      rctx.clearRect(0,0,W,finalH);
+      draw(rctx, W, PAD);
+    };
+    img.src = acPhotoDataUrl;
+  } else {
+    draw(rctx, W, PAD);
+  }
+
+  document.getElementById('acPreviewArea').style.display = 'block';
+  document.getElementById('acPreviewArea').scrollIntoView({behavior:'smooth'});
+  toast('✅ Card generated!', 'ok');
+}
+
+function acDownloadCard() {
+  const canvas = document.getElementById('acCanvas');
+  const name = document.getElementById('acStudentName').value.trim() || 'student';
+  const link = document.createElement('a');
+  link.download = `appreciation_card_${name.replace(/\s+/g,'_')}_${acCategory}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  toast('⬇️ Card downloaded!', 'ok');
+}
+
+function acPrintCard() {
+  const canvas = document.getElementById('acCanvas');
+  const dataUrl = canvas.toDataURL('image/png');
+  const win = window.open('','_blank');
+  win.document.write(`
+    <html><head><title>Appreciation Card</title>
+    <style>
+      body{margin:0;display:flex;justify-content:center;align-items:flex-start;background:#f5f5f5;padding:20px}
+      img{max-width:100%;width:600px;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+      @media print{body{background:white;padding:0}img{width:100%;box-shadow:none}}
+    </style></head>
+    <body><img src="${dataUrl}" onload="window.print()"></body></html>
+  `);
+}
+
+// Init on page load
+document.addEventListener('DOMContentLoaded', () => {
+  acInitComments();
+});
+// Also init when tab is clicked
+const origSwitchTab = window.switchTab;
+window.switchTab = function(tab) {
+  if (origSwitchTab) origSwitchTab(tab);
+  if (tab === 'appreciation') {
+    setTimeout(() => {
+      const c = document.getElementById('acCommentsContainer');
+      if (!c.innerHTML.trim()) acInitComments();
+    }, 100);
+  }
+};
 </script>
 
 </body>
