@@ -392,6 +392,15 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
 .ws-slot-inner:hover { background: var(--primary-light); }
 .ws-slot-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
+.ac-font-btn {
+  border: 2px solid var(--border); border-radius: 10px; padding: 8px 6px;
+  background: white; cursor: pointer; transition: all 0.2s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  color: var(--text);
+}
+.ac-font-btn:hover { border-color: #0369a1; transform: translateY(-1px); }
+.ac-font-btn.active { background: linear-gradient(135deg,#0ea5e9,#0369a1); color: white; border-color: transparent; box-shadow: 0 3px 10px rgba(3,105,161,0.35); transform: translateY(-1px); }
+
 /* ── APPRECIATION CARD ── */
 .ac-cat-btn {
   border: 2.5px solid var(--border); border-radius: 16px; padding: 12px 8px;
@@ -771,6 +780,56 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
           <div style="font-size:11px;font-weight:800;color:#92400e">Achievement</div>
           <div style="font-size:9px;color:#b45309">Trophies & medals</div>
         </button>
+      </div>
+    </div>
+
+    <!-- FONT PICKER -->
+    <div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-radius:16px;padding:14px;border:2px solid #bae6fd;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:900;color:#0369a1;margin-bottom:10px">🔤 Font Style & Size</div>
+
+      <!-- Font Family -->
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:6px">Font Family</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" id="acFontGrid">
+          <button class="ac-font-btn active" id="acFont0" onclick="acSetFont(0)" style="font-family:Arial,sans-serif">
+            <span style="font-size:13px;font-weight:600">Aa</span>
+            <span style="font-size:9px;opacity:.8">Arial</span>
+          </button>
+          <button class="ac-font-btn" id="acFont1" onclick="acSetFont(1)" style="font-family:'Georgia',serif">
+            <span style="font-size:13px;font-weight:600">Aa</span>
+            <span style="font-size:9px;opacity:.8">Georgia</span>
+          </button>
+          <button class="ac-font-btn" id="acFont2" onclick="acSetFont(2)" style="font-family:'Trebuchet MS',sans-serif">
+            <span style="font-size:13px;font-weight:600">Aa</span>
+            <span style="font-size:9px;opacity:.8">Trebuchet</span>
+          </button>
+          <button class="ac-font-btn" id="acFont3" onclick="acSetFont(3)" style="font-family:'Palatino Linotype',serif">
+            <span style="font-size:13px;font-weight:600">Aa</span>
+            <span style="font-size:9px;opacity:.8">Palatino</span>
+          </button>
+          <button class="ac-font-btn" id="acFont4" onclick="acSetFont(4)" style="font-family:'Century Gothic','Gill Sans',sans-serif">
+            <span style="font-size:13px;font-weight:600">Aa</span>
+            <span style="font-size:9px;opacity:.8">Century Gothic</span>
+          </button>
+          <button class="ac-font-btn" id="acFont5" onclick="acSetFont(5)" style="font-family:'Courier New',monospace">
+            <span style="font-size:13px;font-weight:600">Aa</span>
+            <span style="font-size:9px;opacity:.8">Courier</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Font Size -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:11px;font-weight:700;color:#0369a1">Font Size</div>
+          <div style="font-size:12px;font-weight:900;color:#0369a1" id="acFontSizeLabel">Medium (10pt)</div>
+        </div>
+        <input type="range" id="acFontSizeSlider" min="0" max="4" step="1" value="2"
+          oninput="acSetFontSize(this.value)"
+          style="width:100%;accent-color:#0369a1;cursor:pointer;height:6px">
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:#64748b;margin-top:3px">
+          <span>Tiny</span><span>Small</span><span>Medium</span><span>Large</span><span>XL</span>
+        </div>
       </div>
     </div>
 
@@ -3668,6 +3727,41 @@ function acSetStyle(n){
   for(let i=0;i<4;i++) document.getElementById('acStyle'+i).classList.toggle('active',i===n);
 }
 
+// ── Font state ──
+let acCurrentFont=0;
+let acCurrentFontSize=2;
+
+const AC_FONTS=[
+  {name:'Arial',      stack:'Arial,Helvetica,sans-serif'},
+  {name:'Georgia',    stack:'Georgia,"Times New Roman",serif'},
+  {name:'Trebuchet',  stack:'"Trebuchet MS",Verdana,sans-serif'},
+  {name:'Palatino',   stack:'"Palatino Linotype","Book Antiqua",Palatino,serif'},
+  {name:'Century Gothic', stack:'"Century Gothic","Gill Sans MT","Gill Sans",sans-serif'},
+  {name:'Courier',    stack:'"Courier New",Courier,monospace'},
+];
+
+const AC_FONT_SIZES=[
+  {label:'Tiny (8pt)',    body:'8pt',   intro:'8.5pt',  closing:'8.5pt'},
+  {label:'Small (9pt)',   body:'9pt',   intro:'9.5pt',  closing:'9.5pt'},
+  {label:'Medium (10pt)', body:'9.5pt', intro:'10.3pt', closing:'10pt'},
+  {label:'Large (11pt)',  body:'10.5pt',intro:'11.5pt', closing:'11pt'},
+  {label:'XL (12pt)',     body:'11.5pt',intro:'12.5pt', closing:'12pt'},
+];
+
+function acSetFont(n){
+  acCurrentFont=n;
+  for(let i=0;i<6;i++){
+    const el=document.getElementById('acFont'+i);
+    if(el) el.classList.toggle('active',i===n);
+  }
+}
+
+function acSetFontSize(n){
+  acCurrentFontSize=parseInt(n);
+  const lbl=document.getElementById('acFontSizeLabel');
+  if(lbl) lbl.textContent=AC_FONT_SIZES[acCurrentFontSize].label;
+}
+
 function acBuildCard(){
   const name=document.getElementById('acStudentName').value.trim();
   if(!name){toast('❌ Enter student name first','err');return;}
@@ -3676,12 +3770,19 @@ function acBuildCard(){
   AC_SUBJECTS.forEach(sub=>{const el=document.getElementById('acSub_'+sub.replace(/\s+/g,'_'));subjects[sub]=el?el.value:'';});
   const win=window.open('','_blank');
   if(!win){toast('❌ Allow popups in browser!','err');return;}
-  win.document.write(acMakeHTML(name,intro,subjects,acPhotoDataUrl,AC_STYLES[acCurrentStyle]));
+  win.document.write(acMakeHTML(
+    name, intro, subjects, acPhotoDataUrl,
+    AC_STYLES[acCurrentStyle],
+    AC_FONTS[acCurrentFont],
+    AC_FONT_SIZES[acCurrentFontSize]
+  ));
   win.document.close();
   toast('✅ Card ready — press Print to save PDF','ok');
 }
 
-function acMakeHTML(name,intro,subjects,photo,ST){
+function acMakeHTML(name,intro,subjects,photo,ST,FONT,FSIZE){
+  FONT  = FONT  || AC_FONTS[0];
+  FSIZE = FSIZE || AC_FONT_SIZES[2];
   const LABELS={Literacy:'In Literacy,',Numeracy:'In Numeracy,','Understanding the World':'In Understanding the World,','Physical Development':'In Physical Development,',Arabic:'In Arabic,',Islamic:'In Islamic,'};
   const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -3737,7 +3838,7 @@ function acMakeHTML(name,intro,subjects,photo,ST){
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 @page{size:A4 portrait;margin:0}
-html,body{font-family:Arial,Helvetica,sans-serif;background:white}
+html,body{font-family:${FONT.stack};background:white}
 body{width:210mm;height:297mm;overflow:hidden}
 .card{
   position:relative;
@@ -3774,11 +3875,11 @@ ${ST.extraCSS||''}
   padding:0 2mm;
   overflow:hidden;
 }
-.intro{font-size:10.3pt;color:${ST.textColor};line-height:1.42;margin:0}
+.intro{font-size:${FSIZE.intro};color:${ST.textColor};line-height:1.42;margin:0}
 .sname{color:${ST.nameColor};font-weight:bold}
-.sb{font-size:9.5pt;line-height:1.38;color:${ST.textColor};text-align:center;margin:0}
+.sb{font-size:${FSIZE.body};line-height:1.38;color:${ST.textColor};text-align:center;margin:0}
 .sl{color:${ST.labelColor};font-weight:bold}
-.closing{color:${ST.closingColor};font-weight:bold;font-size:10pt;line-height:1.38;text-align:center;margin:0}
+.closing{color:${ST.closingColor};font-weight:bold;font-size:${FSIZE.closing};line-height:1.38;text-align:center;margin:0}
 /* SIGNATURE */
 .sig{text-align:center;flex-shrink:0;padding:1.5mm 0}
 .sigcursive{font-family:'Brush Script MT','Segoe Script',cursive;font-size:19pt;color:${ST.sigColor};display:block;line-height:1.1}
