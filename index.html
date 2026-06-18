@@ -726,7 +726,13 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
     <!-- STUDENT NAME -->
     <div class="fg">
       <label>👤 Student Name <span style="color:var(--accent)">*</span></label>
-      <input type="text" id="acStudentName" placeholder="e.g. Karam" oninput="acUpdatePreview()">
+      <div style="position:relative">
+        <input type="text" id="acStudentName" placeholder="Type or select student..." autocomplete="off"
+          oninput="acStudentNameInput(this.value)"
+          onfocus="acStudentNameInput(this.value)"
+          style="width:100%">
+        <div id="acNameDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:white;border:2px solid var(--primary);border-radius:12px;max-height:200px;overflow-y:auto;z-index:999;box-shadow:0 8px 24px rgba(108,63,197,0.18);margin-top:4px"></div>
+      </div>
     </div>
 
     <!-- STUDENT PHOTO -->
@@ -3711,6 +3717,89 @@ function acRemovePhoto(){
 }
 function acResetComments(){ acInitComments(); toast('🔄 Reset to default','ok'); }
 
+// ── Helper: get first+second name from full name ──
+function acFirstSecondName(fullName){
+  if(!fullName) return '';
+  const parts = fullName.trim().split(/\s+/);
+  return parts.length >= 2 ? parts[0]+' '+parts[1] : parts[0];
+}
+
+// ── Student name dropdown ──
+function acStudentNameInput(q){
+  const dd = document.getElementById('acNameDropdown');
+  if(!dd) return;
+  const all = (typeof students !== 'undefined' ? students : []);
+  if(!q.trim()){
+    // Show all when focused with empty field
+    const list = all.slice(0,50);
+    acRenderNameDropdown(list, dd);
+    return;
+  }
+  const ql = q.toLowerCase();
+  const filtered = all.filter(s => s.name && s.name.toLowerCase().includes(ql)).slice(0,20);
+  acRenderNameDropdown(filtered, dd);
+}
+
+function acRenderNameDropdown(list, dd){
+  if(!list.length){ dd.style.display='none'; return; }
+  dd.innerHTML = list.map(s => {
+    const display = acFirstSecondName(s.name);
+    const initl = (s.name||'?').charAt(0).toUpperCase();
+    const av = s.photoURL
+      ? `<img src="${s.photoURL}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">`
+      : `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px;color:white;font-weight:900;flex-shrink:0">${initl}</div>`;
+    return `<div onclick="acSelectStudentByIndex(${students.indexOf(s)})" style="display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;transition:background .15s" onmouseover="this.style.background='#f0ebff'" onmouseout="this.style.background='white'">
+      ${av}
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--text)">${display}</div>
+        <div style="font-size:10px;color:var(--muted)">${s.id||''}${s.photoURL?' · 📸':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+  dd.style.display = 'block';
+}
+
+function acSelectStudentByIndex(idx){
+  const s = (typeof students !== 'undefined' ? students : [])[idx];
+  if(!s) return;
+  const display = acFirstSecondName(s.name);
+  document.getElementById('acStudentName').value = display;
+  document.getElementById('acNameDropdown').style.display = 'none';
+  // Set photo
+  if(s.photoURL){
+    acPhotoDataUrl = s.photoURL;
+    // Update upload preview too
+    const prev = document.getElementById('acPhotoPreviewImg');
+    const wrap = document.getElementById('acPhotoPreviewWrap');
+    const ph   = document.getElementById('acPhotoPlaceholder');
+    if(prev) prev.src = s.photoURL;
+    if(wrap) wrap.style.display = 'block';
+    if(ph)   ph.style.display = 'none';
+    // Switch to upload tab visually
+    acSwitchPhotoSrc('upload');
+  }
+  // Also update system selected preview if visible
+  const sel = document.getElementById('acSystemSelected');
+  if(sel && acPhotoSrc==='system'){
+    sel.style.display='flex';
+    const ph2 = document.getElementById('acSystemPhoto');
+    const pph = document.getElementById('acSystemPhotoPlaceholder');
+    if(s.photoURL){ ph2.src=s.photoURL; ph2.style.display='block'; if(pph) pph.style.display='none'; }
+    else{ if(ph2) ph2.style.display='none'; if(pph) pph.style.display='flex'; }
+    document.getElementById('acSystemSelectedName').textContent = display;
+  }
+  toast(`✅ ${display} selected`,'ok');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', e => {
+  const dd = document.getElementById('acNameDropdown');
+  const inp = document.getElementById('acStudentName');
+  if(dd && inp && !inp.contains(e.target) && !dd.contains(e.target)){
+    dd.style.display = 'none';
+  }
+});
+
 // ── Photo source switch ──
 function acSwitchPhotoSrc(src){
   acPhotoSrc=src;
@@ -3721,41 +3810,68 @@ function acSwitchPhotoSrc(src){
   if(src==='system') acRenderSystemStudents('');
 }
 
-// ── System students ──
+// ── System students list ──
 function acRenderSystemStudents(q){
-  const list=document.getElementById('acSystemStudentsList');
-  if(!list)return;
-  if(!window.students||!window.students.length){
-    list.innerHTML='<div style="padding:16px;text-align:center;color:#888;font-size:12px;font-weight:600">No students loaded yet.<br>Please load the Students tab first.</div>';
+  const list = document.getElementById('acSystemStudentsList');
+  if(!list) return;
+  const all = typeof students !== 'undefined' ? students : [];
+  if(!all.length){
+    list.innerHTML='<div style="padding:16px;text-align:center;color:#888;font-size:12px;font-weight:600">No students found in system.</div>';
     return;
   }
-  const filtered=q?window.students.filter(s=>s.name&&s.name.toLowerCase().includes(q.toLowerCase())):window.students;
+  const filtered = q ? all.filter(s=>s.name&&s.name.toLowerCase().includes(q.toLowerCase())) : all;
   if(!filtered.length){
-    list.innerHTML='<div style="padding:16px;text-align:center;color:#888;font-size:12px">No students found</div>';
+    list.innerHTML='<div style="padding:16px;text-align:center;color:#888;font-size:12px">No students match your search</div>';
     return;
   }
-  list.innerHTML=filtered.map(s=>{
-    const initl=(s.name||'?').charAt(0).toUpperCase();
-    const av=s.photoURL?`<img src="${s.photoURL}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">`:`<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#a855f7);display:flex;align-items:center;justify-content:center;font-size:17px;color:white;font-weight:900;flex-shrink:0">${initl}</div>`;
-    return `<div class="ac-contact-item" onclick="acSelectSystemStudent('${s.id}')">${av}<div><div style="font-size:13px;font-weight:800;color:var(--text)">${s.name||'Unknown'}</div><div style="font-size:10px;color:var(--muted)">${s.photoURL?'📸 Has photo':''}</div></div></div>`;
+  list.innerHTML = filtered.map(s => {
+    const display = acFirstSecondName(s.name);
+    const initl = (s.name||'?').charAt(0).toUpperCase();
+    const av = s.photoURL
+      ? `<img src="${s.photoURL}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">`
+      : `<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#a855f7);display:flex;align-items:center;justify-content:center;font-size:17px;color:white;font-weight:900;flex-shrink:0">${initl}</div>`;
+    return `<div class="ac-contact-item" onclick="acSelectSystemStudent('${s.id}')">
+      ${av}
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--text)">${display}</div>
+        <div style="font-size:10px;color:var(--muted)">${s.id||''}${s.photoURL?' · 📸 Has photo':' · No photo'}</div>
+      </div>
+    </div>`;
   }).join('');
 }
+
 function acFilterSystemStudents(q){ acRenderSystemStudents(q); }
+
 function acSelectSystemStudent(id){
-  const s=window.students&&window.students.find(x=>x.id===id);
-  if(!s)return;
-  acPhotoDataUrl=s.photoURL||null;
-  const nameEl=document.getElementById('acStudentName');
-  if(!nameEl.value.trim()) nameEl.value=s.name||'';
-  const sel=document.getElementById('acSystemSelected');
-  sel.style.display='flex';
-  const ph=document.getElementById('acSystemPhoto');
-  const pph=document.getElementById('acSystemPhotoPlaceholder');
-  if(s.photoURL){ph.src=s.photoURL;ph.style.display='block';pph.style.display='none';}
-  else{ph.style.display='none';pph.style.display='flex';}
-  document.getElementById('acSystemSelectedName').textContent=s.name||'';
-  toast(`✅ ${s.name} selected`,'ok');
+  const all = typeof students !== 'undefined' ? students : [];
+  const s = all.find(x => String(x.id) === String(id));
+  if(!s) return;
+  const display = acFirstSecondName(s.name);
+  acPhotoDataUrl = s.photoURL || null;
+  // Fill name field
+  document.getElementById('acStudentName').value = display;
+  // Update upload preview
+  if(s.photoURL){
+    const prev = document.getElementById('acPhotoPreviewImg');
+    const wrap = document.getElementById('acPhotoPreviewWrap');
+    const ph   = document.getElementById('acPhotoPlaceholder');
+    if(prev) prev.src = s.photoURL;
+    if(wrap) wrap.style.display = 'block';
+    if(ph)   ph.style.display = 'none';
+  }
+  // Show selected preview
+  const sel = document.getElementById('acSystemSelected');
+  if(sel){
+    sel.style.display='flex';
+    const ph2 = document.getElementById('acSystemPhoto');
+    const pph = document.getElementById('acSystemPhotoPlaceholder');
+    if(s.photoURL){ ph2.src=s.photoURL; ph2.style.display='block'; if(pph) pph.style.display='none'; }
+    else{ if(ph2) ph2.style.display='none'; if(pph) pph.style.display='flex'; }
+    document.getElementById('acSystemSelectedName').textContent = display;
+  }
+  toast(`✅ ${display} selected`,'ok');
 }
+
 function acClearSystemStudent(){
   acPhotoDataUrl=null;
   document.getElementById('acSystemSelected').style.display='none';
@@ -3823,9 +3939,10 @@ function acMakeHTML(name,intro,subjects,photo,ST,FONT,FSIZE,showNameUnder){
     ?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;display:block">`
     :`<div style="width:100%;height:100%;background:#c8d8e8;display:flex;align-items:center;justify-content:center;font-size:38px">👤</div>`;
 
-  // Name under photo
+  // Name under photo — use first+second name only
+  const displayName = (()=>{ const p=name.trim().split(/\s+/); return p.length>=2?p[0]+' '+p[1]:p[0]; })();
   const nameUnderHTML=showNameUnder
-    ?`<div style="text-align:center;margin-top:2mm;font-family:${FONT.stack};font-size:${FSIZE.intro};font-weight:bold;color:${ST.nameColor};letter-spacing:0.3px">${esc(name)}</div>`
+    ?`<div style="text-align:center;margin-top:2mm;font-family:${FONT.stack};font-size:${FSIZE.intro};font-weight:bold;color:${ST.nameColor};letter-spacing:0.3px">${esc(displayName)}</div>`
     :'';
 
   // Top center block
