@@ -401,6 +401,29 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
 .ac-font-btn:hover { border-color: #0369a1; transform: translateY(-1px); }
 .ac-font-btn.active { background: linear-gradient(135deg,#0ea5e9,#0369a1); color: white; border-color: transparent; box-shadow: 0 3px 10px rgba(3,105,161,0.35); transform: translateY(-1px); }
 
+.ac-photo-src-btn {
+  flex:1; padding:9px 8px; border:2.5px solid var(--border); border-radius:12px;
+  background:white; cursor:pointer; font-family:'Nunito','Segoe UI',sans-serif;
+  font-size:12px; font-weight:800; color:var(--muted); transition:all 0.2s ease;
+}
+.ac-photo-src-btn:hover { border-color:var(--primary); color:var(--primary); }
+.ac-photo-src-btn.active { background:linear-gradient(135deg,var(--primary),#a855f7); color:white; border-color:transparent; box-shadow:0 3px 10px rgba(108,63,197,0.3); }
+
+.ac-contact-item {
+  display:flex; align-items:center; gap:10px; padding:10px 12px;
+  cursor:pointer; border-bottom:1px solid #f0f0f0; transition:background 0.15s;
+}
+.ac-contact-item:hover { background:#f0ebff; }
+.ac-contact-item:last-child { border-bottom:none; }
+.ac-contact-avatar {
+  width:38px; height:38px; border-radius:50%; object-fit:cover;
+  border:2px solid var(--border); flex-shrink:0;
+}
+.ac-contact-avatar-placeholder {
+  width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--primary),#a855f7);
+  display:flex; align-items:center; justify-content:center; font-size:16px; color:white; flex-shrink:0;
+}
+
 /* ── APPRECIATION CARD ── */
 .ac-cat-btn {
   border: 2.5px solid var(--border); border-radius: 16px; padding: 12px 8px;
@@ -709,18 +732,70 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
     <!-- STUDENT PHOTO -->
     <div class="fg">
       <label>📸 Student Photo <span style="color:var(--accent)">*</span></label>
-      <div class="photo-upload-area" onclick="document.getElementById('acPhotoInput').click()" id="acPhotoArea">
-        <div id="acPhotoPreviewWrap" style="display:none" class="photo-preview-wrap">
-          <img id="acPhotoPreviewImg" src="" alt="Student Photo" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid var(--primary)">
-          <button class="photo-remove-btn" onclick="event.stopPropagation();acRemovePhoto()">✕</button>
+
+      <!-- Photo source toggle -->
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <button class="ac-photo-src-btn active" id="acPhotoSrcUpload" onclick="acSwitchPhotoSrc('upload')">
+          📁 Upload New
+        </button>
+        <button class="ac-photo-src-btn" id="acPhotoSrcSystem" onclick="acSwitchPhotoSrc('system')">
+          🎒 From Students
+        </button>
+      </div>
+
+      <!-- Upload section -->
+      <div id="acPhotoUploadSection">
+        <div class="photo-upload-area" onclick="document.getElementById('acPhotoInput').click()" id="acPhotoArea">
+          <div id="acPhotoPreviewWrap" style="display:none" class="photo-preview-wrap">
+            <img id="acPhotoPreviewImg" src="" alt="Student Photo" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid var(--primary)">
+            <button class="photo-remove-btn" onclick="event.stopPropagation();acRemovePhoto()">✕</button>
+          </div>
+          <div id="acPhotoPlaceholder">
+            <div style="font-size:36px;margin-bottom:6px">📷</div>
+            <div style="font-size:12px;color:var(--muted);font-weight:700">Tap to upload student photo</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">JPG or PNG</div>
+          </div>
         </div>
-        <div id="acPhotoPlaceholder">
-          <div style="font-size:36px;margin-bottom:6px">📷</div>
-          <div style="font-size:12px;color:var(--muted);font-weight:700">Tap to upload student photo</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px">JPG or PNG</div>
+        <input type="file" id="acPhotoInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="acHandlePhoto(event)">
+      </div>
+
+      <!-- System students section -->
+      <div id="acPhotoSystemSection" style="display:none">
+        <div style="margin-bottom:8px">
+          <input type="text" id="acSystemSearch" placeholder="🔍 Search student name..."
+            style="width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:12px;font-size:13px;font-family:Nunito,sans-serif;font-weight:600;outline:none"
+            oninput="acFilterSystemStudents(this.value)">
+        </div>
+        <div id="acSystemStudentsList" style="max-height:220px;overflow-y:auto;border:2px solid var(--border);border-radius:14px;background:#fafafa">
+          <!-- filled by JS -->
+        </div>
+        <!-- Selected student preview -->
+        <div id="acSystemSelected" style="display:none;margin-top:8px;padding:10px 12px;background:#f0ebff;border-radius:12px;border:2px solid var(--primary);align-items:center;gap:10px">
+          <img id="acSystemPhoto" src="" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--primary)">
+          <div id="acSystemPhotoPlaceholder" style="display:none;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#a855f7);align-items:center;justify-content:center;font-size:20px;color:white">👤</div>
+          <div style="flex:1">
+            <div id="acSystemSelectedName" style="font-size:13px;font-weight:900;color:var(--primary)"></div>
+            <div style="font-size:11px;color:var(--muted)">✅ Student selected from system</div>
+          </div>
+          <button onclick="acClearSystemStudent()" style="background:none;border:none;font-size:18px;cursor:pointer;color:#999;padding:0">✕</button>
         </div>
       </div>
-      <input type="file" id="acPhotoInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="acHandlePhoto(event)">
+    </div>
+
+    <!-- NAME UNDER PHOTO OPTION -->
+    <div class="fg" style="margin-top:-4px">
+      <div style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:14px;padding:12px 14px;border:2px solid #bbf7d0">
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#15803d">🏷️ Show Name Under Photo</div>
+          <div style="font-size:11px;color:#166534;margin-top:2px">Display student name below the photo circle</div>
+        </div>
+        <label style="position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0">
+          <input type="checkbox" id="acShowNameUnderPhoto" style="opacity:0;width:0;height:0" onchange="acToggleNameUnderPhoto(this.checked)">
+          <span id="acNameToggleSlider" style="position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:26px;transition:.3s">
+            <span style="position:absolute;content:'';height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s;display:block" id="acNameToggleKnob"></span>
+          </span>
+        </label>
+      </div>
     </div>
 
     <!-- CATEGORY -->
@@ -3730,6 +3805,100 @@ function acSetStyle(n){
 // ── Font state ──
 let acCurrentFont=0;
 let acCurrentFontSize=2;
+let acShowNameUnder=false;
+let acPhotoSrc='upload'; // 'upload' or 'contact'
+
+// ── Photo source switch ──
+function acSwitchPhotoSrc(src){
+  acPhotoSrc=src;
+  document.getElementById('acPhotoSrcUpload').classList.toggle('active',src==='upload');
+  document.getElementById('acPhotoSrcSystem').classList.toggle('active',src==='system');
+  document.getElementById('acPhotoUploadSection').style.display=src==='upload'?'block':'none';
+  document.getElementById('acPhotoSystemSection').style.display=src==='system'?'block':'none';
+  if(src==='system') acRenderSystemStudents('');
+}
+
+// ── Render students from the app's own students array ──
+function acRenderSystemStudents(q){
+  const list=document.getElementById('acSystemStudentsList');
+  if(!list)return;
+
+  // `students` is the global array already loaded by the app
+  if(!window.students||!window.students.length){
+    list.innerHTML='<div style="padding:16px;text-align:center;color:#888;font-size:12px;font-weight:600">No students loaded yet.<br>Please load the Students tab first.</div>';
+    return;
+  }
+
+  const filtered=q
+    ?window.students.filter(s=>s.name&&s.name.toLowerCase().includes(q.toLowerCase()))
+    :window.students;
+
+  if(!filtered.length){
+    list.innerHTML='<div style="padding:16px;text-align:center;color:#888;font-size:12px">No students found</div>';
+    return;
+  }
+
+  list.innerHTML=filtered.map(s=>{
+    const initl=(s.name||'?').charAt(0).toUpperCase();
+    const avatarEl=s.photoURL
+      ?`<img src="${s.photoURL}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0" onerror="this.style.display='none'">`
+      :`<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#a855f7);display:flex;align-items:center;justify-content:center;font-size:17px;color:white;font-weight:900;flex-shrink:0">${initl}</div>`;
+    return `<div class="ac-contact-item" onclick="acSelectSystemStudent('${s.id}')">
+      ${avatarEl}
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--text)">${s.name||'Unknown'}</div>
+        <div style="font-size:10px;color:var(--muted)">${s.id||''} ${s.photoURL?'· 📸 Has photo':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function acFilterSystemStudents(q){
+  acRenderSystemStudents(q);
+}
+
+function acSelectSystemStudent(id){
+  if(!window.students)return;
+  const s=window.students.find(x=>x.id===id);
+  if(!s)return;
+
+  // Set photo
+  acPhotoDataUrl=s.photoURL||null;
+
+  // Auto-fill name if empty
+  const nameEl=document.getElementById('acStudentName');
+  if(!nameEl.value.trim()) nameEl.value=s.name||'';
+
+  // Show selected preview
+  const sel=document.getElementById('acSystemSelected');
+  sel.style.display='flex';
+  const photoEl=document.getElementById('acSystemPhoto');
+  const photoPlEl=document.getElementById('acSystemPhotoPlaceholder');
+  if(s.photoURL){
+    photoEl.src=s.photoURL;
+    photoEl.style.display='block';
+    photoPlEl.style.display='none';
+  } else {
+    photoEl.style.display='none';
+    photoPlEl.style.display='flex';
+  }
+  document.getElementById('acSystemSelectedName').textContent=s.name||'';
+  toast(`✅ ${s.name} selected`,'ok');
+}
+
+function acClearSystemStudent(){
+  acPhotoDataUrl=null;
+  document.getElementById('acSystemSelected').style.display='none';
+}
+
+// ── Name under photo toggle ──
+function acToggleNameUnderPhoto(checked){
+  acShowNameUnder=checked;
+  const slider=document.getElementById('acNameToggleSlider');
+  const knob=document.getElementById('acNameToggleKnob');
+  if(slider) slider.style.background=checked?'var(--primary)':'#ccc';
+  if(knob) knob.style.transform=checked?'translateX(20px)':'translateX(0)';
+}
 
 const AC_FONTS=[
   {name:'Arial',      stack:'Arial,Helvetica,sans-serif'},
@@ -3774,15 +3943,17 @@ function acBuildCard(){
     name, intro, subjects, acPhotoDataUrl,
     AC_STYLES[acCurrentStyle],
     AC_FONTS[acCurrentFont],
-    AC_FONT_SIZES[acCurrentFontSize]
+    AC_FONT_SIZES[acCurrentFontSize],
+    acShowNameUnder
   ));
   win.document.close();
   toast('✅ Card ready — press Print to save PDF','ok');
 }
 
-function acMakeHTML(name,intro,subjects,photo,ST,FONT,FSIZE){
+function acMakeHTML(name,intro,subjects,photo,ST,FONT,FSIZE,showNameUnder){
   FONT  = FONT  || AC_FONTS[0];
   FSIZE = FSIZE || AC_FONT_SIZES[2];
+  showNameUnder = !!showNameUnder;
   const LABELS={Literacy:'In Literacy,',Numeracy:'In Numeracy,','Understanding the World':'In Understanding the World,','Physical Development':'In Physical Development,',Arabic:'In Arabic,',Islamic:'In Islamic,'};
   const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -3793,8 +3964,16 @@ function acMakeHTML(name,intro,subjects,photo,ST,FONT,FSIZE){
     sHTML+=`<p class="sb"><b class="sl">${LABELS[sub]}</b> ${esc(subjects[sub])}</p>`;
   });
 
-  // Photo element
-  const photoEl=photo
+  // Photo + optional name under photo
+  const nameUnderHTML = showNameUnder
+    ? `<div style="text-align:center;margin-top:2mm;font-family:${FONT.stack};font-size:${FSIZE.intro};font-weight:bold;color:${ST.nameColor};letter-spacing:0.3px">${esc(name)}</div>`
+    : '';
+
+  // Top center: photo + optional name
+  const topCenterHTML = `<div style="display:flex;flex-direction:column;align-items:center">
+    <div class="photo">${photoEl}</div>
+    ${nameUnderHTML}
+  </div>`;
     ?`<img src="${photo}" style="width:100%;height:100%;object-fit:cover;display:block">`
     :`<div style="width:100%;height:100%;background:#c8d8e8;display:flex;align-items:center;justify-content:center;font-size:38px">👤</div>`;
 
@@ -3905,10 +4084,10 @@ ${ST.extraCSS||''}
   ${sparkleHTML}
   <div class="inner">
 
-    <!-- TOP: left clipart | photo | right clipart -->
+    <!-- TOP: left clipart | photo (+name) | right clipart -->
     <div class="top">
       <div>${tlImg}</div>
-      <div class="photo">${photoEl}</div>
+      ${topCenterHTML}
       <div>${trImg}</div>
     </div>
 
