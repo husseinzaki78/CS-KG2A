@@ -369,6 +369,9 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
 .note-badge.note-green { background: linear-gradient(135deg,#d1fae5,#a7f3d0); border-color:#6ee7b7; color:#065f46; }
 .note-badge.note-red { background: linear-gradient(135deg,#fee2e2,#fecaca); border-color:#fca5a5; color:#991b1b; }
 .note-badge.note-blue { background: linear-gradient(135deg,#dbeafe,#bfdbfe); border-color:#93c5fd; color:#1e40af; }
+.note-badge.note-ha { background: linear-gradient(135deg,#fef9c3,#fde68a); border-color:#f59e0b; color:#78350f; font-weight:900; }
+.note-badge.note-ma { background: linear-gradient(135deg,#e0f2fe,#bae6fd); border-color:#38bdf8; color:#0c4a6e; font-weight:900; }
+.note-badge.note-la { background: linear-gradient(135deg,#fce7f3,#fbcfe8); border-color:#f472b6; color:#831843; font-weight:900; }
 
 /* ── WORKSHEET BUILDER ── */
 .ws-img-slot {
@@ -1054,7 +1057,10 @@ body.dark .filter-pill { background: #0f0a1a; border-color: #3a2a5a; }
         <label>⭐ Quick Note (Optional)</label>
         <select id="editNoteType">
           <option value="">— No Note —</option>
-          <option value="yellow">⭐ Needs Follow-up</option>
+          <option value="HA">⭐ HA — High Achiever</option>
+          <option value="MA">🌟 MA — Mid Achiever</option>
+          <option value="LA">💪 LA — Low Achiever</option>
+          <option value="yellow">🔔 Needs Follow-up</option>
           <option value="green">✅ Excellent Student</option>
           <option value="red">⚠️ Needs Attention</option>
           <option value="blue">💙 Special Needs</option>
@@ -1478,9 +1484,17 @@ function renderContacts() {
     // Note badge
     let noteBadge = '';
     if (s.noteType) {
-      const cls = {yellow:'note-badge',green:'note-badge note-green',red:'note-badge note-red',blue:'note-badge note-blue'}[s.noteType]||'note-badge';
-      const icon = {yellow:'⭐',green:'✅',red:'⚠️',blue:'💙'}[s.noteType]||'📌';
-      noteBadge = `<div style="margin-bottom:8px"><span class="${cls}" onclick="event.stopPropagation();openEditModal(${s.id})">${icon} ${s.noteText||'Note'}</span></div>`;
+      const categoryMap = {
+        HA: {cls:'note-badge note-ha',  icon:'⭐', label:'HA'},
+        MA: {cls:'note-badge note-ma',  icon:'🌟', label:'MA'},
+        LA: {cls:'note-badge note-la',  icon:'💪', label:'LA'},
+        yellow:{cls:'note-badge',       icon:'🔔', label:s.noteText||'Follow-up'},
+        green: {cls:'note-badge note-green',icon:'✅',label:s.noteText||'Excellent'},
+        red:   {cls:'note-badge note-red',  icon:'⚠️',label:s.noteText||'Attention'},
+        blue:  {cls:'note-badge note-blue', icon:'💙',label:s.noteText||'Special Needs'},
+      };
+      const m = categoryMap[s.noteType] || {cls:'note-badge',icon:'📌',label:s.noteText||'Note'};
+      noteBadge = `<div style="margin-bottom:8px"><span class="${m.cls}" onclick="event.stopPropagation();openEditModal(${s.id})">${m.icon} ${m.label}</span></div>`;
     }
 
     const infoRows = `
@@ -3746,21 +3760,35 @@ function acRenderNameDropdown(list, dd){
     const display = acFirstSecondName(s.name);
     const initl = (s.name||'?').charAt(0).toUpperCase();
     const av = s.photoURL
-      ? `<img src="${s.photoURL}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">`
-      : `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px;color:white;font-weight:900;flex-shrink:0">${initl}</div>`;
-    return `<div onclick="acSelectStudentByIndex(${students.indexOf(s)})" style="display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;transition:background .15s" onmouseover="this.style.background='#f0ebff'" onmouseout="this.style.background='white'">
+      ? `<img src="${s.photoURL}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">`
+      : `<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px;color:white;font-weight:900;flex-shrink:0">${initl}</div>`;
+    const catBadge = acCatBadgeHTML(s.noteType);
+    const idx = (typeof students !== 'undefined' ? students : []).indexOf(s);
+    return `<div onclick="acSelectStudentByIndex(${idx})" style="display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;transition:background .15s" onmouseover="this.style.background='#f0ebff'" onmouseout="this.style.background='white'">
       ${av}
-      <div>
+      <div style="flex:1;min-width:0">
         <div style="font-size:13px;font-weight:800;color:var(--text)">${display}</div>
-        <div style="font-size:10px;color:var(--muted)">${s.id||''}${s.photoURL?' · 📸':''}</div>
+        <div style="font-size:10px;color:var(--muted)">${s.id||''}</div>
       </div>
+      ${catBadge}
     </div>`;
   }).join('');
   dd.style.display = 'block';
 }
 
+// Helper: category badge HTML
+function acCatBadgeHTML(noteType){
+  const map = {
+    HA:`<span style="font-size:10px;font-weight:900;padding:2px 7px;border-radius:8px;background:#fde68a;color:#78350f;border:1.5px solid #f59e0b;flex-shrink:0">⭐ HA</span>`,
+    MA:`<span style="font-size:10px;font-weight:900;padding:2px 7px;border-radius:8px;background:#bae6fd;color:#0c4a6e;border:1.5px solid #38bdf8;flex-shrink:0">🌟 MA</span>`,
+    LA:`<span style="font-size:10px;font-weight:900;padding:2px 7px;border-radius:8px;background:#fbcfe8;color:#831843;border:1.5px solid #f472b6;flex-shrink:0">💪 LA</span>`,
+  };
+  return map[noteType] || '';
+}
+
 function acSelectStudentByIndex(idx){
-  const s = (typeof students !== 'undefined' ? students : [])[idx];
+  const all = typeof students !== 'undefined' ? students : [];
+  const s = all[idx];
   if(!s) return;
   const display = acFirstSecondName(s.name);
   document.getElementById('acStudentName').value = display;
@@ -3768,27 +3796,19 @@ function acSelectStudentByIndex(idx){
   // Set photo
   if(s.photoURL){
     acPhotoDataUrl = s.photoURL;
-    // Update upload preview too
     const prev = document.getElementById('acPhotoPreviewImg');
     const wrap = document.getElementById('acPhotoPreviewWrap');
     const ph   = document.getElementById('acPhotoPlaceholder');
     if(prev) prev.src = s.photoURL;
     if(wrap) wrap.style.display = 'block';
     if(ph)   ph.style.display = 'none';
-    // Switch to upload tab visually
     acSwitchPhotoSrc('upload');
   }
-  // Also update system selected preview if visible
-  const sel = document.getElementById('acSystemSelected');
-  if(sel && acPhotoSrc==='system'){
-    sel.style.display='flex';
-    const ph2 = document.getElementById('acSystemPhoto');
-    const pph = document.getElementById('acSystemPhotoPlaceholder');
-    if(s.photoURL){ ph2.src=s.photoURL; ph2.style.display='block'; if(pph) pph.style.display='none'; }
-    else{ if(ph2) ph2.style.display='none'; if(pph) pph.style.display='flex'; }
-    document.getElementById('acSystemSelectedName').textContent = display;
+  // Auto-set category if HA/MA/LA
+  if(['HA','MA','LA'].includes(s.noteType)){
+    acSetCategory(s.noteType);
   }
-  toast(`✅ ${display} selected`,'ok');
+  toast(`✅ ${display} selected${s.noteType?` · ${s.noteType}`:''}`, 'ok');
 }
 
 // Close dropdown when clicking outside
@@ -3830,12 +3850,14 @@ function acRenderSystemStudents(q){
     const av = s.photoURL
       ? `<img src="${s.photoURL}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">`
       : `<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#a855f7);display:flex;align-items:center;justify-content:center;font-size:17px;color:white;font-weight:900;flex-shrink:0">${initl}</div>`;
+    const catBadge = acCatBadgeHTML(s.noteType);
     return `<div class="ac-contact-item" onclick="acSelectSystemStudent('${s.id}')">
       ${av}
-      <div>
+      <div style="flex:1">
         <div style="font-size:13px;font-weight:800;color:var(--text)">${display}</div>
-        <div style="font-size:10px;color:var(--muted)">${s.id||''}${s.photoURL?' · 📸 Has photo':' · No photo'}</div>
+        <div style="font-size:10px;color:var(--muted)">${s.id||''}${s.photoURL?' · 📸':''}</div>
       </div>
+      ${catBadge}
     </div>`;
   }).join('');
 }
@@ -3869,7 +3891,11 @@ function acSelectSystemStudent(id){
     else{ if(ph2) ph2.style.display='none'; if(pph) pph.style.display='flex'; }
     document.getElementById('acSystemSelectedName').textContent = display;
   }
-  toast(`✅ ${display} selected`,'ok');
+  // Auto-set category if HA/MA/LA
+  if(['HA','MA','LA'].includes(s.noteType)){
+    acSetCategory(s.noteType);
+  }
+  toast(`✅ ${display} selected${s.noteType?` · ${s.noteType}`:''}`, 'ok');
 }
 
 function acClearSystemStudent(){
