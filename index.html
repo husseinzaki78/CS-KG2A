@@ -3993,11 +3993,11 @@ function acMakeHTML(name,intro,subjects,photo,ST,FONT,FSIZE,showNameUnder){
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Appreciation Card — ${esc(name)}</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
 @page{size:A4 portrait;margin:0}
-html,body{font-family:${FONT.stack};background:white}
+html,body{font-family:${FONT.stack};background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 body{width:210mm;height:297mm;overflow:hidden}
-.card{position:relative;width:210mm;height:297mm;${bgCSS}${gridCSS}${cardBorder}overflow:hidden}
+.card{position:relative;width:210mm;height:297mm;${bgCSS}${gridCSS}${cardBorder}overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 ${ST.extraCSS||''}
 .inner{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;padding:6mm 13mm 5mm 13mm}
 .top{display:flex;align-items:flex-end;justify-content:space-between;flex-shrink:0;margin-bottom:3mm}
@@ -4017,7 +4017,12 @@ ${ST.extraCSS||''}
 .fl{display:flex;align-items:flex-end;gap:3mm}
 .fc{display:flex;flex-direction:column;align-items:center;gap:1mm}
 .pbar{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.97);padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:center;box-shadow:0 -3px 16px rgba(0,0,0,.12);font-family:Arial,sans-serif;z-index:99}
-@media print{.pbar{display:none}body{width:210mm;height:297mm;overflow:hidden;background:white}.card{width:210mm;height:297mm}}
+@media print{
+  .pbar{display:none}
+  html,body{width:210mm;height:297mm;overflow:hidden;background:white !important}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important}
+  .card{width:210mm;height:297mm}
+}
 </style></head><body>
 <div class="card">
   ${frameHTML}${sparkleHTML}
